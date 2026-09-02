@@ -6,6 +6,7 @@ import '../../presentation/auth/login/login_view.dart';
 import '../../presentation/auth/signup/signup_view.dart';
 import '../../presentation/auth/success/success_view.dart';
 import '../../presentation/home/view/home_view.dart';
+import '../../presentation/main_wrapper/main_wrapper.dart';
 import '../../presentation/onboarding/view/onboarding_view.dart';
 import '../../presentation/splash/view/splash_view.dart';
 import 'app_routes.dart';
@@ -36,6 +37,8 @@ class AppRouter {
         return _fade(const ResetPasswordView());
       case AppRoutes.authSuccess:
         return _fade(const SuccessView());
+      case AppRoutes.mainWrapper:
+        return _fade(const MainWrapper());
       case AppRoutes.home:
         return _fade(const HomeView());
       default:

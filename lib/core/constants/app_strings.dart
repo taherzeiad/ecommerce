@@ -72,4 +72,19 @@ class AppStrings {
   static const String success = 'Success!';
   static const String accountCreated = 'Your account has been Created';
   static const String continueLabel = 'Continue';
+
+  // Home
+  static const String helloLetsShop = "Hello, Let's Shop!";
+  static const String searchHint = 'Search here...';
+  static const String categories = 'Categories';
+  static const String seeAll = 'See All';
+  static const String flashDeals = 'Flash Deals For You';
+  static const String popularProduct = 'Popular Product';
+
+  // Categories
+  static const String featuredCategories = 'Featured Categories';
+  static const String latestSmartphones = 'Latest Smartphones';
+  static const String gamingLaptops = 'Gaming Laptops';
+  static const String audio = 'Audio';
+  static const String productsCount = '+50 Product';
 }
