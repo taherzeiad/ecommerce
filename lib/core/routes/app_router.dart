@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../presentation/auth/forgot_password/forgot_password_view.dart';
 import '../../presentation/auth/forgot_password/reset_password_view.dart';
 import '../../presentation/auth/forgot_password/verify_account_view.dart';
@@ -7,7 +8,10 @@ import '../../presentation/auth/signup/signup_view.dart';
 import '../../presentation/auth/success/success_view.dart';
 import '../../presentation/home/view/home_view.dart';
 import '../../presentation/main_wrapper/main_wrapper.dart';
+import '../../presentation/notifications/view/notifications_view.dart';
 import '../../presentation/onboarding/view/onboarding_view.dart';
+import '../../presentation/product_details/view/product_details_view.dart';
+import '../../presentation/reviews/view/reviews_view.dart';
 import '../../presentation/splash/view/splash_view.dart';
 import 'app_routes.dart';
 
@@ -41,6 +45,12 @@ class AppRouter {
         return _fade(const MainWrapper());
       case AppRoutes.home:
         return _fade(const HomeView());
+      case AppRoutes.productDetails:
+        return _fade(const ProductDetailsView());
+      case AppRoutes.notifications:
+        return _fade(const NotificationsView());
+      case AppRoutes.reviews:
+        return _fade(const ReviewsView());
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(
