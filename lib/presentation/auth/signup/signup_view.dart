@@ -146,7 +146,7 @@ class _SignupContent extends StatelessWidget {
                         : () async {
                             final success = await viewModel.signup();
                             if (success && context.mounted) {
-                              Navigator.pushReplacementNamed(context, AppRoutes.home);
+                              Navigator.pushReplacementNamed(context, AppRoutes.mainWrapper);
                             }
                           },
                     child: viewModel.isLoading

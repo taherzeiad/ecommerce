@@ -117,7 +117,7 @@ class _LoginContent extends StatelessWidget {
                         : () async {
                             final success = await viewModel.login();
                             if (success && context.mounted) {
-                              Navigator.pushReplacementNamed(context, AppRoutes.home);
+                              Navigator.pushReplacementNamed(context, AppRoutes.mainWrapper);
                             }
                           },
                     child: viewModel.isLoading
