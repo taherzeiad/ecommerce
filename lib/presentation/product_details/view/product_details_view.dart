@@ -1,177 +1,222 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
-import '../../../core/widgets/primary_button.dart';
+import '../../../core/constants/app_strings.dart';
+import '../../../core/routes/app_routes.dart';
 
-class ProductDetailsView extends StatefulWidget {
+class ProductDetailsView extends StatelessWidget {
   const ProductDetailsView({super.key});
-
-  @override
-  State<ProductDetailsView> createState() => _ProductDetailsViewState();
-}
-
-class _ProductDetailsViewState extends State<ProductDetailsView> {
-  int quantity = 1;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            expandedHeight: 350,
-            pinned: true,
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
-              onPressed: () => Navigator.pop(context),
+      backgroundColor: AppColors.scaffoldBackground,
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildImageSection(context),
+                _buildProductInfo(context),
+              ],
             ),
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.favorite_border, color: Colors.red),
-                onPressed: () {},
+          ),
+          _buildBottomBar(context),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildImageSection(BuildContext context) {
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.45,
+      width: double.infinity,
+      decoration: const BoxDecoration(
+        color: AppColors.cardBackground,
+      ),
+      child: Stack(
+        children: [
+          const Center(
+            child: Icon(Icons.laptop_mac, size: 200, color: Colors.black54),
+          ),
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _buildCircleIcon(Icons.arrow_back, () => Navigator.pop(context)),
+                  _buildCircleIcon(Icons.favorite, () {}, iconColor: AppColors.primary),
+                ],
               ),
-            ],
-            flexibleSpace: FlexibleSpaceBar(
-              background: Container(
-                color: AppColors.cardBackground,
-                child: Center(
-                  child: Icon(
-                    Icons.image,
-                    size: 150,
-                    color: AppColors.primary.withOpacity(0.3),
+            ),
+          ),
+          Positioned(
+            bottom: 20,
+            left: 0,
+            right: 0,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(
+                4,
+                (index) => Container(
+                  width: 8,
+                  height: 8,
+                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                  decoration: BoxDecoration(
+                    color: index == 1 ? AppColors.primary : Colors.grey.shade300,
+                    shape: BoxShape.circle,
                   ),
                 ),
               ),
             ),
           ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        'Premium Wireless Headphones',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.textPrimary,
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: AppColors.primary.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: const Text(
-                          'Electronics',
-                          style: TextStyle(color: AppColors.primary, fontSize: 12),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    children: [
-                      const Icon(Icons.star, color: Colors.orange, size: 20),
-                      const SizedBox(width: 5),
-                      const Text(
-                        '4.8',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                      ),
-                      const SizedBox(width: 5),
-                      Text(
-                        '(120 Reviews)',
-                        style: TextStyle(color: AppColors.textSecondary, fontSize: 14),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            '\$299.00',
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.primary,
-                            ),
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                'from \$10 per month',
-                                style: TextStyle(color: AppColors.textSecondary, fontSize: 12),
-                              ),
-                              const SizedBox(width: 4),
-                              const Icon(Icons.info_outline, size: 14, color: AppColors.textSecondary),
-                            ],
-                          ),
-                        ],
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: AppColors.scaffoldBackground,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Row(
-                          children: [
-                            IconButton(
-                              onPressed: () {
-                                if (quantity > 1) setState(() => quantity--);
-                              },
-                              icon: const Icon(Icons.remove, size: 20),
-                            ),
-                            Text(
-                              '$quantity',
-                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                            ),
-                            IconButton(
-                              onPressed: () => setState(() => quantity++),
-                              icon: const Icon(Icons.add, size: 20),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 30),
-                  const Text(
-                    'Description',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 10),
-                  RichText(
-                    text: TextSpan(
-                      style: const TextStyle(color: AppColors.textSecondary, height: 1.5),
-                      children: [
-                        const TextSpan(
-                          text: 'Experience sound like never before with our premium wireless headphones. Featuring active noise cancellation and 40 hours of battery life... ',
-                        ),
-                        TextSpan(
-                          text: 'Read More',
-                          style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 100),
-                ],
-              ),
-            ),
-          ),
         ],
       ),
-      bottomSheet: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+    );
+  }
+
+  Widget _buildCircleIcon(IconData icon, VoidCallback onTap, {Color? iconColor}) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.circle,
+        ),
+        child: Icon(icon, color: iconColor ?? Colors.black54),
+      ),
+    );
+  }
+
+  Widget _buildProductInfo(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(30),
+          topRight: Radius.circular(30),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Apple MacBook Air M2',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              _buildTag(Icons.laptop, 'Laptop'),
+              const SizedBox(width: 12),
+              _buildTag(Icons.star_border, '(4.8) Review'),
+              const SizedBox(width: 12),
+              GestureDetector(
+                onTap: () => Navigator.pushNamed(context, AppRoutes.reviews),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: AppColors.primary),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: const Text(
+                    AppStrings.addRating,
+                    style: TextStyle(color: AppColors.primary, fontSize: 12),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
+          Row(
+            children: [
+              const Text(
+                AppStrings.qty,
+                style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey),
+              ),
+              const SizedBox(width: 16),
+              _buildQtyBtn(Icons.remove, () {}),
+              const SizedBox(width: 16),
+              const Text('2', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+              const SizedBox(width: 16),
+              _buildQtyBtn(Icons.add, () {}),
+            ],
+          ),
+          const SizedBox(height: 24),
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.grey.shade100,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              children: [
+                const Text(
+                  '\$3300.00',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: AppColors.primary),
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  AppStrings.fromMonth,
+                  style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
+                ),
+                const Spacer(),
+                const Icon(Icons.info_outline, color: AppColors.primary),
+              ],
+            ),
+          ),
+          const SizedBox(height: 24),
+          const Text(
+            'The Apple MacBook Air M2 is a sleek, lightweight, and powerful laptop designed for performance and portability. Powered by Apple\'s advanced M2 chip, it delivers faster processing, smooth multitasking, and impressive energy efficiency ...Read More',
+            style: TextStyle(color: Colors.grey, height: 1.5),
+          ),
+          const SizedBox(height: 100),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTag(IconData icon, String label) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey.shade200),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, size: 16, color: AppColors.primary),
+          const SizedBox(width: 4),
+          Text(label, style: const TextStyle(fontSize: 12)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildQtyBtn(IconData icon, VoidCallback onTap) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(4),
+        decoration: BoxDecoration(
+          color: AppColors.primary.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: Icon(icon, size: 16, color: AppColors.primary),
+      ),
+    );
+  }
+
+  Widget _buildBottomBar(BuildContext context) {
+    return Positioned(
+      bottom: 0,
+      left: 0,
+      right: 0,
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
         decoration: BoxDecoration(
           color: Colors.white,
           boxShadow: [
@@ -184,20 +229,24 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
         ),
         child: Row(
           children: [
+            Expanded(
+              child: ElevatedButton(
+                onPressed: () {},
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primary,
+                  minimumSize: const Size.fromHeight(56),
+                ),
+                child: const Text(AppStrings.buyNow),
+              ),
+            ),
+            const SizedBox(width: 16),
             Container(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                border: Border.all(color: AppColors.primary.withOpacity(0.3)),
-                borderRadius: BorderRadius.circular(10),
+                color: Colors.grey.shade100,
+                borderRadius: BorderRadius.circular(16),
               ),
               child: const Icon(Icons.shopping_cart_outlined, color: AppColors.primary),
-            ),
-            const SizedBox(width: 15),
-            Expanded(
-              child: PrimaryButton(
-                label: 'Buy Now',
-                onPressed: () {},
-              ),
             ),
           ],
         ),

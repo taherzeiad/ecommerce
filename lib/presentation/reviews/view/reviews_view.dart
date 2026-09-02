@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
-import '../../../core/widgets/primary_button.dart';
+import '../../../core/constants/app_strings.dart';
 
 class ReviewsView extends StatelessWidget {
   const ReviewsView({super.key});
@@ -8,45 +8,45 @@ class ReviewsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.scaffoldBackground,
       appBar: AppBar(
-        title: const Text('Reviews & Ratings'),
-        centerTitle: true,
-        backgroundColor: Colors.transparent,
+        backgroundColor: AppColors.primary,
         elevation: 0,
-        foregroundColor: AppColors.textPrimary,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
+        title: const Text(
+          AppStrings.reviewsRating,
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(24),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildRatingSummary(),
-            const SizedBox(height: 20),
-            PrimaryButton(
-              label: 'Add Reviews & Rating',
+            const SizedBox(height: 24),
+            ElevatedButton(
               onPressed: () {},
+              child: const Text('Add Reviews & Rating'),
             ),
-            const SizedBox(height: 30),
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'User Reviews',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  'Recent',
-                  style: TextStyle(color: AppColors.textSecondary),
-                ),
-              ],
+            const SizedBox(height: 32),
+            const Text(
+              AppStrings.userReview,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
             ),
-            const SizedBox(height: 20),
-            _buildReviewItem(),
-            _buildReviewItem(),
+            const SizedBox(height: 16),
+            ListView.separated(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: 3,
+              separatorBuilder: (_, __) => const SizedBox(height: 16),
+              itemBuilder: (context, index) {
+                return _buildUserReviewItem();
+              },
+            ),
           ],
         ),
       ),
@@ -55,44 +55,47 @@ class ReviewsView extends StatelessWidget {
 
   Widget _buildRatingSummary() {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey.shade200),
       ),
       child: Row(
         children: [
-          Column(
-            children: [
-              const Text(
-                '4.8',
-                style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
-              ),
-              const Row(
-                children: [
-                  Icon(Icons.star, color: Colors.orange, size: 16),
-                  Icon(Icons.star, color: Colors.orange, size: 16),
-                  Icon(Icons.star, color: Colors.orange, size: 16),
-                  Icon(Icons.star, color: Colors.orange, size: 16),
-                  Icon(Icons.star_half, color: Colors.orange, size: 16),
-                ],
-              ),
-              const SizedBox(height: 5),
-              Text(
-                '120 Reviews',
-                style: TextStyle(color: AppColors.textSecondary, fontSize: 12),
-              ),
-            ],
+          Container(
+            width: 80,
+            height: 80,
+            decoration: BoxDecoration(
+              color: AppColors.cardBackground,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: const Icon(Icons.laptop_mac, size: 50, color: Colors.black54),
           ),
-          const SizedBox(width: 30),
-          Expanded(
+          const SizedBox(width: 16),
+          const Expanded(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildRatingBar(5, 0.8),
-                _buildRatingBar(4, 0.15),
-                _buildRatingBar(3, 0.05),
-                _buildRatingBar(2, 0.0),
-                _buildRatingBar(1, 0.0),
+                Row(
+                  children: [
+                    Icon(Icons.star, color: Colors.teal, size: 24),
+                    Icon(Icons.star, color: Colors.teal, size: 24),
+                    Icon(Icons.star, color: Colors.teal, size: 24),
+                    Icon(Icons.star, color: Colors.teal, size: 24),
+                    Icon(Icons.star, color: Colors.teal, size: 24),
+                    SizedBox(width: 12),
+                    Text(
+                      '4.8',
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 4),
+                Text(
+                  '1,200 reviews',
+                  style: TextStyle(color: Colors.grey, fontSize: 14),
+                ),
               ],
             ),
           ),
@@ -101,36 +104,13 @@ class ReviewsView extends StatelessWidget {
     );
   }
 
-  Widget _buildRatingBar(int star, double progress) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 5),
-      child: Row(
-        children: [
-          Text('$star', style: const TextStyle(fontSize: 12)),
-          const SizedBox(width: 5),
-          const Icon(Icons.star, size: 12, color: AppColors.textSecondary),
-          const SizedBox(width: 10),
-          Expanded(
-            child: LinearProgressIndicator(
-              value: progress,
-              backgroundColor: AppColors.scaffoldBackground,
-              valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primary),
-              minHeight: 6,
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildReviewItem() {
+  Widget _buildUserReviewItem() {
     return Container(
-      margin: const EdgeInsets.only(bottom: 20),
-      padding: const EdgeInsets.all(15),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey.shade200),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -139,8 +119,8 @@ class ReviewsView extends StatelessWidget {
             children: [
               const CircleAvatar(
                 radius: 20,
-                backgroundColor: AppColors.cardBackground,
-                child: Icon(Icons.person, color: AppColors.primary),
+                backgroundColor: Colors.grey,
+                child: Icon(Icons.person, color: Colors.white),
               ),
               const SizedBox(width: 12),
               const Expanded(
@@ -148,32 +128,28 @@ class ReviewsView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'John Doe',
+                      'Eng.Reham',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      '2 days ago',
-                      style: TextStyle(color: AppColors.textSecondary, fontSize: 12),
+                      '36s ago',
+                      style: TextStyle(color: Colors.grey, fontSize: 12),
                     ),
                   ],
                 ),
               ),
-              Row(
-                children: List.generate(
-                  5,
-                  (index) => Icon(
-                    index < 4 ? Icons.star : Icons.star_border,
-                    color: Colors.orange,
-                    size: 16,
-                  ),
-                ),
+              const Icon(Icons.star, color: Colors.amber, size: 20),
+              const SizedBox(width: 4),
+              const Text(
+                '4.9',
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ],
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 16),
           const Text(
-            'The sound quality is amazing and the noise cancellation works perfectly. Highly recommended!',
-            style: TextStyle(color: AppColors.textSecondary, fontSize: 14),
+            'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the standard Lorem Ipsum has been the industry',
+            style: TextStyle(color: Colors.grey, height: 1.5),
           ),
         ],
       ),

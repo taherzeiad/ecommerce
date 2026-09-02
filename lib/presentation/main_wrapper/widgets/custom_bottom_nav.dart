@@ -14,11 +14,11 @@ class CustomBottomNav extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-      height: 70,
+      margin: const EdgeInsets.fromLTRB(24, 0, 24, 32),
+      height: 72,
       decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(35),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(36),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.08),
@@ -30,29 +30,73 @@ class CustomBottomNav extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          _buildNavItem(0, Icons.home_outlined),
-          _buildNavItem(1, Icons.dashboard_outlined),
-          _buildNavItem(2, Icons.shopping_bag_outlined),
-          _buildNavItem(3, Icons.favorite_border),
+          _NavItem(
+            icon: Icons.home_outlined,
+            activeIcon: Icons.home,
+            isActive: currentIndex == 0,
+            onTap: () => onTap(0),
+          ),
+          _NavItem(
+            icon: Icons.dashboard_outlined,
+            activeIcon: Icons.dashboard,
+            isActive: currentIndex == 1,
+            onTap: () => onTap(1),
+          ),
+          _NavItem(
+            icon: Icons.shopping_bag_outlined,
+            activeIcon: Icons.shopping_bag,
+            isActive: currentIndex == 2,
+            onTap: () => onTap(2),
+          ),
+          _NavItem(
+            icon: Icons.favorite_border,
+            activeIcon: Icons.favorite,
+            isActive: currentIndex == 3,
+            onTap: () => onTap(3),
+          ),
         ],
       ),
     );
   }
+}
 
-  Widget _buildNavItem(int index, IconData icon) {
-    final isActive = currentIndex == index;
-    return GestureDetector(
-      onTap: () => onTap(index),
-      behavior: HitTestBehavior.opaque,
-      child: Container(
-        height: 70,
-        width: 60,
-        alignment: Alignment.center,
-        child: Icon(
-          icon,
-          color: isActive ? AppColors.primary : AppColors.textSecondary,
-          size: 28,
-        ),
+class _NavItem extends StatelessWidget {
+  final IconData icon;
+  final IconData activeIcon;
+  final bool isActive;
+  final VoidCallback onTap;
+
+  const _NavItem({
+    required this.icon,
+    required this.activeIcon,
+    required this.isActive,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            isActive ? activeIcon : icon,
+            color: isActive ? AppColors.primary : Colors.grey.shade400,
+            size: 28,
+          ),
+          if (isActive) ...[
+            const SizedBox(height: 4),
+            Container(
+              width: 4,
+              height: 4,
+              decoration: const BoxDecoration(
+                color: AppColors.primary,
+                shape: BoxShape.circle,
+              ),
+            ),
+          ],
+        ],
       ),
     );
   }

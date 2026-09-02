@@ -1,25 +1,37 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
-import '../../../core/widgets/primary_button.dart';
+import '../../../core/constants/app_strings.dart';
+import '../../../core/routes/app_routes.dart';
 
 class WishlistView extends StatelessWidget {
   const WishlistView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Dummy state check
-    bool isEmpty = false;
+    // Toggle this to see the list state
+    const bool isEmpty = false;
 
     return Scaffold(
-      backgroundColor: AppColors.scaffoldBackground,
       appBar: AppBar(
-        title: const Text('My Wishlist'),
-        centerTitle: true,
-        backgroundColor: Colors.transparent,
+        backgroundColor: AppColors.primary,
         elevation: 0,
-        foregroundColor: AppColors.textPrimary,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {},
+        ),
+        title: const Text(
+          AppStrings.wishlist,
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.shopping_bag_outlined, color: Colors.white),
+            onPressed: () {},
+          ),
+        ],
       ),
-      body: isEmpty ? _buildEmptyState(context) : _buildWishlistList(),
+      body: isEmpty ? _buildEmptyState(context) : _buildWishlist(context),
     );
   }
 
@@ -29,35 +41,36 @@ class WishlistView extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            padding: const EdgeInsets.all(30),
+            padding: const EdgeInsets.all(40),
             decoration: BoxDecoration(
-              color: AppColors.cardBackground,
+              color: AppColors.primary.withOpacity(0.05),
               shape: BoxShape.circle,
             ),
-            child: const Stack(
-              alignment: Alignment.topRight,
+            child: Stack(
+              alignment: Alignment.center,
               children: [
-                Icon(Icons.favorite, size: 80, color: AppColors.primary),
-                Icon(Icons.close, size: 24, color: Colors.white),
+                const Icon(Icons.favorite_border, size: 120, color: AppColors.primary),
+                const Icon(Icons.close, size: 40, color: AppColors.primary),
               ],
             ),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 32),
           const Text(
-            'My Wishlist is Empty',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            AppStrings.wishlistEmpty,
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: AppColors.primary),
           ),
-          const SizedBox(height: 10),
-          const Text(
-            'Tap heart button to save items here.',
-            style: TextStyle(color: AppColors.textSecondary),
+          const SizedBox(height: 12),
+          Text(
+            AppStrings.wishlistEmptyDesc,
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.grey.shade600, height: 1.5),
           ),
-          const SizedBox(height: 30),
+          const SizedBox(height: 40),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 50),
-            child: PrimaryButton(
-              label: 'Explore Now',
+            padding: const EdgeInsets.symmetric(horizontal: 40),
+            child: ElevatedButton(
               onPressed: () {},
+              child: const Text(AppStrings.explore),
             ),
           ),
         ],
@@ -65,61 +78,89 @@ class WishlistView extends StatelessWidget {
     );
   }
 
-  Widget _buildWishlistList() {
-    return ListView.builder(
-      padding: const EdgeInsets.all(20),
-      itemCount: 3,
+  Widget _buildWishlist(BuildContext context) {
+    return ListView.separated(
+      padding: const EdgeInsets.all(24),
+      itemCount: 5,
+      separatorBuilder: (_, __) => const SizedBox(height: 16),
       itemBuilder: (context, index) {
-        return Container(
-          margin: const EdgeInsets.only(bottom: 15),
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(15),
+        return _buildWishlistItem(context);
+      },
+    );
+  }
+
+  Widget _buildWishlistItem(BuildContext context) {
+    return GestureDetector(
+      onTap: () => Navigator.pushNamed(context, AppRoutes.productDetails),
+      child: Container(
+        padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 5),
           ),
-          child: Row(
-            children: [
-              Container(
-                width: 80,
-                height: 80,
-                decoration: BoxDecoration(
-                  color: AppColors.cardBackground,
-                  borderRadius: BorderRadius.circular(10),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 80,
+            height: 80,
+            decoration: BoxDecoration(
+              color: AppColors.cardBackground,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: const Icon(Icons.headphones, color: Colors.blue, size: 40),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Besound AI',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
-                child: const Icon(Icons.image, color: AppColors.primary),
-              ),
-              const SizedBox(width: 15),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                const SizedBox(height: 4),
+                Row(
                   children: [
-                    const Text(
-                      'Product Name',
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                    ),
-                    const Text(
-                      '\$299.00',
-                      style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold),
-                    ),
+                    Text('Rating', style: TextStyle(color: Colors.grey.shade600, fontSize: 12)),
+                    const Text('(4.5)', style: TextStyle(color: AppColors.primary, fontSize: 12, fontWeight: FontWeight.bold)),
+                    const Icon(Icons.star, color: AppColors.primary, size: 14),
                   ],
                 ),
+                const SizedBox(height: 8),
+                const Text(
+                  '\$120',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+              ],
+            ),
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.delete_outline, color: Colors.red),
+                onPressed: () {},
               ),
-              Column(
-                children: [
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.delete_outline, color: Colors.red),
-                  ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.shopping_cart_outlined, color: AppColors.primary),
-                  ),
-                ],
+              Container(
+                padding: const EdgeInsets.all(4),
+                decoration: const BoxDecoration(
+                  color: AppColors.primary,
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.add, color: Colors.white, size: 16),
               ),
             ],
           ),
-        );
-      },
+        ],
+      ),
+      ),
     );
   }
 }

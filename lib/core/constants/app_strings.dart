@@ -73,18 +73,43 @@ class AppStrings {
   static const String accountCreated = 'Your account has been Created';
   static const String continueLabel = 'Continue';
 
-  // Home
-  static const String helloLetsShop = "Hello, Let's Shop!";
-  static const String searchHint = 'Search here...';
+  // Home & Categories
+  static const String helloShop = 'Hello\nLet’s Shop!';
+  static const String searchPlaceholder = 'Search';
   static const String categories = 'Categories';
   static const String seeAll = 'See All';
   static const String flashDeals = 'Flash Deals For You';
   static const String popularProduct = 'Popular Product';
-
-  // Categories
   static const String featuredCategories = 'Featured Categories';
   static const String latestSmartphones = 'Latest Smartphones';
   static const String gamingLaptops = 'Gaming Laptops';
-  static const String audio = 'Audio';
-  static const String productsCount = '+50 Product';
+  static const String discoverTech = 'Discover the newest mobile technology';
+  static const String highPerformance = 'High-performance computing power';
+
+  // Product Details
+  static const String qty = 'QTY';
+  static const String fromMonth = 'from \$10 per month';
+  static const String readMore = '...Read More';
+  static const String buyNow = 'Buy Now';
+  static const String addRating = 'Add a rating';
+
+  // Wishlist
+  static const String wishlist = 'WishList';
+  static const String wishlistEmpty = 'My Wishlist is Empty';
+  static const String wishlistEmptyDesc = 'Tap Heart Button to Start Saving\nYour Favorite Item';
+  static const String explore = 'Explore';
+
+  // Notifications
+  static const String notificationsTitle = 'Notifications';
+  static const String all = 'All';
+  static const String unread = 'Unread';
+  static const String orders = 'Orders';
+  static const String system = 'System';
+
+  // Reviews
+  static const String reviewsRating = 'Reviews & Rating';
+  static const String yourFeedback = 'Your Feedback';
+  static const String shareThoughts = 'Share Your thoughts';
+  static const String submit = 'Submit';
+  static const String userReview = 'User Review';
 }

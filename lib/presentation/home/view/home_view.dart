@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_strings.dart';
-import '../../../data/models/category_model.dart';
+import '../../../core/routes/app_routes.dart';
 import '../../../data/models/product_model.dart';
 import '../widgets/product_card.dart';
 
@@ -10,73 +10,73 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<CategoryModel> categories = [
-      const CategoryModel(id: '1', name: 'Fashion', imagePath: 'assets/icons/fashion.png'),
-      const CategoryModel(id: '2', name: 'Electronics', imagePath: 'assets/icons/electronics.png'),
-      const CategoryModel(id: '3', name: 'Appliances', imagePath: 'assets/icons/appliances.png'),
-      const CategoryModel(id: '4', name: 'Beauty', imagePath: 'assets/icons/beauty.png'),
-      const CategoryModel(id: '5', name: 'Furniture', imagePath: 'assets/icons/furniture.png'),
-    ];
-
-    final List<ProductModel> products = [
-      const ProductModel(
-        id: '1',
-        name: 'Wireless Headphones',
-        category: 'Electronics',
-        price: 99.99,
-        description: 'High quality wireless headphones',
-        images: ['https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&q=80'],
-        isFlashDeal: true,
+    final List<ProductModel> dummyProducts = List.generate(
+      4,
+      (index) => ProductModel(
+        id: index.toString(),
+        name: index == 0 ? 'Apple MacBook Air M2' : 'Product $index',
+        category: 'Laptop',
+        price: 3300.0,
+        oldPrice: 3500.0,
+        description: 'Description here...',
+        images: [],
       ),
-      const ProductModel(
-        id: '2',
-        name: 'Smart Watch',
-        category: 'Electronics',
-        price: 149.99,
-        description: 'Modern smart watch with health tracking',
-        images: ['https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&q=80'],
-        isFlashDeal: true,
-      ),
-      const ProductModel(
-        id: '3',
-        name: 'Running Shoes',
-        category: 'Fashion',
-        price: 79.99,
-        description: 'Comfortable running shoes',
-        images: ['https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&q=80'],
-      ),
-    ];
+    );
 
     return Scaffold(
-      backgroundColor: AppColors.scaffoldBackground,
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 16),
-                _buildHeader(),
-                const SizedBox(height: 20),
-                _buildSearchBar(),
-                const SizedBox(height: 20),
-                _buildDiscountBanner(),
-                const SizedBox(height: 24),
-                _buildSectionHeader(AppStrings.categories, () {}),
-                const SizedBox(height: 12),
-                _buildCategoriesList(categories),
-                const SizedBox(height: 24),
-                _buildSectionHeader(AppStrings.flashDeals, () {}),
-                const SizedBox(height: 12),
-                _buildFlashDealsList(products),
-                const SizedBox(height: 24),
-                _buildSectionHeader(AppStrings.popularProduct, () {}),
-                const SizedBox(height: 12),
-                _buildPopularProductsGrid(products),
-                const SizedBox(height: 20),
-              ],
-            ),
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildHeader(),
+              const SizedBox(height: 24),
+              _buildSearch(),
+              const SizedBox(height: 24),
+              _buildBanner(),
+              const SizedBox(height: 24),
+              _buildSectionHeader(AppStrings.categories, () {}),
+              const SizedBox(height: 16),
+              _buildCategoryList(),
+              const SizedBox(height: 24),
+              _buildSectionHeader(AppStrings.flashDeals, () {}),
+              const SizedBox(height: 16),
+              SizedBox(
+                height: 220,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: dummyProducts.length,
+                  separatorBuilder: (_, __) => const SizedBox(width: 16),
+                  itemBuilder: (context, index) {
+                    return ProductCard(
+                      product: dummyProducts[index],
+                      onTap: () => Navigator.pushNamed(context, AppRoutes.productDetails),
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: 24),
+              _buildSectionHeader(AppStrings.popularProduct, () {}),
+              const SizedBox(height: 16),
+              GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 0.75,
+                  crossAxisSpacing: 16,
+                  mainAxisSpacing: 16,
+                ),
+                itemCount: 4,
+                itemBuilder: (context, index) {
+                  return ProductCard(
+                    product: dummyProducts[index % dummyProducts.length],
+                  );
+                },
+              ),
+              const SizedBox(height: 80), // Space for bottom nav
+            ],
           ),
         ),
       ),
@@ -85,114 +85,134 @@ class HomeView extends StatelessWidget {
 
   Widget _buildHeader() {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        const CircleAvatar(
-          radius: 20,
-          backgroundColor: AppColors.cardBackground,
-          child: Icon(Icons.person, color: AppColors.primary),
-        ),
-        const SizedBox(width: 12),
-        const Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                AppStrings.helloLetsShop,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                  color: AppColors.textPrimary,
+        Row(
+          children: [
+            const CircleAvatar(
+              radius: 24,
+              backgroundColor: Colors.grey,
+              child: Icon(Icons.person, color: Colors.white),
+            ),
+            const SizedBox(width: 12),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Hello',
+                  style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
                 ),
-              ),
-            ],
-          ),
+                const Text(
+                  'Let’s Shop!',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                ),
+              ],
+            ),
+          ],
         ),
-        IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.dark_mode_outlined, color: AppColors.textPrimary),
-        ),
-        IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.notifications_none, color: AppColors.textPrimary),
+        Row(
+          children: [
+            _buildHeaderIcon(Icons.notifications_none),
+            const SizedBox(width: 12),
+            _buildHeaderIcon(Icons.nights_stay_outlined),
+          ],
         ),
       ],
     );
   }
 
-  Widget _buildSearchBar() {
+  Widget _buildHeaderIcon(IconData icon) {
+    return Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        shape: BoxShape.circle,
+        border: Border.all(color: Colors.grey.shade200),
+      ),
+      child: Icon(icon, color: Colors.black54, size: 22),
+    );
+  }
+
+  Widget _buildSearch() {
     return Row(
       children: [
         Expanded(
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            height: 50,
+            height: 52,
             decoration: BoxDecoration(
-              color: AppColors.white,
-              borderRadius: BorderRadius.circular(12),
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(26),
+              border: Border.all(color: Colors.grey.shade200),
             ),
             child: const Row(
               children: [
-                Icon(Icons.search, color: AppColors.textSecondary),
-                SizedBox(width: 8),
-                Text(AppStrings.searchHint, style: TextStyle(color: AppColors.textSecondary)),
+                Icon(Icons.search, color: Colors.grey),
+                SizedBox(width: 12),
+                Text('Search', style: TextStyle(color: Colors.grey)),
               ],
             ),
           ),
         ),
         const SizedBox(width: 12),
         Container(
-          height: 50,
-          width: 50,
+          padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
-            color: AppColors.primary,
-            borderRadius: BorderRadius.circular(12),
+            color: Colors.white,
+            shape: BoxShape.circle,
+            border: Border.all(color: Colors.grey.shade200),
           ),
-          child: const Icon(Icons.tune, color: AppColors.white),
+          child: const Icon(Icons.tune, color: AppColors.primary, size: 22),
         ),
       ],
     );
   }
 
-  Widget _buildDiscountBanner() {
+  Widget _buildBanner() {
     return Container(
-      height: 150,
       width: double.infinity,
+      height: 160,
       decoration: BoxDecoration(
-        color: AppColors.primary,
-        borderRadius: BorderRadius.circular(16),
+        color: AppColors.primary.withOpacity(0.2),
+        borderRadius: BorderRadius.circular(24),
       ),
       child: Stack(
         children: [
-          Positioned(
-            right: -20,
-            bottom: -20,
-            child: CircleAvatar(
-              radius: 60,
-              backgroundColor: Colors.white.withOpacity(0.1),
-            ),
-          ),
-          const Padding(
-            padding: EdgeInsets.all(20.0),
+          Padding(
+            padding: const EdgeInsets.all(24),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  '30% OFF',
-                  style: TextStyle(
-                    color: AppColors.white,
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                  ),
+                const Text(
+                  'Get Discount on Shop\nday UP to 50%',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                 ),
-                Text(
-                  'On all electronics',
-                  style: TextStyle(
-                    color: AppColors.white,
-                    fontSize: 16,
+                const SizedBox(height: 12),
+                ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    foregroundColor: AppColors.primary,
+                    minimumSize: const Size(80, 36),
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
                   ),
+                  child: const Text('Get Now'),
                 ),
               ],
+            ),
+          ),
+          Positioned(
+            right: 0,
+            bottom: 0,
+            top: 0,
+            child: Container(
+              width: 140,
+              decoration: const BoxDecoration(
+                // Placeholder for watch image
+                color: Colors.transparent,
+              ),
+              child: const Icon(Icons.watch, size: 100, color: AppColors.primary),
             ),
           ),
         ],
@@ -206,90 +226,49 @@ class HomeView extends StatelessWidget {
       children: [
         Text(
           title,
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: AppColors.textPrimary,
-          ),
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
         ),
-        GestureDetector(
-          onTap: onSeeAll,
-          child: const Text(
-            AppStrings.seeAll,
-            style: TextStyle(
-              color: AppColors.primary,
-              fontWeight: FontWeight.w600,
-            ),
+        TextButton(
+          onPressed: onSeeAll,
+          child: const Row(
+            children: [
+              Text(AppStrings.seeAll, style: TextStyle(fontSize: 14)),
+              Icon(Icons.chevron_right, size: 18),
+            ],
           ),
         ),
       ],
     );
   }
 
-  Widget _buildCategoriesList(List<CategoryModel> categories) {
+  Widget _buildCategoryList() {
+    final categories = ['Phone', 'Fashion', 'Audio', 'Laptop', 'Games'];
+    final icons = [Icons.phone_android, Icons.checkroom, Icons.headphones, Icons.laptop, Icons.videogame_asset];
+
     return SizedBox(
-      height: 90,
+      height: 100,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         itemCount: categories.length,
-        separatorBuilder: (context, index) => const SizedBox(width: 16),
+        separatorBuilder: (_, __) => const SizedBox(width: 20),
         itemBuilder: (context, index) {
-          final category = categories[index];
           return Column(
             children: [
               Container(
-                height: 60,
-                width: 60,
-                decoration: const BoxDecoration(
-                  color: AppColors.white,
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
                   shape: BoxShape.circle,
+                  border: Border.all(color: Colors.grey.shade200),
                 ),
-                child: const Icon(Icons.category_outlined, color: AppColors.primary),
+                child: Icon(icons[index], color: Colors.grey.shade600),
               ),
               const SizedBox(height: 8),
-              Text(
-                category.name,
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: AppColors.textPrimary,
-                ),
-              ),
+              Text(categories[index], style: const TextStyle(fontSize: 12)),
             ],
           );
         },
       ),
-    );
-  }
-
-  Widget _buildFlashDealsList(List<ProductModel> products) {
-    final flashDeals = products.where((p) => p.isFlashDeal).toList();
-    return SizedBox(
-      height: 210,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        itemCount: flashDeals.length,
-        separatorBuilder: (context, index) => const SizedBox(width: 16),
-        itemBuilder: (context, index) {
-          return ProductCard(product: flashDeals[index]);
-        },
-      ),
-    );
-  }
-
-  Widget _buildPopularProductsGrid(List<ProductModel> products) {
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: products.length,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 0.75,
-        crossAxisSpacing: 16,
-        mainAxisSpacing: 16,
-      ),
-      itemBuilder: (context, index) {
-        return ProductCard(product: products[index]);
-      },
     );
   }
 }
