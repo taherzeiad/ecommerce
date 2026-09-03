@@ -31,7 +31,7 @@ class _SplashBody extends StatelessWidget {
           } else if (viewModel.destination == SplashDestination.login) {
             Navigator.pushReplacementNamed(context, AppRoutes.login);
           } else if (viewModel.destination == SplashDestination.home) {
-            Navigator.pushReplacementNamed(context, AppRoutes.home);
+            Navigator.pushReplacementNamed(context, AppRoutes.mainWrapper);
           }
         });
 
