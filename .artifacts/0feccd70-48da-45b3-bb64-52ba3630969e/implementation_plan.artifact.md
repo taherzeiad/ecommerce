@@ -1,71 +1,85 @@
-# Authentication Flow Implementation Plan
+# E-commerce Main Features Implementation Plan
 
-This plan outlines the steps to implement the authentication module, including Login, Sign Up, OTP Verification, Password Recovery, and Success screens, following the existing MVVM architecture.
+This plan outlines the steps to implement the core shopping experience, including the main navigation shell, home screen, categories, product browsing, and wishlist.
 
 ## User Review Required
 
 > [!IMPORTANT]
-> - **Navigation Flow**: I've designed the flow as: `Splash -> Onboarding -> Login`. From Login, users can go to `Sign Up` or `Forgot Password`.
-> - **Social Logins**: Social login buttons (FB, Pinterest, LinkedIn) will be implemented as UI placeholders for now.
-> - **OTP Component**: I will create a custom numeric keypad as shown in the design for the `Verify Account` screen.
+> - **Navigation Structure**: I will implement a `MainWrapper` that hosts a custom rounded **Bottom Navigation Bar** with 4 tabs: Home, Categories, Cart, and Wishlist.
+> - **Data Layer**: I will use dummy data models for Products, Categories, and Notifications to make the UI runnable immediately.
+> - **Image Assets**: I will use placeholder images/icons where real assets are missing.
 
 ## Proposed Changes
 
 ### Core & Data Layer
-Summary: Update routes and constants, and create a repository for auth operations.
+Summary: Update navigation and create data models for the shopping experience.
 
 #### [MODIFY] [app_routes.dart](file:///C:/Users/Taher/StudioProjects/ecommerce/lib/core/routes/app_routes.dart)
-Add routes for all new screens.
+Add routes for:
+- `mainWrapper` (The shell with bottom nav)
+- `productDetails`
+- `notifications`
+- `allProducts`
+- `reviews`
 
-#### [MODIFY] [app_router.dart](file:///C:/Users/Taher/StudioProjects/ecommerce/lib/core/routes/app_router.dart)
-Wire up the new routes to their respective screens.
-
-#### [MODIFY] [app_strings.dart](file:///C:/Users/Taher/StudioProjects/ecommerce/lib/core/constants/app_strings.dart)
-Add all user-facing strings for the new screens.
-
-#### [NEW] [auth_repository.dart](file:///C:/Users/Taher/StudioProjects/ecommerce/lib/data/repositories/auth_repository.dart)
-Interface and implementation for authentication tasks (Login, Signup, OTP, Reset).
-
----
-
-### Presentation Layer (Auth)
-Summary: Create ViewModels and Views for each screen.
-
-#### [NEW] [Login](file:///C:/Users/Taher/StudioProjects/ecommerce/lib/presentation/auth/login/)
-- `login_view.dart`: Main login screen.
-- `login_viewmodel.dart`: State management for login.
-
-#### [NEW] [Sign Up](file:///C:/Users/Taher/StudioProjects/ecommerce/lib/presentation/auth/signup/)
-- `signup_view.dart`: Account creation screen.
-- `signup_viewmodel.dart`: State management for signup.
-
-#### [NEW] [Password Recovery](file:///C:/Users/Taher/StudioProjects/ecommerce/lib/presentation/auth/forgot_password/)
-- `forgot_password_view.dart`: Email entry for reset.
-- `verify_account_view.dart`: OTP entry with custom keypad.
-- `reset_password_view.dart`: New password entry.
-- `auth_viewmodel.dart`: Shared or separate ViewModels for the recovery flow.
-
-#### [NEW] [Success](file:///C:/Users/Taher/StudioProjects/ecommerce/lib/presentation/auth/success/success_view.dart)
-A generic success screen that can be used after signup or password reset.
+#### [NEW] [Data Models](file:///C:/Users/Taher/StudioProjects/ecommerce/lib/data/models/)
+- `category_model.dart`
+- `product_model.dart`
+- `notification_model.dart`
+- `review_model.dart`
 
 ---
 
-### Shared Components
-Summary: Reusable widgets for the auth module.
+### Presentation Layer: Main Shell
+Summary: The container for the primary navigation.
 
-#### [NEW] [Auth Header](file:///C:/Users/Taher/StudioProjects/ecommerce/lib/presentation/auth/widgets/auth_header.dart)
-The curved teal header with titles seen in the designs.
+#### [NEW] [Main Wrapper](file:///C:/Users/Taher/StudioProjects/ecommerce/lib/presentation/main_wrapper/)
+- `main_wrapper.dart`: Scaffold with `IndexedStack` for tabs.
+- `widgets/custom_bottom_nav.dart`: The rounded white bar seen in the designs.
 
-#### [NEW] [Social Logins](file:///C:/Users/Taher/StudioProjects/ecommerce/lib/presentation/auth/widgets/social_login_bar.dart)
-The "Or sign in with" section.
+---
+
+### Presentation Layer: Tabs
+Summary: Implementation of the 4 main navigation tabs.
+
+#### [MODIFY] [Home Screen](file:///C:/Users/Taher/StudioProjects/ecommerce/lib/presentation/home/)
+- Update `home_view.dart` with header, search, banner, and horizontal/grid sections.
+
+#### [NEW] [Categories Screen](file:///C:/Users/Taher/StudioProjects/ecommerce/lib/presentation/categories/)
+- `categories_view.dart`: Featured wide cards and category grid.
+
+#### [NEW] [Wishlist Screen](file:///C:/Users/Taher/StudioProjects/ecommerce/lib/presentation/wishlist/)
+- `wishlist_view.dart`: Handle empty state and favorite items list.
+
+---
+
+### Presentation Layer: Secondary Screens
+Summary: Detail and auxiliary screens.
+
+#### [NEW] [Product Details](file:///C:/Users/Taher/StudioProjects/ecommerce/lib/presentation/product_details/)
+- `product_details_view.dart`: Image slider, QTY selector, and description.
+
+#### [NEW] [Notifications](file:///C:/Users/Taher/StudioProjects/ecommerce/lib/presentation/notifications/)
+- `notifications_view.dart`: Filter chips and activity list.
+
+#### [NEW] [Reviews](file:///C:/Users/Taher/StudioProjects/ecommerce/lib/presentation/reviews/)
+- `reviews_view.dart`: Summary card, "Add Review" button, and user feedback list.
+
+---
+
+### Shared UI Components
+- `SearchField`: Reusable search bar with filter icon.
+- `ProductCard`: Grid/List item for products.
+- `CategoryItem`: Circle icon for home and cards for category screen.
 
 ## Verification Plan
 
 ### Automated Tests
-- Unit tests for `AuthViewModel` to verify navigation and validation logic.
-- Widget tests for `LoginView` and `SignupView` to ensure UI elements are present.
+- Widget tests for the Bottom Navigation tab switching.
+- Unit tests for the Wishlist logic (Add/Remove).
 
 ### Manual Verification
-- Run the app and navigate through the entire flow: `Splash -> Onboarding -> Login -> Sign Up -> Verify -> Success -> Home`.
-- Verify input validation (empty fields, email format).
-- Verify the custom numeric keypad in the OTP screen.
+- Navigate between all 4 main tabs.
+- Open Product Details from Home/Wishlist.
+- Check the Custom Keypad (if still applicable) and ensure keyboard behavior doesn't break the new layouts.
+- Test "Empty Wishlist" vs "Items in Wishlist" UI.

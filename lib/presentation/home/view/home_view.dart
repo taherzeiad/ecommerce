@@ -14,7 +14,7 @@ class HomeView extends StatelessWidget {
       4,
       (index) => ProductModel(
         id: index.toString(),
-        name: index == 0 ? 'Apple MacBook Air M2' : 'Product \$index',
+        name: index == 0 ? 'Apple MacBook Air M2' : 'Product $index',
         category: 'Laptop',
         price: 3300.0,
         oldPrice: 3500.0,
