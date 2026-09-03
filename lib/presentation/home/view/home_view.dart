@@ -32,7 +32,7 @@ class HomeView extends StatelessWidget {
             children: [
               _buildHeader(),
               const SizedBox(height: 24),
-              _buildSearch(),
+              _buildSearch(context),
               const SizedBox(height: 24),
               _buildBanner(),
               const SizedBox(height: 24),
@@ -133,36 +133,42 @@ class HomeView extends StatelessWidget {
     );
   }
 
-  Widget _buildSearch() {
+  Widget _buildSearch(BuildContext context) {
     return Row(
       children: [
         Expanded(
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            height: 52,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(26),
-              border: Border.all(color: Colors.grey.shade200),
-            ),
-            child: const Row(
-              children: [
-                Icon(Icons.search, color: Colors.grey),
-                SizedBox(width: 12),
-                Text('Search', style: TextStyle(color: Colors.grey)),
-              ],
+          child: GestureDetector(
+            onTap: () => Navigator.pushNamed(context, AppRoutes.search),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              height: 52,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(26),
+                border: Border.all(color: Colors.grey.shade200),
+              ),
+              child: const Row(
+                children: [
+                  Icon(Icons.search, color: Colors.grey),
+                  SizedBox(width: 12),
+                  Text('Search', style: TextStyle(color: Colors.grey)),
+                ],
+              ),
             ),
           ),
         ),
         const SizedBox(width: 12),
-        Container(
-          padding: const EdgeInsets.all(14),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            shape: BoxShape.circle,
-            border: Border.all(color: Colors.grey.shade200),
+        GestureDetector(
+          onTap: () => Navigator.pushNamed(context, AppRoutes.filterSort),
+          child: Container(
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+              border: Border.all(color: Colors.grey.shade200),
+            ),
+            child: const Icon(Icons.tune, color: AppColors.primary, size: 22),
           ),
-          child: const Icon(Icons.tune, color: AppColors.primary, size: 22),
         ),
       ],
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../cart/view/cart_view.dart';
 import '../categories/view/categories_view.dart';
 import '../home/view/home_view.dart';
 import '../profile/view/profile_view.dart';
@@ -18,7 +19,7 @@ class _MainWrapperState extends State<MainWrapper> {
   final List<Widget> _screens = [
     const HomeView(),
     const CategoriesView(),
-    const Center(child: Text('Cart Screen')),
+    const CartView(),
     const WishlistView(),
     const ProfileView(),
   ];
