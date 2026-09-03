@@ -17,10 +17,12 @@ import '../../presentation/main_wrapper/main_wrapper.dart';
 import '../../presentation/notifications/view/notifications_view.dart';
 import '../../presentation/onboarding/view/onboarding_view.dart';
 import '../../presentation/payment/view/add_card_view.dart';
+import '../../presentation/product_details/view/all_products_view.dart';
 import '../../presentation/product_details/view/product_details_view.dart';
 import '../../presentation/profile/view/change_password_view.dart';
 import '../../presentation/profile/view/edit_profile_view.dart';
 import '../../presentation/profile/view/profile_view.dart';
+import '../../presentation/reviews/view/add_review_view.dart';
 import '../../presentation/reviews/view/reviews_view.dart';
 import '../../presentation/search/view/filter_sort_view.dart';
 import '../../presentation/search/view/search_view.dart';
@@ -62,12 +64,16 @@ class AppRouter {
         return _fade(const MainWrapper());
       case AppRoutes.home:
         return _fade(const HomeView());
+      case AppRoutes.allProducts:
+        return _fade(const AllProductsView());
       case AppRoutes.productDetails:
         return _fade(const ProductDetailsView());
       case AppRoutes.notifications:
         return _fade(const NotificationsView());
       case AppRoutes.reviews:
         return _fade(const ReviewsView());
+      case AppRoutes.addReview:
+        return _fade(const AddReviewView());
       case AppRoutes.profile:
         return _fade(const ProfileView());
       case AppRoutes.editProfile:

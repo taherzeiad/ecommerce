@@ -32,4 +32,5 @@ class AppRoutes {
   static const String addCard = '/add-card';
   static const String orderSuccess = '/order-success';
   static const String orderTracking = '/order-tracking';
+  static const String addReview = '/add-review';
 }

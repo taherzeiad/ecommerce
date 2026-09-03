@@ -164,21 +164,24 @@ class CategoriesView extends StatelessWidget {
               ),
             ),
           Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(icon, size: 60, color: Colors.black),
-                const SizedBox(height: 12),
-                Text(
-                  title,
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  count,
-                  style: const TextStyle(color: AppColors.primary, fontSize: 12, fontWeight: FontWeight.w500),
-                ),
-              ],
+            child: InkWell(
+              onTap: () => Navigator.pushNamed(context, AppRoutes.allProducts),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(icon, size: 60, color: Colors.black),
+                  const SizedBox(height: 12),
+                  Text(
+                    title,
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    count,
+                    style: const TextStyle(color: AppColors.primary, fontSize: 12, fontWeight: FontWeight.w500),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
