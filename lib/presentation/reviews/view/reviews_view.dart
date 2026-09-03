@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_strings.dart';
+import '../../../core/routes/app_routes.dart';
 
 class ReviewsView extends StatelessWidget {
   const ReviewsView({super.key});
