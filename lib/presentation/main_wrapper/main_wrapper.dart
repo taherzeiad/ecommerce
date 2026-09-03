@@ -16,6 +16,15 @@ class MainWrapper extends StatefulWidget {
 class _MainWrapperState extends State<MainWrapper> {
   int _currentIndex = 0;
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final args = ModalRoute.of(context)?.settings.arguments;
+    if (args is int) {
+      _currentIndex = args;
+    }
+  }
+
   final List<Widget> _screens = [
     const HomeView(),
     const CategoriesView(),

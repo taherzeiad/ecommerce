@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_strings.dart';
 
@@ -73,10 +74,25 @@ class CategoriesView extends StatelessWidget {
                 itemCount: 4,
                 itemBuilder: (context, index) {
                   final titles = ['Smartphones', 'Audio', 'Gaming', 'Laptop'];
-                  final counts = ['+250 Product', '+50 Product', '+250 Product', '+550 Product'];
-                  final icons = [Icons.smartphone, Icons.headphones, Icons.videogame_asset, Icons.laptop];
-                  
-                  return _buildCategoryGridItem(titles[index], counts[index], icons[index], index == 0);
+                  final counts = [
+                    '+250 Product',
+                    '+50 Product',
+                    '+250 Product',
+                    '+550 Product',
+                  ];
+                  final icons = [
+                    Icons.smartphone,
+                    Icons.headphones,
+                    Icons.videogame_asset,
+                    Icons.laptop,
+                  ];
+
+                  return _buildCategoryGridItem(
+                    titles[index],
+                    counts[index],
+                    icons[index],
+                    index == 0,
+                  );
                 },
               ),
               const SizedBox(height: 80),
@@ -100,7 +116,10 @@ class CategoriesView extends StatelessWidget {
         children: [
           Icon(Icons.search, color: AppColors.primary),
           SizedBox(width: 12),
-          Text(AppStrings.searchPlaceholder, style: TextStyle(color: Colors.grey)),
+          Text(
+            AppStrings.searchPlaceholder,
+            style: TextStyle(color: Colors.grey),
+          ),
           Spacer(),
           Icon(Icons.tune, color: AppColors.primary),
         ],
@@ -123,12 +142,19 @@ class CategoriesView extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: Colors.white,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   subtitle,
-                  style: TextStyle(fontSize: 12, color: Colors.white.withOpacity(0.9)),
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.white.withOpacity(0.9),
+                  ),
                 ),
               ],
             ),
@@ -139,7 +165,12 @@ class CategoriesView extends StatelessWidget {
     );
   }
 
-  Widget _buildCategoryGridItem(String title, String count, IconData icon, bool isNew) {
+  Widget _buildCategoryGridItem(
+    String title,
+    String count,
+    IconData icon,
+    bool isNew,
+  ) {
     return Container(
       decoration: BoxDecoration(
         color: AppColors.primary.withOpacity(0.05),
@@ -159,7 +190,11 @@ class CategoriesView extends StatelessWidget {
                 ),
                 child: const Text(
                   'New',
-                  style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
@@ -173,12 +208,19 @@ class CategoriesView extends StatelessWidget {
                   const SizedBox(height: 12),
                   Text(
                     title,
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     count,
-                    style: const TextStyle(color: AppColors.primary, fontSize: 12, fontWeight: FontWeight.w500),
+                    style: const TextStyle(
+                      color: AppColors.primary,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ],
               ),
