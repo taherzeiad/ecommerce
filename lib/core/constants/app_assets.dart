@@ -5,7 +5,7 @@ class AppAssets {
 
   static const String _base = 'lib/assets/images';
 
-  static const String onboarding1 = '$_base/onboarding_1.svg';
+  static const String onboarding1 = '$_base/onboarding_1.png';
   static const String onboarding2 = '$_base/onboarding_2.svg';
-  static const String onboarding3 = '$_base/onboarding_3.svg';
+  static const String onboarding3 = '$_base/onboarding_3.png';
 }

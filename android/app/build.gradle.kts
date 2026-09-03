@@ -8,7 +8,7 @@ plugins {
 android {
     namespace = "com.example.ecommerce"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = "28.2.13676358"
+    // Let Flutter choose the best NDK version for the stable Gradle plugin
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -35,6 +35,10 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.getByName("debug")
+        }
+        getByName("debug") {
+            // الحل الصحيح لإصدار AGP 9.0: إضافة كل ملفات الـ .so للمستثنيات لتجنب طلب الـ NDK
+            packaging.jniLibs.keepDebugSymbols.add("**/*.so")
         }
     }
 }
