@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../categories/view/categories_view.dart';
 import '../home/view/home_view.dart';
+import '../profile/view/profile_view.dart';
 import '../wishlist/view/wishlist_view.dart';
 import 'widgets/custom_bottom_nav.dart';
 
@@ -19,6 +20,7 @@ class _MainWrapperState extends State<MainWrapper> {
     const CategoriesView(),
     const Center(child: Text('Cart Screen')),
     const WishlistView(),
+    const ProfileView(),
   ];
 
   @override

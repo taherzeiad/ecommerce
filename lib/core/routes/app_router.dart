@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../presentation/auth/forgot_password/forgot_password_view.dart';
 import '../../presentation/auth/forgot_password/reset_password_view.dart';
 import '../../presentation/auth/forgot_password/verify_account_view.dart';
@@ -10,7 +11,15 @@ import '../../presentation/main_wrapper/main_wrapper.dart';
 import '../../presentation/notifications/view/notifications_view.dart';
 import '../../presentation/onboarding/view/onboarding_view.dart';
 import '../../presentation/product_details/view/product_details_view.dart';
+import '../../presentation/profile/view/change_password_view.dart';
+import '../../presentation/profile/view/edit_profile_view.dart';
+import '../../presentation/profile/view/profile_view.dart';
 import '../../presentation/reviews/view/reviews_view.dart';
+import '../../presentation/settings/view/about_us_view.dart';
+import '../../presentation/settings/view/help_center_view.dart';
+import '../../presentation/settings/view/privacy_view.dart';
+import '../../presentation/settings/view/settings_view.dart';
+import '../../presentation/settings/view/terms_conditions_view.dart';
 import '../../presentation/splash/view/splash_view.dart';
 import 'app_routes.dart';
 
@@ -50,6 +59,22 @@ class AppRouter {
         return _fade(const NotificationsView());
       case AppRoutes.reviews:
         return _fade(const ReviewsView());
+      case AppRoutes.profile:
+        return _fade(const ProfileView());
+      case AppRoutes.editProfile:
+        return _fade(const EditProfileView());
+      case AppRoutes.changePassword:
+        return _fade(const ChangePasswordView());
+      case AppRoutes.settings:
+        return _fade(const SettingsView());
+      case AppRoutes.aboutUs:
+        return _fade(const AboutUsView());
+      case AppRoutes.helpCenter:
+        return _fade(const HelpCenterView());
+      case AppRoutes.privacy:
+        return _fade(const PrivacyView());
+      case AppRoutes.termsConditions:
+        return _fade(const TermsConditionsView());
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(
