@@ -15,4 +15,22 @@ class AppRoutes {
   static const String verifyAccount = '/verify-account';
   static const String resetPassword = '/reset-password';
   static const String authSuccess = '/auth-success';
+  static const String profile = '/profile';
+  static const String editProfile = '/edit-profile';
+  static const String changePassword = '/change-password';
+  static const String settings = '/settings';
+  static const String aboutUs = '/about-us';
+  static const String helpCenter = '/help-center';
+  static const String privacy = '/privacy';
+  static const String termsConditions = '/terms-conditions';
+  static const String search = '/search';
+  static const String filterSort = '/filter-sort';
+  static const String cart = '/cart';
+  static const String checkout = '/checkout';
+  static const String addAddress = '/add-address';
+  static const String editAddress = '/edit-address';
+  static const String addCard = '/add-card';
+  static const String orderSuccess = '/order-success';
+  static const String orderTracking = '/order-tracking';
+  static const String addReview = '/add-review';
 }

@@ -32,15 +32,15 @@ class HomeView extends StatelessWidget {
             children: [
               _buildHeader(),
               const SizedBox(height: 24),
-              _buildSearch(),
+              _buildSearch(context),
               const SizedBox(height: 24),
               _buildBanner(),
               const SizedBox(height: 24),
-              _buildSectionHeader(AppStrings.categories, () {}),
+              _buildSectionHeader(AppStrings.categories, () => Navigator.pushNamed(context, AppRoutes.mainWrapper, arguments: 1)),
               const SizedBox(height: 16),
-              _buildCategoryList(),
+              _buildCategoryList(context),
               const SizedBox(height: 24),
-              _buildSectionHeader(AppStrings.flashDeals, () {}),
+              _buildSectionHeader(AppStrings.flashDeals, () => Navigator.pushNamed(context, AppRoutes.allProducts)),
               const SizedBox(height: 16),
               SizedBox(
                 height: 220,
@@ -133,36 +133,42 @@ class HomeView extends StatelessWidget {
     );
   }
 
-  Widget _buildSearch() {
+  Widget _buildSearch(BuildContext context) {
     return Row(
       children: [
         Expanded(
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            height: 52,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(26),
-              border: Border.all(color: Colors.grey.shade200),
-            ),
-            child: const Row(
-              children: [
-                Icon(Icons.search, color: Colors.grey),
-                SizedBox(width: 12),
-                Text('Search', style: TextStyle(color: Colors.grey)),
-              ],
+          child: GestureDetector(
+            onTap: () => Navigator.pushNamed(context, AppRoutes.search),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              height: 52,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(26),
+                border: Border.all(color: Colors.grey.shade200),
+              ),
+              child: const Row(
+                children: [
+                  Icon(Icons.search, color: Colors.grey),
+                  SizedBox(width: 12),
+                  Text('Search', style: TextStyle(color: Colors.grey)),
+                ],
+              ),
             ),
           ),
         ),
         const SizedBox(width: 12),
-        Container(
-          padding: const EdgeInsets.all(14),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            shape: BoxShape.circle,
-            border: Border.all(color: Colors.grey.shade200),
+        GestureDetector(
+          onTap: () => Navigator.pushNamed(context, AppRoutes.filterSort),
+          child: Container(
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+              border: Border.all(color: Colors.grey.shade200),
+            ),
+            child: const Icon(Icons.tune, color: AppColors.primary, size: 22),
           ),
-          child: const Icon(Icons.tune, color: AppColors.primary, size: 22),
         ),
       ],
     );
@@ -241,7 +247,7 @@ class HomeView extends StatelessWidget {
     );
   }
 
-  Widget _buildCategoryList() {
+  Widget _buildCategoryList(BuildContext context) {
     final categories = ['Phone', 'Fashion', 'Audio', 'Laptop', 'Games'];
     final icons = [Icons.phone_android, Icons.checkroom, Icons.headphones, Icons.laptop, Icons.videogame_asset];
 
@@ -252,20 +258,23 @@ class HomeView extends StatelessWidget {
         itemCount: categories.length,
         separatorBuilder: (_, __) => const SizedBox(width: 20),
         itemBuilder: (context, index) {
-          return Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Colors.grey.shade200),
+          return InkWell(
+            onTap: () => Navigator.pushNamed(context, AppRoutes.allProducts),
+            child: Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.grey.shade200),
+                  ),
+                  child: Icon(icons[index], color: Colors.grey.shade600),
                 ),
-                child: Icon(icons[index], color: Colors.grey.shade600),
-              ),
-              const SizedBox(height: 8),
-              Text(categories[index], style: const TextStyle(fontSize: 12)),
-            ],
+                const SizedBox(height: 8),
+                Text(categories[index], style: const TextStyle(fontSize: 12)),
+              ],
+            ),
           );
         },
       ),

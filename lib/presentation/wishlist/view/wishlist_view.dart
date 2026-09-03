@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_strings.dart';
 import '../../../core/routes/app_routes.dart';
@@ -49,7 +50,11 @@ class WishlistView extends StatelessWidget {
             child: Stack(
               alignment: Alignment.center,
               children: [
-                const Icon(Icons.favorite_border, size: 120, color: AppColors.primary),
+                const Icon(
+                  Icons.favorite_border,
+                  size: 120,
+                  color: AppColors.primary,
+                ),
                 const Icon(Icons.close, size: 40, color: AppColors.primary),
               ],
             ),
@@ -57,7 +62,11 @@ class WishlistView extends StatelessWidget {
           const SizedBox(height: 32),
           const Text(
             AppStrings.wishlistEmpty,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: AppColors.primary),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+              color: AppColors.primary,
+            ),
           ),
           const SizedBox(height: 12),
           Text(
@@ -94,73 +103,89 @@ class WishlistView extends StatelessWidget {
       onTap: () => Navigator.pushNamed(context, AppRoutes.productDetails),
       child: Container(
         padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 5),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 80,
-            height: 80,
-            decoration: BoxDecoration(
-              color: AppColors.cardBackground,
-              borderRadius: BorderRadius.circular(12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 5),
             ),
-            child: const Icon(Icons.headphones, color: Colors.blue, size: 40),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 80,
+              height: 80,
+              decoration: BoxDecoration(
+                color: AppColors.cardBackground,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Icon(Icons.headphones, color: Colors.blue, size: 40),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Besound AI',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      Text(
+                        'Rating',
+                        style: TextStyle(
+                          color: Colors.grey.shade600,
+                          fontSize: 12,
+                        ),
+                      ),
+                      const Text(
+                        '(4.5)',
+                        style: TextStyle(
+                          color: AppColors.primary,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const Icon(
+                        Icons.star,
+                        color: AppColors.primary,
+                        size: 14,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  const Text(
+                    '\$120',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                ],
+              ),
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  'Besound AI',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                IconButton(
+                  icon: const Icon(Icons.delete_outline, color: Colors.red),
+                  onPressed: () {},
                 ),
-                const SizedBox(height: 4),
-                Row(
-                  children: [
-                    Text('Rating', style: TextStyle(color: Colors.grey.shade600, fontSize: 12)),
-                    const Text('(4.5)', style: TextStyle(color: AppColors.primary, fontSize: 12, fontWeight: FontWeight.bold)),
-                    const Icon(Icons.star, color: AppColors.primary, size: 14),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                const Text(
-                  '\$120',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: const BoxDecoration(
+                    color: AppColors.primary,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(Icons.add, color: Colors.white, size: 16),
                 ),
               ],
             ),
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(
-                icon: const Icon(Icons.delete_outline, color: Colors.red),
-                onPressed: () {},
-              ),
-              Container(
-                padding: const EdgeInsets.all(4),
-                decoration: const BoxDecoration(
-                  color: AppColors.primary,
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(Icons.add, color: Colors.white, size: 16),
-              ),
-            ],
-          ),
-        ],
-      ),
-      ),
+          ],
+        ),
     );
   }
 }

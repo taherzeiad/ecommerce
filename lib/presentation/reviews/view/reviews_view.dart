@@ -29,7 +29,7 @@ class ReviewsView extends StatelessWidget {
             _buildRatingSummary(),
             const SizedBox(height: 24),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () => Navigator.pushNamed(context, AppRoutes.addReview),
               child: const Text('Add Reviews & Rating'),
             ),
             const SizedBox(height: 32),
