@@ -36,6 +36,10 @@ android {
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.getByName("debug")
         }
+        getByName("debug") {
+            // الحل الصحيح لإصدار AGP 9.0: إضافة كل ملفات الـ .so للمستثنيات لتجنب طلب الـ NDK
+            packaging.jniLibs.keepDebugSymbols.add("**/*.so")
+        }
     }
 }
 

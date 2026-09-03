@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../core/constants/app_colors.dart';
 import '../../../core/routes/app_routes.dart';
 
@@ -121,17 +122,37 @@ class _CheckoutViewState extends State<CheckoutView> {
       ),
       child: Column(
         children: [
-          _buildAddressRow(Icons.person, 'Name', 'Ramiz Majed Alashqar', showEdit: true),
+          _buildAddressRow(
+            Icons.person,
+            'Name',
+            'Ramiz Majed Alashqar',
+            showEdit: true,
+          ),
           const Divider(height: 24),
-          _buildAddressRow(Icons.location_on, 'Address', '742 Maple Street, Apt 5B\nBrooklyn, NY 11221\nUnited States'),
+          _buildAddressRow(
+            Icons.location_on,
+            'Address',
+            '742 Maple Street, Apt 5B\nBrooklyn, NY 11221\nUnited States',
+          ),
           const Divider(height: 24),
-          _buildAddressRow(Icons.phone, 'Phone Number', '+ 1 555 742 8391', showCheck: true),
+          _buildAddressRow(
+            Icons.phone,
+            'Phone Number',
+            '+ 1 555 742 8391',
+            showCheck: true,
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildAddressRow(IconData icon, String label, String value, {bool showEdit = false, bool showCheck = false}) {
+  Widget _buildAddressRow(
+    IconData icon,
+    String label,
+    String value, {
+    bool showEdit = false,
+    bool showCheck = false,
+  }) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -141,15 +162,25 @@ class _CheckoutViewState extends State<CheckoutView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(label, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+              Text(
+                label,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
               const SizedBox(height: 4),
-              Text(value, style: const TextStyle(color: Colors.grey, height: 1.4)),
+              Text(
+                value,
+                style: const TextStyle(color: Colors.grey, height: 1.4),
+              ),
             ],
           ),
         ),
         if (showEdit)
           IconButton(
-            onPressed: () => Navigator.pushNamed(context, AppRoutes.editAddress),
+            onPressed: () =>
+                Navigator.pushNamed(context, AppRoutes.editAddress),
             icon: const Icon(Icons.edit, color: AppColors.primary),
           ),
         if (showCheck)
@@ -168,7 +199,10 @@ class _CheckoutViewState extends State<CheckoutView> {
       child: TextButton.icon(
         onPressed: () => Navigator.pushNamed(context, AppRoutes.addAddress),
         icon: const Icon(Icons.add_circle, color: AppColors.primary),
-        label: const Text('Add New Address', style: TextStyle(color: AppColors.primary, fontSize: 16)),
+        label: const Text(
+          'Add New Address',
+          style: TextStyle(color: AppColors.primary, fontSize: 16),
+        ),
       ),
     );
   }
@@ -179,24 +213,38 @@ class _CheckoutViewState extends State<CheckoutView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Payment Option', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          const Text(
+            'Payment Option',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
           const SizedBox(height: 16),
           _buildPaymentIcons(),
           const SizedBox(height: 32),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Select your card', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              const Text(
+                'Select your card',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
               TextButton(
-                onPressed: () => Navigator.pushNamed(context, AppRoutes.addCard),
+                onPressed: () =>
+                    Navigator.pushNamed(context, AppRoutes.addCard),
                 child: const Text('Add New Card'),
               ),
             ],
           ),
           const SizedBox(height: 12),
-          _buildCardOption('Mastercard – **** 4956', 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/1280px-Mastercard-logo.svg.png', isSelected: true),
+          _buildCardOption(
+            'Mastercard – **** 4956',
+            'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/1280px-Mastercard-logo.svg.png',
+            isSelected: true,
+          ),
           const SizedBox(height: 16),
-          _buildCardOption('Axis Bank **** 1453', 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/PayPal.svg/1200px-PayPal.svg.png'),
+          _buildCardOption(
+            'Axis Bank **** 1453',
+            'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/PayPal.svg/1200px-PayPal.svg.png',
+          ),
           const SizedBox(height: 32),
           _buildOrderSummary(orderNumber: '#135792'),
         ],
@@ -214,26 +262,36 @@ class _CheckoutViewState extends State<CheckoutView> {
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: icons.map((url) => Container(
-        padding: const EdgeInsets.all(8),
-        width: 60,
-        height: 40,
-        decoration: BoxDecoration(
-          border: Border.all(color: const Color(0xFFD8E6E3)),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Image.network(url, fit: BoxFit.contain),
-      )).toList(),
+      children: icons
+          .map(
+            (url) => Container(
+              padding: const EdgeInsets.all(8),
+              width: 60,
+              height: 40,
+              decoration: BoxDecoration(
+                border: Border.all(color: const Color(0xFFD8E6E3)),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Image.network(url, fit: BoxFit.contain),
+            ),
+          )
+          .toList(),
     );
   }
 
-  Widget _buildCardOption(String title, String logoUrl, {bool isSelected = false}) {
+  Widget _buildCardOption(
+    String title,
+    String logoUrl, {
+    bool isSelected = false,
+  }) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: isSelected ? AppColors.primary : const Color(0xFFF1F1F1)),
+        border: Border.all(
+          color: isSelected ? AppColors.primary : const Color(0xFFF1F1F1),
+        ),
       ),
       child: Row(
         children: [
@@ -241,9 +299,17 @@ class _CheckoutViewState extends State<CheckoutView> {
             value: isSelected,
             onChanged: (val) {},
             activeColor: AppColors.primary,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(4),
+            ),
           ),
-          Text(title, style: const TextStyle(fontWeight: FontWeight.w500, color: Colors.grey)),
+          Text(
+            title,
+            style: const TextStyle(
+              fontWeight: FontWeight.w500,
+              color: Colors.grey,
+            ),
+          ),
           const Spacer(),
           Image.network(logoUrl, width: 40, height: 24, fit: BoxFit.contain),
         ],
@@ -291,10 +357,27 @@ class _CheckoutViewState extends State<CheckoutView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Gabriele Persola', style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
+          const Text(
+            'Gabriele Persola',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           const Spacer(),
-          const Text('Credit Card:', style: TextStyle(color: Colors.white70, fontSize: 14)),
-          const Text('3761 **** **** 4956', style: TextStyle(color: Colors.white, fontSize: 20, letterSpacing: 2)),
+          const Text(
+            'Credit Card:',
+            style: TextStyle(color: Colors.white70, fontSize: 14),
+          ),
+          const Text(
+            '3761 **** **** 4956',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              letterSpacing: 2,
+            ),
+          ),
           const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -302,11 +385,20 @@ class _CheckoutViewState extends State<CheckoutView> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: const [
-                  Text('Expiration:', style: TextStyle(color: Colors.white70, fontSize: 12)),
-                  Text('01/27', style: TextStyle(color: Colors.white, fontSize: 16)),
+                  Text(
+                    'Expiration:',
+                    style: TextStyle(color: Colors.white70, fontSize: 12),
+                  ),
+                  Text(
+                    '01/27',
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
                 ],
               ),
-              Image.network('https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/1280px-Mastercard-logo.svg.png', width: 50),
+              Image.network(
+                'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/1280px-Mastercard-logo.svg.png',
+                width: 50,
+              ),
             ],
           ),
         ],
@@ -318,13 +410,19 @@ class _CheckoutViewState extends State<CheckoutView> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+        Text(
+          label,
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+        ),
         const SizedBox(height: 8),
         TextFormField(
           initialValue: value,
           decoration: InputDecoration(
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 16,
+            ),
           ),
         ),
       ],
@@ -346,7 +444,13 @@ class _CheckoutViewState extends State<CheckoutView> {
             children: [
               const Icon(Icons.assignment_outlined, color: AppColors.primary),
               const SizedBox(width: 8),
-              Text('Your Order $orderNumber', style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold)),
+              Text(
+                'Your Order $orderNumber',
+                style: const TextStyle(
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 16),
@@ -356,7 +460,12 @@ class _CheckoutViewState extends State<CheckoutView> {
           const Divider(height: 24),
           _buildSummaryRow('Total Price', '1312.00\$', isBold: true),
           const SizedBox(height: 16),
-          const Center(child: Text('All prices displayed are inclusive of all applicable Tax.', style: TextStyle(fontSize: 12, color: Colors.grey))),
+          const Center(
+            child: Text(
+              'All prices displayed are inclusive of all applicable Tax.',
+              style: TextStyle(fontSize: 12, color: Colors.grey),
+            ),
+          ),
         ],
       ),
     );
@@ -368,8 +477,20 @@ class _CheckoutViewState extends State<CheckoutView> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: TextStyle(fontSize: 16, fontWeight: isBold ? FontWeight.bold : FontWeight.w500)),
-          Text(value, style: TextStyle(fontSize: 16, fontWeight: isBold ? FontWeight.bold : FontWeight.w500)),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: isBold ? FontWeight.bold : FontWeight.w500,
+            ),
+          ),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: isBold ? FontWeight.bold : FontWeight.w500,
+            ),
+          ),
         ],
       ),
     );
@@ -381,10 +502,16 @@ class _CheckoutViewState extends State<CheckoutView> {
     VoidCallback? onTap;
 
     if (_currentStep == 0) {
-      onTap = () => _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.ease);
+      onTap = () => _pageController.nextPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.ease,
+      );
     } else if (_currentStep == 1) {
       text = 'Continue';
-      onTap = () => _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.ease);
+      onTap = () => _pageController.nextPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.ease,
+      );
     } else {
       text = 'Confirm';
       icon = null;
