@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_strings.dart';
+import '../../../core/routes/app_routes.dart';
 
 class CategoriesView extends StatelessWidget {
   const CategoriesView({super.key});
@@ -88,6 +89,7 @@ class CategoriesView extends StatelessWidget {
                   ];
 
                   return _buildCategoryGridItem(
+                    context,
                     titles[index],
                     counts[index],
                     icons[index],
@@ -131,7 +133,7 @@ class CategoriesView extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppColors.primary.withOpacity(0.4),
+        color: AppColors.primary.withValues(alpha: 0.4),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -153,19 +155,20 @@ class CategoriesView extends StatelessWidget {
                   subtitle,
                   style: TextStyle(
                     fontSize: 12,
-                    color: Colors.white.withOpacity(0.9),
+                    color: Colors.white.withValues(alpha: 0.9),
                   ),
                 ),
               ],
             ),
           ),
-          Icon(icon, size: 60, color: Colors.white.withOpacity(0.8)),
+          Icon(icon, size: 60, color: Colors.white.withValues(alpha: 0.8)),
         ],
       ),
     );
   }
 
   Widget _buildCategoryGridItem(
+    BuildContext context,
     String title,
     String count,
     IconData icon,
@@ -173,7 +176,7 @@ class CategoriesView extends StatelessWidget {
   ) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.primary.withOpacity(0.05),
+        color: AppColors.primary.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Stack(
