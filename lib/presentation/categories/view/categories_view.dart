@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_strings.dart';
+import '../../../core/routes/app_routes.dart';
 
 class CategoriesView extends StatelessWidget {
   const CategoriesView({super.key});
@@ -88,6 +89,7 @@ class CategoriesView extends StatelessWidget {
                   ];
 
                   return _buildCategoryGridItem(
+                    context,
                     titles[index],
                     counts[index],
                     icons[index],
@@ -166,6 +168,7 @@ class CategoriesView extends StatelessWidget {
   }
 
   Widget _buildCategoryGridItem(
+    BuildContext context,
     String title,
     String count,
     IconData icon,

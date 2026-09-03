@@ -189,6 +189,7 @@ class WishlistView extends StatelessWidget {
               ),
             ],
           ),
-        );
-    }
+        ),
+      );
+  }
 }

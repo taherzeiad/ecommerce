@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../data/models/onboarding_item_model.dart';
 
@@ -28,7 +29,7 @@ class OnboardingPageWidget extends StatelessWidget {
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12),
-                child: Image.asset(item.imagePath, fit: BoxFit.contain),
+                child: SvgPicture.asset(item.imagePath, fit: BoxFit.contain),
               ),
             ),
           ),
