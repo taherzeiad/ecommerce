@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:vector_graphics/vector_graphics.dart';
+
+import '../../../core/constants/app_assets.dart';
 import '../../../core/constants/app_colors.dart';
-import '../../../core/constants/app_strings.dart';
 import '../../../core/routes/app_routes.dart';
 import '../viewmodel/splash_viewmodel.dart';
 
@@ -37,37 +39,10 @@ class _SplashBody extends StatelessWidget {
 
         return Scaffold(
           backgroundColor: AppColors.primaryDark,
-          body: Center(
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 44,
-                  height: 44,
-                  alignment: Alignment.center,
-                  decoration: const BoxDecoration(
-                    color: AppColors.white,
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Text(
-                    'E',
-                    style: TextStyle(
-                      color: AppColors.primaryDark,
-                      fontWeight: FontWeight.w900,
-                      fontSize: 22,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                const Text(
-                  AppStrings.appName,
-                  style: TextStyle(
-                    color: AppColors.white,
-                    fontSize: 22,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
+          body: const Center(
+            child: VectorGraphic(
+              loader: AssetBytesLoader(AppAssets.splash),
+              width: 200, // Adjust size as needed based on the design
             ),
           ),
         );
