@@ -13,25 +13,39 @@ class SocialLoginBar extends StatelessWidget {
       children: [
         Row(
           children: [
-            const Expanded(child: Divider()),
+            const Expanded(
+              child: Divider(
+                color: Color(0xFFCBD5E0),
+                thickness: 1,
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Text(
                 AppStrings.orSignInWith,
-                style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
+                style: const TextStyle(
+                  color: Color(0xFF718096),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                ),
               ),
             ),
-            const Expanded(child: Divider()),
+            const Expanded(
+              child: Divider(
+                color: Color(0xFFCBD5E0),
+                thickness: 1,
+              ),
+            ),
           ],
         ),
-        const SizedBox(height: 24),
+        const SizedBox(height: 32),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             _SocialButton(iconPath: AppAssets.facebook, onPressed: () {}),
-            const SizedBox(width: 10),
+            const SizedBox(width: 20),
             _SocialButton(iconPath: AppAssets.pinterest, onPressed: () {}),
-            const SizedBox(width: 10),
+            const SizedBox(width: 20),
             _SocialButton(iconPath: AppAssets.linkedin, onPressed: () {}),
           ],
         ),

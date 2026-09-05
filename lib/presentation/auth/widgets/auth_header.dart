@@ -5,74 +5,100 @@ import '../../../core/constants/app_colors.dart';
 class AuthHeader extends StatelessWidget {
   final String title;
   final String subtitle;
-  final Widget? illustration;
+  final bool titleOnTop;
+  final bool centerTitle;
+  final Widget? bottomWidget;
 
   const AuthHeader({
     super.key,
     required this.title,
     required this.subtitle,
-    this.illustration,
+    this.titleOnTop = false,
+    this.centerTitle = false,
+    this.bottomWidget,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      decoration: const BoxDecoration(
-        color: AppColors.primary,
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(40),
-          bottomRight: Radius.circular(40),
-        ),
+    final titleWidget = Text(
+      title,
+      textAlign: centerTitle ? TextAlign.center : TextAlign.start,
+      style: const TextStyle(
+        color: Colors.white,
+        fontSize: 32,
+        fontWeight: FontWeight.bold,
+        height: 1.2,
       ),
-      child: Stack(
-        children: [
-          // Background circles (placeholders for the teal circles in design)
-          const Positioned(
-            top: -20,
-            left: -20,
-            child: _Circle(size: 100, opacity: 0.1),
-          ),
-          const Positioned(
-            top: 40,
-            right: -10,
-            child: _Circle(size: 60, opacity: 0.1),
-          ),
+    );
 
-          SafeArea(
-            bottom: false,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(24, 20, 24, 40),
+    final subtitleWidget = Text(
+      subtitle,
+      textAlign: centerTitle ? TextAlign.center : TextAlign.start,
+      style: TextStyle(
+        color: Colors.white.withOpacity(0.9),
+        fontSize: 18,
+        fontWeight: FontWeight.w500,
+      ),
+    );
+
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        // Background circles
+        Positioned(
+          top: -40,
+          left: -30,
+          child: _Circle(size: 150, opacity: 0.15),
+        ),
+        Positioned(
+          top: 60,
+          right: 20,
+          child: _Circle(size: 40, opacity: 0.1),
+        ),
+        Positioned(
+          bottom: -20,
+          left: 100,
+          child: _Circle(size: 100, opacity: 0.1),
+        ),
+        Positioned(
+          top: 150,
+          right: -50,
+          child: _Circle(size: 180, opacity: 0.05),
+        ),
+
+        SafeArea(
+          bottom: false,
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(24, 40, 24, bottomWidget != null ? 60 : 40),
+            child: SizedBox(
+              width: double.infinity,
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: centerTitle
+                    ? CrossAxisAlignment.center
+                    : CrossAxisAlignment.start,
                 children: [
-                  if (illustration != null) ...[
-                    Center(child: illustration!),
-                    const SizedBox(height: 24),
+                  if (titleOnTop) ...[
+                    titleWidget,
+                    const SizedBox(height: 8),
+                    subtitleWidget,
+                  ] else ...[
+                    subtitleWidget,
+                    const SizedBox(height: 16),
+                    titleWidget,
                   ],
-
-                  const SizedBox(height: 8),
-                  Text(
-                    subtitle,
-                    style: TextStyle(
-                      color: Colors.white.withOpacity(0.9),
-                      fontSize: 16,
-                    ),
-                  ),
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
                 ],
               ),
             ),
           ),
-        ],
-      ),
+        ),
+        if (bottomWidget != null)
+          Positioned(
+            bottom: -50,
+            left: 0,
+            right: 0,
+            child: Center(child: bottomWidget!),
+          ),
+      ],
     );
   }
 }

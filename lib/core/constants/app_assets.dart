@@ -13,4 +13,7 @@ class AppAssets {
   static const String facebook = '$_baseIcons/facebook.svg';
   static const String linkedin = '$_baseIcons/linkedin.svg';
   static const String pinterest = '$_baseIcons/pinterest.svg';
+  static const String lock = '$_baseIcons/lock.svg';
+  static const String verify = '$_baseIcons/nument.svg';
+  static const String resetPassword = '$_baseIcons/lockcry.svg';
 }
