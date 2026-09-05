@@ -35,7 +35,7 @@ class _LoginContent extends StatelessWidget {
           children: [
             const AuthHeader(
               subtitle: AppStrings.loginSubtitle,
-              title: AppStrings.loginTitle
+              title: AppStrings.loginTitle,
             ),
             Padding(
               padding: const EdgeInsets.all(24.0),
@@ -50,7 +50,7 @@ class _LoginContent extends StatelessWidget {
                   TextField(
                     controller: viewModel.emailController,
                     decoration: InputDecoration(
-                      hintText: 'example@gmail.com',
+                      hintText: 'Email Address',
                       prefixIcon: const Icon(Icons.email_outlined),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -71,7 +71,7 @@ class _LoginContent extends StatelessWidget {
                     controller: viewModel.passwordController,
                     obscureText: true,
                     decoration: InputDecoration(
-                      hintText: '********',
+                      hintText: 'Password',
                       prefixIcon: const Icon(Icons.lock_outline),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),

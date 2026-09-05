@@ -69,7 +69,7 @@ class _SignupContent extends StatelessWidget {
                   TextField(
                     controller: viewModel.emailController,
                     decoration: InputDecoration(
-                      hintText: 'example@gmail.com',
+                      hintText: 'Email Address',
                       prefixIcon: const Icon(Icons.email_outlined),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -90,7 +90,7 @@ class _SignupContent extends StatelessWidget {
                     controller: viewModel.passwordController,
                     obscureText: true,
                     decoration: InputDecoration(
-                      hintText: '********',
+                      hintText: 'Password',
                       prefixIcon: const Icon(Icons.lock_outline),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -111,7 +111,7 @@ class _SignupContent extends StatelessWidget {
                     controller: viewModel.confirmPasswordController,
                     obscureText: true,
                     decoration: InputDecoration(
-                      hintText: '********',
+                      hintText: 'Password',
                       prefixIcon: const Icon(Icons.lock_outline),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),

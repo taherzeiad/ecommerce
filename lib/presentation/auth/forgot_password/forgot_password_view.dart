@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_strings.dart';
 import '../../../core/routes/app_routes.dart';
@@ -47,7 +48,7 @@ class _ForgotPasswordContent extends StatelessWidget {
                   TextField(
                     controller: viewModel.emailController,
                     decoration: InputDecoration(
-                      hintText: 'example@gmail.com',
+                      hintText: 'Email.Address',
                       prefixIcon: const Icon(Icons.email_outlined),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
