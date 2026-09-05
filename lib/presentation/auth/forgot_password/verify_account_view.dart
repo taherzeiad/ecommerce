@@ -64,10 +64,9 @@ class _VerifyAccountContent extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  const Text(
-                    'reh2mm2003@gmail.com',
-                    // This should ideally come from viewModel
-                    style: TextStyle(
+                  Text(
+                    viewModel.emailController.text,
+                    style: const TextStyle(
                       color: Color(0xFF4A5568),
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
@@ -78,14 +77,14 @@ class _VerifyAccountContent extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: List.generate(6, (index) {
+                      children: List.generate(4, (index) {
                         String char = "";
                         if (viewModel.otp.length > index) {
                           char = viewModel.otp[index];
                         }
                         return Container(
-                          width: 54,
-                          height: 64,
+                          width: 65,
+                          height: 70,
                           decoration: BoxDecoration(
                             color: Colors.white,
                             border: Border.all(
@@ -100,7 +99,7 @@ class _VerifyAccountContent extends StatelessWidget {
                           child: Text(
                             char.isEmpty ? '—' : char,
                             style: TextStyle(
-                              fontSize: 24,
+                              fontSize: 28,
                               fontWeight: FontWeight.bold,
                               color: char.isEmpty
                                   ? const Color(0xFFCBD5E0)
@@ -158,9 +157,19 @@ class _VerifyAccountContent extends StatelessWidget {
                   ),
                   const Spacer(),
                   _NumericKeypad(
-                    onTap: (val) {
-                      if (viewModel.otp.length < 6) {
+                    onTap: (val) async {
+                      if (viewModel.otp.length < 4) {
                         viewModel.appendOtp(val);
+                        if (viewModel.otp.length == 4) {
+                          final success = await viewModel.verifyOtp();
+                          if (success && context.mounted) {
+                            Navigator.pushNamed(
+                              context,
+                              AppRoutes.resetPassword,
+                              arguments: viewModel,
+                            );
+                          }
+                        }
                       }
                     },
                     onDelete: () => viewModel.removeLastOtp(),
