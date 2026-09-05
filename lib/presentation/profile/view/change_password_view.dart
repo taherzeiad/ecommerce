@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:vector_graphics/vector_graphics.dart';
+
+import '../../../core/constants/app_assets.dart';
 import '../../../core/constants/app_colors.dart';
 
 class ChangePasswordView extends StatelessWidget {
@@ -21,9 +24,9 @@ class ChangePasswordView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Center(
-              child: Image.network(
-                'https://cdn-icons-png.flaticon.com/512/6195/6195699.png', // Dummy unlock icon
+            const Center(
+              child: VectorGraphic(
+                loader: AssetBytesLoader(AppAssets.changePassword),
                 height: 150,
               ),
             ),
