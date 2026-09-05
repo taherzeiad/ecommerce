@@ -50,11 +50,7 @@ class AuthHeader extends StatelessWidget {
           left: -30,
           child: _Circle(size: 150, opacity: 0.15),
         ),
-        Positioned(
-          top: 60,
-          right: 20,
-          child: _Circle(size: 40, opacity: 0.1),
-        ),
+        Positioned(top: 60, right: 20, child: _Circle(size: 40, opacity: 0.1)),
         Positioned(
           bottom: -20,
           left: 100,
@@ -69,7 +65,12 @@ class AuthHeader extends StatelessWidget {
         SafeArea(
           bottom: false,
           child: Padding(
-            padding: EdgeInsets.fromLTRB(24, 40, 24, bottomWidget != null ? 60 : 40),
+            padding: EdgeInsets.fromLTRB(
+              24,
+              40,
+              24,
+              bottomWidget != null ? 60 : 40,
+            ),
             child: SizedBox(
               width: double.infinity,
               child: Column(
