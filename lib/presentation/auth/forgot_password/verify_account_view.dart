@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_strings.dart';
 import '../../../core/routes/app_routes.dart';
 import '../widgets/auth_header.dart';
+import '../widgets/verify_illustration.dart';
 import 'auth_viewmodel.dart';
 
 class VerifyAccountView extends StatelessWidget {
@@ -11,7 +13,8 @@ class VerifyAccountView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = ModalRoute.of(context)!.settings.arguments as ForgotPasswordViewModel;
+    final viewModel =
+        ModalRoute.of(context)!.settings.arguments as ForgotPasswordViewModel;
 
     return ChangeNotifierProvider.value(
       value: viewModel,
@@ -28,106 +31,140 @@ class _VerifyAccountContent extends StatelessWidget {
     final viewModel = context.watch<ForgotPasswordViewModel>();
 
     return Scaffold(
+      backgroundColor: AppColors.primary,
       body: Column(
         children: [
           const AuthHeader(
             title: AppStrings.verifyAccountTitle,
-            subtitle: AppStrings.verifyAccountDesc,
+            subtitle: '',
+            centerTitle: true,
+            bottomWidget: VerifyIllustration(),
           ),
+          const SizedBox(height: 40),
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            child: Container(
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                color: Color(0xFFF7FAFC),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(40),
+                  topRight: Radius.circular(40),
+                ),
+              ),
               child: Column(
                 children: [
-                  const SizedBox(height: 40),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: List.generate(4, (index) {
-                      String char = "";
-                      if (viewModel.otp.length > index) {
-                        char = viewModel.otp[index];
-                      }
-                      return Container(
-                        width: 60,
-                        height: 60,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: char.isEmpty ? Colors.grey.shade300 : AppColors.primary,
-                            width: 2,
-                          ),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        alignment: Alignment.center,
-                        child: Text(
-                          char.isEmpty ? 'X' : char,
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: char.isEmpty ? Colors.grey.shade300 : Colors.black,
-                          ),
-                        ),
-                      );
-                    }),
+                  const SizedBox(height: 60),
+                  const Text(
+                    AppStrings.verifyAccountDesc,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Color(0xFF4A5568),
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 8),
+                  const Text(
+                    'reh2mm2003@gmail.com', // This should ideally come from viewModel
+                    style: TextStyle(
+                      color: Color(0xFF4A5568),
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 60),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: List.generate(6, (index) {
+                        String char = "";
+                        if (viewModel.otp.length > index) {
+                          char = viewModel.otp[index];
+                        }
+                        return Container(
+                          width: 54,
+                          height: 64,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(
+                              color: char.isEmpty
+                                  ? const Color(0xFFE2E8F0)
+                                  : AppColors.primary,
+                              width: 1.5,
+                            ),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          alignment: Alignment.center,
+                          child: Text(
+                            char.isEmpty ? '—' : char,
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: char.isEmpty
+                                  ? const Color(0xFFCBD5E0)
+                                  : const Color(0xFF2D3748),
+                            ),
+                          ),
+                        );
+                      }),
+                    ),
+                  ),
+                  const SizedBox(height: 80),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text(AppStrings.resendCode),
-                      TextButton(
-                        onPressed: () {
-                          // Resend logic could be implemented here
-                        },
+                      const Text(
+                        'Didn’t receive the code ? ',
+                        style: TextStyle(
+                          color: Color(0xFF4A5568),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {},
                         child: const Text(
-                          AppStrings.resend,
+                          'Resend',
                           style: TextStyle(
-                            color: AppColors.primary,
+                            color: Color(0xFF38B2AC),
+                            fontSize: 14,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
                     ],
                   ),
-                  const Text(
-                    "${AppStrings.codeExpire} 00:30",
-                    style: TextStyle(color: Colors.grey),
+                  const SizedBox(height: 8),
+                  RichText(
+                    text: TextSpan(
+                      style: const TextStyle(
+                        color: Color(0xFFA0AEC0),
+                        fontSize: 14,
+                      ),
+                      children: [
+                        const TextSpan(text: 'The code will expire in '),
+                        TextSpan(
+                          text: '2:00',
+                          style: TextStyle(
+                            color: Colors.red.shade400,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const TextSpan(text: ' seconds'),
+                      ],
+                    ),
                   ),
                   const Spacer(),
                   _NumericKeypad(
-                    onTap: (val) => viewModel.appendOtp(val),
+                    onTap: (val) {
+                      if (viewModel.otp.length < 6) {
+                        viewModel.appendOtp(val);
+                      }
+                    },
                     onDelete: () => viewModel.removeLastOtp(),
                     onReset: () => viewModel.clearOtp(),
                   ),
-                  const SizedBox(height: 24),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 50,
-                    child: ElevatedButton(
-                      onPressed: viewModel.isLoading
-                          ? null
-                          : () async {
-                              final success = await viewModel.verifyOtp();
-                              if (success && context.mounted) {
-                                Navigator.pushNamed(
-                                  context,
-                                  AppRoutes.resetPassword,
-                                  arguments: viewModel,
-                                );
-                              }
-                            },
-                      child: viewModel.isLoading
-                          ? const SizedBox(
-                              height: 20,
-                              width: 20,
-                              child: CircularProgressIndicator(
-                                color: Colors.white,
-                                strokeWidth: 2,
-                              ),
-                            )
-                          : const Text(AppStrings.next),
-                    ),
-                  ),
-                  const SizedBox(height: 24),
                 ],
               ),
             ),
@@ -151,49 +188,89 @@ class _NumericKeypad extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.count(
-      shrinkWrap: true,
-      crossAxisCount: 3,
-      childAspectRatio: 2.0,
-      mainAxisSpacing: 10,
-      crossAxisSpacing: 10,
-      physics: const NeverScrollableScrollPhysics(),
-      children: [
-        ...['1', '2', '3', '4', '5', '6', '7', '8', '9'].map((digit) {
-          return _KeyButton(text: digit, onTap: () => onTap(digit));
-        }),
-        TextButton(
-          onPressed: onReset,
-          child: const Text(
-            AppStrings.resetPin,
-            style: TextStyle(color: Colors.black, fontSize: 14),
-          ),
-        ),
-        _KeyButton(text: '0', onTap: () => onTap('0')),
-        IconButton(
-          onPressed: onDelete,
-          icon: const Icon(Icons.backspace_outlined),
-        ),
-      ],
+    return Container(
+      color: Colors.white,
+      child: Column(
+        children: [
+          _buildRow(['1', '2', '3']),
+          _buildRow(['4', '5', '6']),
+          _buildRow(['7', '8', '9']),
+          _buildBottomRow(),
+        ],
+      ),
     );
   }
-}
 
-class _KeyButton extends StatelessWidget {
-  final String text;
-  final VoidCallback onTap;
+  Widget _buildRow(List<String> keys) {
+    return Container(
+      decoration: const BoxDecoration(
+        border: Border(top: BorderSide(color: Color(0xFFEDF2F7))),
+      ),
+      child: Row(
+        children: keys.map((key) => Expanded(child: _buildKey(key))).toList(),
+      ),
+    );
+  }
 
-  const _KeyButton({required this.text, required this.onTap});
+  Widget _buildBottomRow() {
+    return Container(
+      decoration: const BoxDecoration(
+        border: Border(top: BorderSide(color: Color(0xFFEDF2F7))),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: InkWell(
+              onTap: onReset,
+              child: Container(
+                height: 70,
+                alignment: Alignment.center,
+                child: const Text(
+                  'Reset PIN?',
+                  style: TextStyle(
+                    color: Color(0xFF4A5568),
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Expanded(child: _buildKey('0')),
+          Expanded(
+            child: InkWell(
+              onTap: onDelete,
+              child: Container(
+                height: 70,
+                alignment: Alignment.center,
+                child: const Icon(
+                  Icons.backspace,
+                  color: Colors.black,
+                  size: 24,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildKey(String key) {
     return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
-      child: Center(
+      onTap: () => onTap(key),
+      child: Container(
+        height: 70,
+        alignment: Alignment.center,
+        decoration: const BoxDecoration(
+          border: Border(left: BorderSide(color: Color(0xFFEDF2F7))),
+        ),
         child: Text(
-          text,
-          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
+          key,
+          style: const TextStyle(
+            color: Color(0xFF2D3748),
+            fontSize: 26,
+            fontWeight: FontWeight.w500,
+          ),
         ),
       ),
     );

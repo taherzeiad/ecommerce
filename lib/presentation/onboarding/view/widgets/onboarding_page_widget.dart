@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vector_graphics/vector_graphics.dart';
+
 import '../../../../core/constants/app_colors.dart';
 import '../../../../data/models/onboarding_item_model.dart';
 
@@ -23,10 +24,6 @@ class OnboardingPageWidget extends StatelessWidget {
             aspectRatio: 1,
             child: Container(
               padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: AppColors.cardBackground,
-                borderRadius: BorderRadius.circular(20),
-              ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12),
                 child: item.imagePath.endsWith('.svg')

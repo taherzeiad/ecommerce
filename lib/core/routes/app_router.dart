@@ -45,71 +45,72 @@ class AppRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case AppRoutes.splash:
-        return _fade(const SplashView());
+        return _fade(const SplashView(), settings);
       case AppRoutes.onboarding:
-        return _fade(const OnboardingView());
+        return _fade(const OnboardingView(), settings);
       case AppRoutes.login:
-        return _fade(const LoginView());
+        return _fade(const LoginView(), settings);
       case AppRoutes.signup:
-        return _fade(const SignupView());
+        return _fade(const SignupView(), settings);
       case AppRoutes.forgotPassword:
-        return _fade(const ForgotPasswordView());
+        return _fade(const ForgotPasswordView(), settings);
       case AppRoutes.verifyAccount:
-        return _fade(const VerifyAccountView());
+        return _fade(const VerifyAccountView(), settings);
       case AppRoutes.resetPassword:
-        return _fade(const ResetPasswordView());
+        return _fade(const ResetPasswordView(), settings);
       case AppRoutes.authSuccess:
-        return _fade(const SuccessView());
+        return _fade(const SuccessView(), settings);
       case AppRoutes.mainWrapper:
-        return _fade(const MainWrapper());
+        return _fade(const MainWrapper(), settings);
       case AppRoutes.home:
-        return _fade(const HomeView());
+        return _fade(const HomeView(), settings);
       case AppRoutes.allProducts:
-        return _fade(const AllProductsView());
+        return _fade(const AllProductsView(), settings);
       case AppRoutes.productDetails:
-        return _fade(const ProductDetailsView());
+        return _fade(const ProductDetailsView(), settings);
       case AppRoutes.notifications:
-        return _fade(const NotificationsView());
+        return _fade(const NotificationsView(), settings);
       case AppRoutes.reviews:
-        return _fade(const ReviewsView());
+        return _fade(const ReviewsView(), settings);
       case AppRoutes.addReview:
-        return _fade(const AddReviewView());
+        return _fade(const AddReviewView(), settings);
       case AppRoutes.profile:
-        return _fade(const ProfileView());
+        return _fade(const ProfileView(), settings);
       case AppRoutes.editProfile:
-        return _fade(const EditProfileView());
+        return _fade(const EditProfileView(), settings);
       case AppRoutes.changePassword:
-        return _fade(const ChangePasswordView());
+        return _fade(const ChangePasswordView(), settings);
       case AppRoutes.settings:
-        return _fade(const SettingsView());
+        return _fade(const SettingsView(), settings);
       case AppRoutes.aboutUs:
-        return _fade(const AboutUsView());
+        return _fade(const AboutUsView(), settings);
       case AppRoutes.helpCenter:
-        return _fade(const HelpCenterView());
+        return _fade(const HelpCenterView(), settings);
       case AppRoutes.privacy:
-        return _fade(const PrivacyView());
+        return _fade(const PrivacyView(), settings);
       case AppRoutes.termsConditions:
-        return _fade(const TermsConditionsView());
+        return _fade(const TermsConditionsView(), settings);
       case AppRoutes.search:
-        return _fade(const SearchView());
+        return _fade(const SearchView(), settings);
       case AppRoutes.filterSort:
-        return _fade(const FilterSortView());
+        return _fade(const FilterSortView(), settings);
       case AppRoutes.cart:
-        return _fade(const CartView());
+        return _fade(const CartView(), settings);
       case AppRoutes.checkout:
-        return _fade(const CheckoutView());
+        return _fade(const CheckoutView(), settings);
       case AppRoutes.addAddress:
-        return _fade(const AddAddressView());
+        return _fade(const AddAddressView(), settings);
       case AppRoutes.editAddress:
-        return _fade(const EditAddressView());
+        return _fade(const EditAddressView(), settings);
       case AppRoutes.addCard:
-        return _fade(const AddCardView());
+        return _fade(const AddCardView(), settings);
       case AppRoutes.orderSuccess:
-        return _fade(const OrderSuccessView());
+        return _fade(const OrderSuccessView(), settings);
       case AppRoutes.orderTracking:
-        return _fade(const OrderTrackingView());
+        return _fade(const OrderTrackingView(), settings);
       default:
         return MaterialPageRoute(
+          settings: settings,
           builder: (_) => Scaffold(
             body: Center(child: Text('No route defined for ${settings.name}')),
           ),
@@ -117,8 +118,9 @@ class AppRouter {
     }
   }
 
-  static Route<dynamic> _fade(Widget page) {
+  static Route<dynamic> _fade(Widget page, RouteSettings settings) {
     return PageRouteBuilder(
+      settings: settings,
       pageBuilder: (_, __, ___) => page,
       transitionsBuilder: (_, animation, __, child) {
         return FadeTransition(opacity: animation, child: child);
