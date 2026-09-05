@@ -65,7 +65,8 @@ class _VerifyAccountContent extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   const Text(
-                    'reh2mm2003@gmail.com', // This should ideally come from viewModel
+                    'reh2mm2003@gmail.com',
+                    // This should ideally come from viewModel
                     style: TextStyle(
                       color: Color(0xFF4A5568),
                       fontSize: 18,
@@ -227,10 +228,7 @@ class _NumericKeypad extends StatelessWidget {
                 alignment: Alignment.center,
                 child: const Text(
                   'Reset PIN?',
-                  style: TextStyle(
-                    color: Color(0xFF4A5568),
-                    fontSize: 16,
-                  ),
+                  style: TextStyle(color: Color(0xFF4A5568), fontSize: 16),
                 ),
               ),
             ),
