@@ -69,7 +69,12 @@ flutter:
   uses-material-design: true
 
   assets:
-    - path: lib/assets/images/
+    - path: lib/assets/icons/
+      transformers:
+        - package: vector_graphics_compiler
+    - lib/assets/images/onboarding_1.png
+    - lib/assets/images/onboarding_3.png
+    - path: lib/assets/images/onboarding_2.svg
       transformers:
         - package: vector_graphics_compiler
 
