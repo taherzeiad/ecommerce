@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../core/constants/app_colors.dart';
 
 class AuthHeader extends StatelessWidget {
@@ -27,17 +28,17 @@ class AuthHeader extends StatelessWidget {
       child: Stack(
         children: [
           // Background circles (placeholders for the teal circles in design)
-          Positioned(
+          const Positioned(
             top: -20,
             left: -20,
             child: _Circle(size: 100, opacity: 0.1),
           ),
-          Positioned(
+          const Positioned(
             top: 40,
             right: -10,
             child: _Circle(size: 60, opacity: 0.1),
           ),
-          
+
           SafeArea(
             bottom: false,
             child: Padding(
@@ -49,20 +50,21 @@ class AuthHeader extends StatelessWidget {
                     Center(child: illustration!),
                     const SizedBox(height: 24),
                   ],
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+
                   const SizedBox(height: 8),
                   Text(
                     subtitle,
                     style: TextStyle(
                       color: Colors.white.withOpacity(0.9),
                       fontSize: 16,
+                    ),
+                  ),
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ],

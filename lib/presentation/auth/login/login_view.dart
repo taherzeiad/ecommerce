@@ -34,8 +34,8 @@ class _LoginContent extends StatelessWidget {
         child: Column(
           children: [
             const AuthHeader(
-              title: AppStrings.loginTitle,
               subtitle: AppStrings.loginSubtitle,
+              title: AppStrings.loginTitle
             ),
             Padding(
               padding: const EdgeInsets.all(24.0),

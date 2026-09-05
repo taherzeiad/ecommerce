@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vector_graphics/vector_graphics.dart';
+
 import '../../../core/constants/app_assets.dart';
 import '../../../core/constants/app_strings.dart';
 
@@ -27,20 +28,11 @@ class SocialLoginBar extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _SocialButton(
-              iconPath: AppAssets.facebook,
-              onPressed: () {},
-            ),
+            _SocialButton(iconPath: AppAssets.facebook, onPressed: () {}),
             const SizedBox(width: 10),
-            _SocialButton(
-              iconPath: AppAssets.pinterest,
-              onPressed: () {},
-            ),
+            _SocialButton(iconPath: AppAssets.pinterest, onPressed: () {}),
             const SizedBox(width: 10),
-            _SocialButton(
-              iconPath: AppAssets.linkedin,
-              onPressed: () {},
-            ),
+            _SocialButton(iconPath: AppAssets.linkedin, onPressed: () {}),
           ],
         ),
       ],
@@ -52,10 +44,7 @@ class _SocialButton extends StatelessWidget {
   final String iconPath;
   final VoidCallback onPressed;
 
-  const _SocialButton({
-    required this.iconPath,
-    required this.onPressed,
-  });
+  const _SocialButton({required this.iconPath, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
