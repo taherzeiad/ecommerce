@@ -10,7 +10,6 @@ class WishlistView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Toggle this to see the list state
-    const bool isEmpty = false;
 
     return Scaffold(
       appBar: AppBar(
@@ -32,60 +31,10 @@ class WishlistView extends StatelessWidget {
           ),
         ],
       ),
-      body: isEmpty ? _buildEmptyState(context) : _buildWishlist(context),
+      body: _buildWishlist(context),
     );
   }
 
-  Widget _buildEmptyState(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(40),
-            decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.05),
-              shape: BoxShape.circle,
-            ),
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                const Icon(
-                  Icons.favorite_border,
-                  size: 120,
-                  color: AppColors.primary,
-                ),
-                const Icon(Icons.close, size: 40, color: AppColors.primary),
-              ],
-            ),
-          ),
-          const SizedBox(height: 32),
-          const Text(
-            AppStrings.wishlistEmpty,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
-              color: AppColors.primary,
-            ),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            AppStrings.wishlistEmptyDesc,
-            textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.grey.shade600, height: 1.5),
-          ),
-          const SizedBox(height: 40),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 40),
-            child: ElevatedButton(
-              onPressed: () {},
-              child: const Text(AppStrings.explore),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   Widget _buildWishlist(BuildContext context) {
     return ListView.separated(

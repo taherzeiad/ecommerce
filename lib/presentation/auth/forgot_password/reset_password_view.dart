@@ -48,7 +48,7 @@ class _ResetPasswordContent extends StatelessWidget {
                     controller: viewModel.passwordController,
                     obscureText: true,
                     decoration: InputDecoration(
-                      hintText: '********',
+                      hintText: 'Password',
                       prefixIcon: const Icon(Icons.lock_outline),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -69,7 +69,7 @@ class _ResetPasswordContent extends StatelessWidget {
                     controller: viewModel.confirmPasswordController,
                     obscureText: true,
                     decoration: InputDecoration(
-                      hintText: '********',
+                      hintText: 'Password',
                       prefixIcon: const Icon(Icons.lock_outline),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),

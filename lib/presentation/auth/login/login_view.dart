@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_strings.dart';
 import '../../../core/routes/app_routes.dart';
@@ -14,7 +15,8 @@ class LoginView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => LoginViewModel(AuthRepositoryImpl()), // Ideally provided via DI
+      create: (_) => LoginViewModel(AuthRepositoryImpl()),
+      // Ideally provided via DI
       child: const _LoginContent(),
     );
   }
@@ -32,8 +34,8 @@ class _LoginContent extends StatelessWidget {
         child: Column(
           children: [
             const AuthHeader(
-              title: AppStrings.loginTitle,
               subtitle: AppStrings.loginSubtitle,
+              title: AppStrings.loginTitle,
             ),
             Padding(
               padding: const EdgeInsets.all(24.0),
@@ -48,7 +50,7 @@ class _LoginContent extends StatelessWidget {
                   TextField(
                     controller: viewModel.emailController,
                     decoration: InputDecoration(
-                      hintText: 'example@gmail.com',
+                      hintText: 'Email Address',
                       prefixIcon: const Icon(Icons.email_outlined),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -69,7 +71,7 @@ class _LoginContent extends StatelessWidget {
                     controller: viewModel.passwordController,
                     obscureText: true,
                     decoration: InputDecoration(
-                      hintText: '********',
+                      hintText: 'Password',
                       prefixIcon: const Icon(Icons.lock_outline),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -96,7 +98,10 @@ class _LoginContent extends StatelessWidget {
                       ),
                       TextButton(
                         onPressed: () {
-                          Navigator.pushNamed(context, AppRoutes.forgotPassword);
+                          Navigator.pushNamed(
+                            context,
+                            AppRoutes.forgotPassword,
+                          );
                         },
                         child: const Text(AppStrings.forgotPassword),
                       ),
@@ -117,7 +122,10 @@ class _LoginContent extends StatelessWidget {
                         : () async {
                             final success = await viewModel.login();
                             if (success && context.mounted) {
-                              Navigator.pushReplacementNamed(context, AppRoutes.mainWrapper);
+                              Navigator.pushReplacementNamed(
+                                context,
+                                AppRoutes.mainWrapper,
+                              );
                             }
                           },
                     child: viewModel.isLoading

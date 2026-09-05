@@ -3,9 +3,14 @@
 class AppAssets {
   AppAssets._();
 
-  static const String _base = 'lib/assets/images';
+  static const String _baseImages = 'lib/assets/images';
+  static const String _baseIcons = 'lib/assets/icons';
 
-  static const String onboarding1 = '$_base/onboarding_1.png';
-  static const String onboarding2 = '$_base/onboarding_2.svg';
-  static const String onboarding3 = '$_base/onboarding_3.png';
+  static const String onboarding1 = '$_baseImages/onboarding_1.png';
+  static const String onboarding2 = '$_baseImages/onboarding_2.svg';
+  static const String onboarding3 = '$_baseImages/onboarding_3.png';
+
+  static const String facebook = '$_baseIcons/facebook.svg';
+  static const String linkedin = '$_baseIcons/linkedin.svg';
+  static const String pinterest = '$_baseIcons/pinterest.svg';
 }

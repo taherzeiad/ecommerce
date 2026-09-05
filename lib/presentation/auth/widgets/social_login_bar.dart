@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:vector_graphics/vector_graphics.dart';
+
+import '../../../core/constants/app_assets.dart';
 import '../../../core/constants/app_strings.dart';
 
 class SocialLoginBar extends StatelessWidget {
@@ -25,23 +28,11 @@ class SocialLoginBar extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _SocialButton(
-              icon: Icons.facebook,
-              color: const Color(0xFF3B5998),
-              onPressed: () {},
-            ),
-            const SizedBox(width: 20),
-            _SocialButton(
-              icon: Icons.pin_drop, // Using pin_drop as a placeholder for Pinterest
-              color: const Color(0xFFBD081C),
-              onPressed: () {},
-            ),
-            const SizedBox(width: 20),
-            _SocialButton(
-              icon: Icons.link, // Placeholder for LinkedIn
-              color: const Color(0xFF0077B5),
-              onPressed: () {},
-            ),
+            _SocialButton(iconPath: AppAssets.facebook, onPressed: () {}),
+            const SizedBox(width: 10),
+            _SocialButton(iconPath: AppAssets.pinterest, onPressed: () {}),
+            const SizedBox(width: 10),
+            _SocialButton(iconPath: AppAssets.linkedin, onPressed: () {}),
           ],
         ),
       ],
@@ -50,27 +41,23 @@ class SocialLoginBar extends StatelessWidget {
 }
 
 class _SocialButton extends StatelessWidget {
-  final IconData icon;
-  final Color color;
+  final String iconPath;
   final VoidCallback onPressed;
 
-  const _SocialButton({
-    required this.icon,
-    required this.color,
-    required this.onPressed,
-  });
+  const _SocialButton({required this.iconPath, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onPressed,
+      borderRadius: BorderRadius.circular(30),
       child: Container(
         padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: color,
-          shape: BoxShape.circle,
+        child: VectorGraphic(
+          loader: AssetBytesLoader(iconPath),
+          width: 39,
+          height: 39,
         ),
-        child: Icon(icon, color: Colors.white, size: 28),
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_strings.dart';
 import '../../../core/routes/app_routes.dart';
@@ -13,7 +14,8 @@ class SignupView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => SignupViewModel(AuthRepositoryImpl()), // Ideally provided via DI
+      create: (_) => SignupViewModel(AuthRepositoryImpl()),
+      // Ideally provided via DI
       child: const _SignupContent(),
     );
   }
@@ -67,7 +69,7 @@ class _SignupContent extends StatelessWidget {
                   TextField(
                     controller: viewModel.emailController,
                     decoration: InputDecoration(
-                      hintText: 'example@gmail.com',
+                      hintText: 'Email Address',
                       prefixIcon: const Icon(Icons.email_outlined),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -88,7 +90,7 @@ class _SignupContent extends StatelessWidget {
                     controller: viewModel.passwordController,
                     obscureText: true,
                     decoration: InputDecoration(
-                      hintText: '********',
+                      hintText: 'Password',
                       prefixIcon: const Icon(Icons.lock_outline),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -109,7 +111,7 @@ class _SignupContent extends StatelessWidget {
                     controller: viewModel.confirmPasswordController,
                     obscureText: true,
                     decoration: InputDecoration(
-                      hintText: '********',
+                      hintText: 'Password',
                       prefixIcon: const Icon(Icons.lock_outline),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -146,7 +148,10 @@ class _SignupContent extends StatelessWidget {
                         : () async {
                             final success = await viewModel.signup();
                             if (success && context.mounted) {
-                              Navigator.pushReplacementNamed(context, AppRoutes.mainWrapper);
+                              Navigator.pushReplacementNamed(
+                                context,
+                                AppRoutes.mainWrapper,
+                              );
                             }
                           },
                     child: viewModel.isLoading
