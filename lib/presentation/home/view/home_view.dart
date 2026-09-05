@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_strings.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../data/models/product_model.dart';
 import '../widgets/product_card.dart';
+
+// Design-system text color used across the home screen (titles, prices).
+const Color _kDarkText = Color(0xFF2C3E50);
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -24,6 +28,7 @@ class HomeView extends StatelessWidget {
     );
 
     return Scaffold(
+      backgroundColor: const Color(0xFFF3FAF9),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
@@ -36,14 +41,24 @@ class HomeView extends StatelessWidget {
               const SizedBox(height: 24),
               _buildBanner(),
               const SizedBox(height: 24),
-              _buildSectionHeader(AppStrings.categories, () => Navigator.pushNamed(context, AppRoutes.mainWrapper, arguments: 1)),
+              _buildSectionHeader(
+                AppStrings.categories,
+                () => Navigator.pushNamed(
+                  context,
+                  AppRoutes.mainWrapper,
+                  arguments: 1,
+                ),
+              ),
               const SizedBox(height: 16),
               _buildCategoryList(context),
               const SizedBox(height: 24),
-              _buildSectionHeader(AppStrings.flashDeals, () => Navigator.pushNamed(context, AppRoutes.allProducts)),
+              _buildSectionHeader(
+                AppStrings.flashDeals,
+                () => Navigator.pushNamed(context, AppRoutes.allProducts),
+              ),
               const SizedBox(height: 16),
               SizedBox(
-                height: 220,
+                height: 230,
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   itemCount: dummyProducts.length,
@@ -51,7 +66,10 @@ class HomeView extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return ProductCard(
                       product: dummyProducts[index],
-                      onTap: () => Navigator.pushNamed(context, AppRoutes.productDetails),
+                      onTap: () => Navigator.pushNamed(
+                        context,
+                        AppRoutes.productDetails,
+                      ),
                     );
                   },
                 ),
@@ -64,7 +82,7 @@ class HomeView extends StatelessWidget {
                 physics: const NeverScrollableScrollPhysics(),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
-                  childAspectRatio: 0.75,
+                  childAspectRatio: 0.68,
                   crossAxisSpacing: 16,
                   mainAxisSpacing: 16,
                 ),
@@ -100,11 +118,15 @@ class HomeView extends StatelessWidget {
               children: [
                 Text(
                   'Hello',
-                  style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
+                  style: TextStyle(color: Colors.grey.shade500, fontSize: 14),
                 ),
                 const Text(
                   'Let’s Shop!',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                    color: _kDarkText,
+                  ),
                 ),
               ],
             ),
@@ -112,74 +134,96 @@ class HomeView extends StatelessWidget {
         ),
         Row(
           children: [
-            _buildHeaderIcon(Icons.notifications_none),
+            _buildHeaderIcon(Icons.notifications_none, hasBadge: true),
             const SizedBox(width: 12),
-            _buildHeaderIcon(Icons.nights_stay_outlined),
+            _buildHeaderIcon(Icons.nightlight_round),
           ],
         ),
       ],
     );
   }
 
-  Widget _buildHeaderIcon(IconData icon) {
-    return Container(
-      padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        shape: BoxShape.circle,
-        border: Border.all(color: Colors.grey.shade200),
-      ),
-      child: Icon(icon, color: Colors.black54, size: 22),
+  Widget _buildHeaderIcon(IconData icon, {bool hasBadge = false}) {
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: AppColors.primary.withOpacity(0.12),
+            shape: BoxShape.circle,
+          ),
+          child: Icon(icon, color: AppColors.primary, size: 22),
+        ),
+        if (hasBadge)
+          Positioned(
+            top: 6,
+            right: 6,
+            child: Container(
+              width: 8,
+              height: 8,
+              decoration: BoxDecoration(
+                color: AppColors.primary,
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.white, width: 1),
+              ),
+            ),
+          ),
+      ],
     );
   }
 
   Widget _buildSearch(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: GestureDetector(
-            onTap: () => Navigator.pushNamed(context, AppRoutes.search),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              height: 52,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(26),
-                border: Border.all(color: Colors.grey.shade200),
-              ),
-              child: const Row(
+    return Container(
+      height: 52,
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(26),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: GestureDetector(
+              onTap: () => Navigator.pushNamed(context, AppRoutes.search),
+              child: Row(
                 children: [
-                  Icon(Icons.search, color: Colors.grey),
-                  SizedBox(width: 12),
-                  Text('Search', style: TextStyle(color: Colors.grey)),
+                  Icon(Icons.search, color: AppColors.primary),
+                  const SizedBox(width: 12),
+                  const Text('Search', style: TextStyle(color: Colors.grey)),
                 ],
               ),
             ),
           ),
-        ),
-        const SizedBox(width: 12),
-        GestureDetector(
-          onTap: () => Navigator.pushNamed(context, AppRoutes.filterSort),
-          child: Container(
-            padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.grey.shade200),
-            ),
-            child: const Icon(Icons.tune, color: AppColors.primary, size: 22),
+          GestureDetector(
+            onTap: () => Navigator.pushNamed(context, AppRoutes.filterSort),
+            child: Icon(Icons.tune, color: AppColors.primary, size: 22),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
   Widget _buildBanner() {
     return Container(
       width: double.infinity,
-      height: 160,
+      height: 170,
       decoration: BoxDecoration(
-        color: AppColors.primary.withOpacity(0.2),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            AppColors.primary.withOpacity(0.95),
+            AppColors.primary.withOpacity(0.35),
+          ],
+        ),
         borderRadius: BorderRadius.circular(24),
       ),
       child: Stack(
@@ -191,8 +235,22 @@ class HomeView extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text(
-                  'Get Discount on Shop\nday UP to 50%',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  'Get Discount on Shop\nday',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: Colors.white,
+                    height: 1.2,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  'UP to 50%',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24,
+                    color: _kDarkText,
+                  ),
                 ),
                 const SizedBox(height: 12),
                 ElevatedButton(
@@ -200,29 +258,110 @@ class HomeView extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
                     foregroundColor: AppColors.primary,
-                    minimumSize: const Size(80, 36),
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    elevation: 0,
+                    shape: const StadiumBorder(),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 10,
+                    ),
                   ),
-                  child: const Text('Get Now'),
+                  child: const Text(
+                    'Get Now',
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  ),
                 ),
               ],
             ),
           ),
           Positioned(
-            right: 0,
-            bottom: 0,
+            right: 16,
             top: 0,
-            child: Container(
-              width: 140,
-              decoration: const BoxDecoration(
-                // Placeholder for watch image
-                color: Colors.transparent,
-              ),
-              child: const Icon(Icons.watch, size: 100, color: AppColors.primary),
+            bottom: 0,
+            child: Center(child: _buildWatchGraphic()),
+          ),
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 14,
+            child: Center(child: _buildBannerDots()),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Decorative fitness-watch graphic (placeholder until a real product image
+  // is supplied) built to resemble the banner artwork.
+  Widget _buildWatchGraphic() {
+    return SizedBox(
+      width: 90,
+      height: 150,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Container(
+            width: 44,
+            height: 150,
+            decoration: BoxDecoration(
+              color: AppColors.primary,
+              borderRadius: BorderRadius.circular(22),
+            ),
+          ),
+          Container(
+            width: 72,
+            height: 92,
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: const Color(0xFF1B1B1B),
+              borderRadius: BorderRadius.circular(18),
+              border: Border.all(color: Colors.white, width: 2),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  '08:30',
+                  style: TextStyle(color: Colors.white, fontSize: 8),
+                ),
+                const SizedBox(height: 2),
+                const Icon(
+                  Icons.timer_outlined,
+                  color: Colors.cyanAccent,
+                  size: 10,
+                ),
+                const Text(
+                  '5.2',
+                  style: TextStyle(
+                    color: Colors.cyanAccent,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const Text(
+                  'KM',
+                  style: TextStyle(color: Colors.cyanAccent, fontSize: 8),
+                ),
+              ],
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildBannerDots() {
+    Widget dot({bool active = false}) => Container(
+      margin: const EdgeInsets.symmetric(horizontal: 3),
+      width: active ? 18 : 6,
+      height: 6,
+      decoration: BoxDecoration(
+        color: active ? const Color(0xFF00695C) : Colors.white.withOpacity(0.7),
+        borderRadius: BorderRadius.circular(4),
+      ),
+    );
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [dot(), dot(active: true), dot()],
     );
   }
 
@@ -232,14 +371,38 @@ class HomeView extends StatelessWidget {
       children: [
         Text(
           title,
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+            color: _kDarkText,
+          ),
         ),
-        TextButton(
-          onPressed: onSeeAll,
-          child: const Row(
+        InkWell(
+          onTap: onSeeAll,
+          borderRadius: BorderRadius.circular(20),
+          child: Row(
             children: [
-              Text(AppStrings.seeAll, style: TextStyle(fontSize: 14)),
-              Icon(Icons.chevron_right, size: 18),
+              Text(
+                AppStrings.seeAll,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.primary,
+                ),
+              ),
+              const SizedBox(width: 6),
+              Container(
+                padding: const EdgeInsets.all(3),
+                decoration: BoxDecoration(
+                  color: AppColors.primary,
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.chevron_right,
+                  size: 14,
+                  color: Colors.white,
+                ),
+              ),
             ],
           ),
         ),
@@ -249,7 +412,13 @@ class HomeView extends StatelessWidget {
 
   Widget _buildCategoryList(BuildContext context) {
     final categories = ['Phone', 'Fashion', 'Audio', 'Laptop', 'Games'];
-    final icons = [Icons.phone_android, Icons.checkroom, Icons.headphones, Icons.laptop, Icons.videogame_asset];
+    final icons = [
+      Icons.phone_android,
+      Icons.checkroom,
+      Icons.headphones,
+      Icons.laptop,
+      Icons.videogame_asset,
+    ];
 
     return SizedBox(
       height: 100,
@@ -263,16 +432,23 @@ class HomeView extends StatelessWidget {
             child: Column(
               children: [
                 Container(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(18),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     shape: BoxShape.circle,
-                    border: Border.all(color: Colors.grey.shade200),
+                    border: Border.all(color: AppColors.primary, width: 1.4),
                   ),
-                  child: Icon(icons[index], color: Colors.grey.shade600),
+                  child: Icon(icons[index], color: Colors.grey.shade700),
                 ),
                 const SizedBox(height: 8),
-                Text(categories[index], style: const TextStyle(fontSize: 12)),
+                Text(
+                  categories[index],
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    color: _kDarkText,
+                  ),
+                ),
               ],
             ),
           );
