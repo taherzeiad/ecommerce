@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../core/constants/app_colors.dart';
 import '../../../core/routes/app_routes.dart';
 import '../widgets/profile_widgets.dart';
@@ -22,7 +23,11 @@ class EditProfileView extends StatelessWidget {
             onPressed: () => Navigator.pop(context),
             child: const Text(
               'Save',
-              style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ],
@@ -43,8 +48,13 @@ class EditProfileView extends StatelessWidget {
                   foregroundColor: AppColors.primary,
                   side: const BorderSide(color: Color(0xFFD8E6E3)),
                   backgroundColor: const Color(0xFFE7F5F3),
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                 ),
               ),
             ),
@@ -61,7 +71,8 @@ class EditProfileView extends StatelessWidget {
             _buildLinkCard(
               icon: Icons.person_outline,
               title: 'Change Password',
-              onTap: () => Navigator.pushNamed(context, AppRoutes.changePassword),
+              onTap: () =>
+                  Navigator.pushNamed(context, AppRoutes.changePassword),
             ),
             const SizedBox(height: 16),
             _buildLinkCard(
@@ -85,7 +96,11 @@ class EditProfileView extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 8.0),
       child: Text(
         label,
-        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Color(0xFF1B1B29)),
+        style: const TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+          color: Color(0xFF1B1B29),
+        ),
       ),
     );
   }
@@ -96,7 +111,10 @@ class EditProfileView extends StatelessWidget {
       decoration: InputDecoration(
         hintText: hintText,
         hintStyle: const TextStyle(color: Color(0xFFBDBDBD)),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 16,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
           borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
@@ -109,7 +127,11 @@ class EditProfileView extends StatelessWidget {
     );
   }
 
-  Widget _buildLinkCard({required IconData icon, required String title, required VoidCallback onTap}) {
+  Widget _buildLinkCard({
+    required IconData icon,
+    required String title,
+    required VoidCallback onTap,
+  }) {
     return InkWell(
       onTap: onTap,
       child: Container(
@@ -128,7 +150,11 @@ class EditProfileView extends StatelessWidget {
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
             ),
             const Spacer(),
-            const Icon(Icons.arrow_forward_ios, size: 16, color: Color(0xFFBDBDBD)),
+            const Icon(
+              Icons.arrow_forward_ios,
+              size: 16,
+              color: Color(0xFFBDBDBD),
+            ),
           ],
         ),
       ),
