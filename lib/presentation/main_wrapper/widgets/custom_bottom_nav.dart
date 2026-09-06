@@ -23,7 +23,7 @@ class CustomBottomNav extends StatelessWidget {
         borderRadius: BorderRadius.circular(36),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.08),
+            color: Colors.black.withValues(alpha: 0.08),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -87,7 +87,9 @@ class _NavItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // اختيار المسار الصحيح بناءً على حالة التحديد
-    final String? currentAsset = isActive ? (activeAssetPath ?? assetPath) : assetPath;
+    final String? currentAsset = isActive
+        ? (activeAssetPath ?? assetPath)
+        : assetPath;
 
     return InkWell(
       onTap: onTap,

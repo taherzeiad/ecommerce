@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:vector_graphics/vector_graphics.dart';
+
 import '../../../core/constants/app_colors.dart';
+import '../../../core/constants/app_strings.dart';
 import '../../../core/routes/app_routes.dart';
 
 class CartView extends StatefulWidget {
@@ -13,24 +16,27 @@ class _CartViewState extends State<CartView> {
   final List<Map<String, dynamic>> _cartItems = [
     {
       'name': 'Samsung M13',
-      'detail': '\"256GB inch Display\"',
-      'price': 550.0,
+      'detail': '"256GB inch Display"',
+      'priceLabel': '\$550.00',
       'quantity': 1,
-      'image': 'https://m.media-amazon.com/images/I/817WWpa7xIL._AC_SL1500_.jpg',
+      'image':
+          'https://m.media-amazon.com/images/I/817WWpa7xIL._AC_SL1500_.jpg',
     },
     {
       'name': 'LG Refrigerator',
       'detail': 'Smart Cooling',
-      'price': 820.0,
+      'priceLabel': '\$ 820.00',
       'quantity': 1,
-      'image': 'https://m.media-amazon.com/images/I/61iVusLwA4L._AC_SL1500_.jpg',
+      'image':
+          'https://m.media-amazon.com/images/I/61iVusLwA4L._AC_SL1500_.jpg',
     },
     {
       'name': 'Summer Dress',
       'detail': 'Women\'s Fashion',
-      'price': 820.0,
+      'priceLabel': '\$ 820.00',
       'quantity': 1,
-      'image': 'https://m.media-amazon.com/images/I/61M-c19nQdL._AC_SL1001_.jpg',
+      'image':
+          'https://m.media-amazon.com/images/I/61M-c19nQdL._AC_SL1001_.jpg',
     },
   ];
 
@@ -41,14 +47,23 @@ class _CartViewState extends State<CartView> {
         backgroundColor: AppColors.primary,
         elevation: 0,
         centerTitle: true,
+        leading: IconButton(
+          onPressed: () => Navigator.pop(context),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+        ),
         title: const Text(
-          'Shopping Cart',
+          AppStrings.shoppingCart,
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         actions: [
           IconButton(
             onPressed: () {},
-            icon: const Icon(Icons.dark_mode_outlined, color: Colors.white),
+            icon: const VectorGraphic(
+              loader: AssetBytesLoader('lib/assets/icons/moon.svg'),
+              width: 24,
+              height: 24,
+              colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
+            ),
           ),
         ],
       ),
@@ -61,15 +76,20 @@ class _CartViewState extends State<CartView> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Order Summary',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.grey),
+                    AppStrings.orderSummary,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey,
+                    ),
                   ),
                   const SizedBox(height: 16),
                   ListView.separated(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: _cartItems.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 16),
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(height: 16),
                     itemBuilder: (context, index) {
                       return _buildCartItem(index);
                     },
@@ -78,7 +98,7 @@ class _CartViewState extends State<CartView> {
                   _buildAddMoreItems(),
                   const SizedBox(height: 32),
                   const Text(
-                    'Discount Coupon',
+                    AppStrings.discountCoupon,
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 12),
@@ -91,9 +111,27 @@ class _CartViewState extends State<CartView> {
           ),
           Padding(
             padding: const EdgeInsets.all(24.0),
-            child: ElevatedButton(
-              onPressed: () => Navigator.pushNamed(context, AppRoutes.checkout),
-              child: const Text('Check Out'),
+            child: SizedBox(
+              width: double.infinity,
+              height: 56,
+              child: ElevatedButton(
+                onPressed: () =>
+                    Navigator.pushNamed(context, AppRoutes.checkout),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primary,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(28),
+                  ),
+                ),
+                child: const Text(
+                  AppStrings.checkout,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
             ),
           ),
         ],
@@ -113,11 +151,19 @@ class _CartViewState extends State<CartView> {
           color: Colors.red,
           borderRadius: BorderRadius.circular(12),
         ),
-        child: Column(
+        child: const Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            Icon(Icons.delete_outline, color: Colors.white),
-            Text('delete', style: TextStyle(color: Colors.white, fontSize: 12)),
+          children: [
+            Icon(Icons.delete_outline, color: Colors.white, size: 28),
+            SizedBox(height: 4),
+            Text(
+              'delete',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ],
         ),
       ),
@@ -139,8 +185,8 @@ class _CartViewState extends State<CartView> {
               borderRadius: BorderRadius.circular(8),
               child: Image.network(
                 item['image'],
-                width: 80,
-                height: 80,
+                width: 90,
+                height: 90,
                 fit: BoxFit.cover,
               ),
             ),
@@ -151,40 +197,56 @@ class _CartViewState extends State<CartView> {
                 children: [
                   Text(
                     item['name'],
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
                   ),
+                  const SizedBox(height: 4),
                   Text(
                     item['detail'],
-                    style: TextStyle(color: Colors.grey.shade400, fontSize: 12),
+                    style: TextStyle(color: Colors.grey.shade400, fontSize: 13),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 12),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        '\$${item['price']}',
+                        item['priceLabel'],
                         style: const TextStyle(
-                          color: Color(0xFF1B4E8B),
+                          color: Color(0xFF1B1B29),
                           fontWeight: FontWeight.bold,
-                          fontSize: 16,
+                          fontSize: 17,
                         ),
                       ),
                       Container(
+                        height: 32,
                         decoration: BoxDecoration(
                           border: Border.all(color: const Color(0xFFE0E0E0)),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Row(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
                             _buildQtyBtn(Icons.remove, () {
                               if (item['quantity'] > 1) {
                                 setState(() => item['quantity']--);
                               }
                             }),
+                            const VerticalDivider(width: 1, thickness: 1),
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 12),
-                              child: Text('${item['quantity']}'),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                              ),
+                              child: Text(
+                                '${item['quantity']}',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFF1B1B29),
+                                ),
+                              ),
                             ),
+                            const VerticalDivider(width: 1, thickness: 1),
                             _buildQtyBtn(Icons.add, () {
                               setState(() => item['quantity']++);
                             }),
@@ -205,9 +267,10 @@ class _CartViewState extends State<CartView> {
   Widget _buildQtyBtn(IconData icon, VoidCallback onTap) {
     return InkWell(
       onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.all(4.0),
-        child: Icon(icon, size: 16, color: const Color(0xFF1B4E8B)),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        alignment: Alignment.center,
+        child: Icon(icon, size: 18, color: const Color(0xFF1B1B29)),
       ),
     );
   }
@@ -221,8 +284,19 @@ class _CartViewState extends State<CartView> {
       ),
       child: TextButton.icon(
         onPressed: () {},
+        style: TextButton.styleFrom(
+          foregroundColor: AppColors.primary,
+          minimumSize: const Size(double.infinity, 52),
+          padding: const EdgeInsets.symmetric(vertical: 14),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
         icon: const Icon(Icons.add, size: 20),
-        label: const Text('Add More Items'),
+        label: const Text(
+          AppStrings.addMoreItems,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
     );
   }
@@ -233,7 +307,7 @@ class _CartViewState extends State<CartView> {
         Expanded(
           child: TextField(
             decoration: InputDecoration(
-              hintText: 'Promo Code',
+              hintText: AppStrings.promoCode,
               hintStyle: const TextStyle(color: Color(0xFFBDBDBD)),
               contentPadding: const EdgeInsets.symmetric(horizontal: 16),
               border: OutlineInputBorder(
@@ -251,10 +325,14 @@ class _CartViewState extends State<CartView> {
         ElevatedButton(
           onPressed: () {},
           style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.primary,
+            foregroundColor: Colors.white,
             minimumSize: const Size(100, 48),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
           ),
-          child: const Text('Apply'),
+          child: const Text(AppStrings.apply),
         ),
       ],
     );
@@ -263,16 +341,43 @@ class _CartViewState extends State<CartView> {
   Widget _buildPriceBreakdown() {
     return Column(
       children: [
-        _buildPriceRow('Sub Total', '\$5.95'),
-        _buildPriceRow('Delivery Fees', '\$1.00'),
-        _buildPriceRow('Taxes', '\$50.10', isRed: true),
-        const Divider(height: 32, thickness: 1, color: Color(0xFFF1F1F1)),
-        _buildPriceRow('Total', '\$100.00', isBold: true),
+        _buildPriceRow(AppStrings.subTotal, '\$5.95'),
+        _buildPriceRow(AppStrings.deliveryFees, '\$1.00'),
+        _buildPriceRow(AppStrings.taxes, '\$50.10', isRed: true),
+        const SizedBox(height: 16),
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final boxWidth = constraints.constrainWidth();
+            const dashWidth = 5.0;
+            const dashHeight = 1.2;
+            final dashCount = (boxWidth / (2 * dashWidth)).floor();
+            return Flex(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              direction: Axis.horizontal,
+              children: List.generate(dashCount, (_) {
+                return const SizedBox(
+                  width: dashWidth,
+                  height: dashHeight,
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(color: Color(0xFFD8E6E3)),
+                  ),
+                );
+              }),
+            );
+          },
+        ),
+        const SizedBox(height: 16),
+        _buildPriceRow(AppStrings.total, '\$100.00', isBold: true),
       ],
     );
   }
 
-  Widget _buildPriceRow(String label, String value, {bool isRed = false, bool isBold = false}) {
+  Widget _buildPriceRow(
+    String label,
+    String value, {
+    bool isRed = false,
+    bool isBold = false,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(

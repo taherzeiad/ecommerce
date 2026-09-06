@@ -113,4 +113,17 @@ class AppStrings {
   static const String shareThoughts = 'Share Your thoughts';
   static const String submit = 'Submit';
   static const String userReview = 'User Review';
+
+  // Cart
+  static const String shoppingCart = 'Shopping Cart';
+  static const String orderSummary = 'Order Summary';
+  static const String addMoreItems = 'Add More Items';
+  static const String discountCoupon = 'Discount Coupon';
+  static const String promoCode = 'Promo Code';
+  static const String apply = 'Apply';
+  static const String subTotal = 'Sub Total';
+  static const String deliveryFees = 'Delivery Fees';
+  static const String taxes = 'Taxes';
+  static const String total = 'Total';
+  static const String checkout = 'Check Out';
 }
