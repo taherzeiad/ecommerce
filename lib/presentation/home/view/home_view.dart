@@ -134,26 +134,31 @@ class HomeView extends StatelessWidget {
         ),
         Row(
           children: [
-            _buildHeaderIcon(Icons.notifications_none, hasBadge: true),
+            _buildHeaderIcon('assets/icons/notification.png', hasBadge: true),
             const SizedBox(width: 12),
-            _buildHeaderIcon(Icons.nightlight_round),
+            _buildHeaderIcon('assets/icons/theme.png'),
           ],
         ),
       ],
     );
   }
 
-  Widget _buildHeaderIcon(IconData icon, {bool hasBadge = false}) {
+  Widget _buildHeaderIcon(String assetPath, {bool hasBadge = false}) {
     return Stack(
       clipBehavior: Clip.none,
       children: [
         Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: AppColors.primary.withOpacity(0.12),
+            color: AppColors.primary.withValues(alpha: 0.12),
             shape: BoxShape.circle,
           ),
-          child: Icon(icon, color: AppColors.primary, size: 22),
+          child: _buildAssetIcon(
+            assetPath,
+            width: 22,
+            height: 22,
+            color: AppColors.primary,
+          ),
         ),
         if (hasBadge)
           Positioned(
@@ -182,7 +187,7 @@ class HomeView extends StatelessWidget {
         borderRadius: BorderRadius.circular(26),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -195,7 +200,12 @@ class HomeView extends StatelessWidget {
               onTap: () => Navigator.pushNamed(context, AppRoutes.search),
               child: Row(
                 children: [
-                  Icon(Icons.search, color: AppColors.primary),
+                  _buildAssetIcon(
+                    'assets/icons/search.png',
+                    color: AppColors.primary,
+                    width: 20,
+                    height: 20,
+                  ),
                   const SizedBox(width: 12),
                   const Text('Search', style: TextStyle(color: Colors.grey)),
                 ],
@@ -204,7 +214,12 @@ class HomeView extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () => Navigator.pushNamed(context, AppRoutes.filterSort),
-            child: Icon(Icons.tune, color: AppColors.primary, size: 22),
+            child: _buildAssetIcon(
+              'assets/icons/filter.png',
+              color: AppColors.primary,
+              width: 22,
+              height: 22,
+            ),
           ),
         ],
       ),
@@ -220,8 +235,8 @@ class HomeView extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            AppColors.primary.withOpacity(0.95),
-            AppColors.primary.withOpacity(0.35),
+            AppColors.primary.withValues(alpha: 0.95),
+            AppColors.primary.withValues(alpha: 0.35),
           ],
         ),
         borderRadius: BorderRadius.circular(24),
@@ -316,20 +331,16 @@ class HomeView extends StatelessWidget {
               borderRadius: BorderRadius.circular(18),
               border: Border.all(color: Colors.white, width: 2),
             ),
-            child: Column(
+            child: const Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text(
+                Text(
                   '08:30',
                   style: TextStyle(color: Colors.white, fontSize: 8),
                 ),
-                const SizedBox(height: 2),
-                const Icon(
-                  Icons.timer_outlined,
-                  color: Colors.cyanAccent,
-                  size: 10,
-                ),
-                const Text(
+                SizedBox(height: 2),
+                Icon(Icons.timer_outlined, color: Colors.cyanAccent, size: 10),
+                Text(
                   '5.2',
                   style: TextStyle(
                     color: Colors.cyanAccent,
@@ -337,7 +348,7 @@ class HomeView extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const Text(
+                Text(
                   'KM',
                   style: TextStyle(color: Colors.cyanAccent, fontSize: 8),
                 ),
@@ -355,7 +366,9 @@ class HomeView extends StatelessWidget {
       width: active ? 18 : 6,
       height: 6,
       decoration: BoxDecoration(
-        color: active ? const Color(0xFF00695C) : Colors.white.withOpacity(0.7),
+        color: active
+            ? const Color(0xFF00695C)
+            : Colors.white.withValues(alpha: 0.7),
         borderRadius: BorderRadius.circular(4),
       ),
     );
@@ -382,7 +395,7 @@ class HomeView extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
           child: Row(
             children: [
-              Text(
+              const Text(
                 AppStrings.seeAll,
                 style: TextStyle(
                   fontSize: 14,
@@ -393,7 +406,7 @@ class HomeView extends StatelessWidget {
               const SizedBox(width: 6),
               Container(
                 padding: const EdgeInsets.all(3),
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: AppColors.primary,
                   shape: BoxShape.circle,
                 ),
@@ -412,12 +425,12 @@ class HomeView extends StatelessWidget {
 
   Widget _buildCategoryList(BuildContext context) {
     final categories = ['Phone', 'Fashion', 'Audio', 'Laptop', 'Games'];
-    final icons = [
-      Icons.phone_android,
-      Icons.checkroom,
-      Icons.headphones,
-      Icons.laptop,
-      Icons.videogame_asset,
+    final categoryIcons = [
+      'assets/icons/phone.png',
+      'assets/icons/clothes.png',
+      'assets/icons/sound.png',
+      'assets/icons/laptop.png',
+      'assets/icons/play.png',
     ];
 
     return SizedBox(
@@ -432,13 +445,18 @@ class HomeView extends StatelessWidget {
             child: Column(
               children: [
                 Container(
-                  padding: const EdgeInsets.all(18),
+                  padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     shape: BoxShape.circle,
                     border: Border.all(color: AppColors.primary, width: 1.4),
                   ),
-                  child: Icon(icons[index], color: Colors.grey.shade700),
+                  child: _buildAssetIcon(
+                    categoryIcons[index],
+                    width: 24,
+                    height: 24,
+                    color: Colors.grey.shade700,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 Text(
@@ -454,6 +472,28 @@ class HomeView extends StatelessWidget {
           );
         },
       ),
+    );
+  }
+
+  // Helper widget to display icons from Assets
+  Widget _buildAssetIcon(
+    String path, {
+    double width = 24,
+    double height = 24,
+    Color? color,
+  }) {
+    return Image.asset(
+      path,
+      width: width,
+      height: height,
+      color: color,
+      errorBuilder: (context, error, stackTrace) {
+        return Icon(
+          Icons.image_not_supported_outlined,
+          size: width,
+          color: color ?? Colors.grey,
+        );
+      },
     );
   }
 }

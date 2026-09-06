@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../core/constants/app_colors.dart';
 import '../../../core/routes/app_routes.dart';
 
@@ -65,7 +66,8 @@ class _SettingsViewState extends State<SettingsView> {
             _buildSettingsItem(
               icon: Icons.description_outlined,
               title: 'Terms & Condition',
-              onTap: () => Navigator.pushNamed(context, AppRoutes.termsConditions),
+              onTap: () =>
+                  Navigator.pushNamed(context, AppRoutes.termsConditions),
             ),
             _buildSettingsItem(
               icon: Icons.info_outline,
@@ -113,7 +115,11 @@ class _SettingsViewState extends State<SettingsView> {
         subtitle: subtitle != null
             ? Text(subtitle, style: const TextStyle(color: AppColors.primary))
             : null,
-        trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: Color(0xFFBDBDBD)),
+        trailing: const Icon(
+          Icons.arrow_forward_ios,
+          size: 16,
+          color: Color(0xFFBDBDBD),
+        ),
       ),
     );
   }
@@ -138,28 +144,36 @@ class _SettingsViewState extends State<SettingsView> {
             color: AppColors.primary.withOpacity(0.1),
             shape: BoxShape.circle,
           ),
-          child: const Icon(Icons.notifications_none, color: AppColors.primary, size: 24),
+          child: const Icon(
+            Icons.notifications_none,
+            color: AppColors.primary,
+            size: 24,
+          ),
         ),
         title: Text(title, style: const TextStyle(fontWeight: FontWeight.w500)),
         trailing: Switch(
           value: value,
           onChanged: onChanged,
-          activeColor: AppColors.primary,
+          activeThumbColor: AppColors.primary,
         ),
       ),
     );
   }
 
   void _showLogoutDialog(BuildContext context) {
-     // Reusing the same dialog logic as in ProfileView
-     showDialog(
+    // Reusing the same dialog logic as in ProfileView
+    showDialog(
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.power_settings_new, color: Color(0xFFE57373), size: 64),
+            const Icon(
+              Icons.power_settings_new,
+              color: Color(0xFFE57373),
+              size: 64,
+            ),
             const SizedBox(height: 24),
             const Text(
               'Are You Sure to wont to Log out ?',
@@ -179,9 +193,15 @@ class _SettingsViewState extends State<SettingsView> {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.pushNamedAndRemoveUntil(context, AppRoutes.login, (route) => false);
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        AppRoutes.login,
+                        (route) => false,
+                      );
                     },
-                    style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFE57373)),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFE57373),
+                    ),
                     child: const Text('Log out'),
                   ),
                 ),
