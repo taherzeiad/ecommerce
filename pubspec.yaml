@@ -105,6 +105,7 @@ flutter:
         - package: vector_graphics_compiler
     - lib/assets/images/onboarding_1.png
     - lib/assets/images/onboarding_3.png
+    - lib/assets/images/image 9.png
     - path: lib/assets/images/onboarding_2.svg
       transformers:
         - package: vector_graphics_compiler

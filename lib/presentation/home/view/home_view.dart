@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vector_graphics/vector_graphics.dart';
 
+import '../../../core/constants/app_assets.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_strings.dart';
 import '../../../core/routes/app_routes.dart';
@@ -312,55 +313,10 @@ class HomeView extends StatelessWidget {
   // Decorative fitness-watch graphic (placeholder until a real product image
   // is supplied) built to resemble the banner artwork.
   Widget _buildWatchGraphic() {
-    return SizedBox(
-      width: 90,
-      height: 150,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Container(
-            width: 44,
-            height: 150,
-            decoration: BoxDecoration(
-              color: AppColors.primary,
-              borderRadius: BorderRadius.circular(22),
-            ),
-          ),
-          Container(
-            width: 72,
-            height: 92,
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: const Color(0xFF1B1B1B),
-              borderRadius: BorderRadius.circular(18),
-              border: Border.all(color: Colors.white, width: 2),
-            ),
-            child: const Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  '08:30',
-                  style: TextStyle(color: Colors.white, fontSize: 8),
-                ),
-                SizedBox(height: 2),
-                Icon(Icons.timer_outlined, color: Colors.cyanAccent, size: 10),
-                Text(
-                  '5.2',
-                  style: TextStyle(
-                    color: Colors.cyanAccent,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  'KM',
-                  style: TextStyle(color: Colors.cyanAccent, fontSize: 8),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
+    return Image.asset(
+      AppAssets.bannerImage,
+      width: 150,
+      fit: BoxFit.contain,
     );
   }
 
