@@ -134,9 +134,9 @@ class HomeView extends StatelessWidget {
         ),
         Row(
           children: [
-            _buildHeaderIcon('assets/icons/notification.png', hasBadge: true),
+            _buildHeaderIcon('lib/assets/icons/notification.png', hasBadge: true),
             const SizedBox(width: 12),
-            _buildHeaderIcon('assets/icons/theme.png'),
+            _buildHeaderIcon('lib/assets/icons/theme.png'),
           ],
         ),
       ],
@@ -201,7 +201,7 @@ class HomeView extends StatelessWidget {
               child: Row(
                 children: [
                   _buildAssetIcon(
-                    'assets/icons/search.png',
+                    'lib/assets/icons/search.png',
                     color: AppColors.primary,
                     width: 20,
                     height: 20,
@@ -215,7 +215,7 @@ class HomeView extends StatelessWidget {
           GestureDetector(
             onTap: () => Navigator.pushNamed(context, AppRoutes.filterSort),
             child: _buildAssetIcon(
-              'assets/icons/filter.png',
+              'lib/assets/icons/filter.png',
               color: AppColors.primary,
               width: 22,
               height: 22,
@@ -426,15 +426,15 @@ class HomeView extends StatelessWidget {
   Widget _buildCategoryList(BuildContext context) {
     final categories = ['Phone', 'Fashion', 'Audio', 'Laptop', 'Games'];
     final categoryIcons = [
-      'assets/icons/phone.png',
-      'assets/icons/clothes.png',
-      'assets/icons/sound.png',
-      'assets/icons/laptop.png',
-      'assets/icons/play.png',
+      'lib/assets/icons/phone.png',
+      'lib/assets/icons/clothes.png',
+      'lib/assets/icons/sound.png',
+      'lib/assets/icons/laptop.png',
+      'lib/assets/icons/play.png',
     ];
 
     return SizedBox(
-      height: 100,
+      height: 95,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         itemCount: categories.length,
@@ -449,16 +449,16 @@ class HomeView extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     shape: BoxShape.circle,
-                    border: Border.all(color: AppColors.primary, width: 1.4),
+                    border: Border.all(color: AppColors.primary, width: 2),
                   ),
                   child: _buildAssetIcon(
                     categoryIcons[index],
-                    width: 24,
-                    height: 24,
+                    width: 25,
+                    height: 35,
                     color: Colors.grey.shade700,
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 5),
                 Text(
                   categories[index],
                   style: const TextStyle(
