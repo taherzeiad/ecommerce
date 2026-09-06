@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vector_graphics/vector_graphics.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_strings.dart';
@@ -485,6 +486,14 @@ class HomeView extends StatelessWidget {
     double height = 24,
     Color? color,
   }) {
+    if (path.endsWith('.svg')) {
+      return VectorGraphic(
+        loader: AssetBytesLoader(path),
+        width: width,
+        height: height,
+        colorFilter: color != null ? ColorFilter.mode(color, BlendMode.srcIn) : null,
+      );
+    }
     return Image.asset(
       path,
       width: width,

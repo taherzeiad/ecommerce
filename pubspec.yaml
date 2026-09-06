@@ -91,6 +91,18 @@ flutter:
     - path: lib/assets/icons/lockfor.svg
       transformers:
         - package: vector_graphics_compiler
+    - path: lib/assets/icons/notification.svg
+      transformers:
+        - package: vector_graphics_compiler
+    - path: lib/assets/icons/moon.svg
+      transformers:
+        - package: vector_graphics_compiler
+    - path: lib/assets/icons/search.svg
+      transformers:
+        - package: vector_graphics_compiler
+    - path: lib/assets/icons/filter.svg
+      transformers:
+        - package: vector_graphics_compiler
     - lib/assets/images/onboarding_1.png
     - lib/assets/images/onboarding_3.png
     - path: lib/assets/images/onboarding_2.svg
