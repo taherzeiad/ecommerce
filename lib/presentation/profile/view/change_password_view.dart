@@ -66,7 +66,11 @@ class ChangePasswordView extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 8.0),
       child: Text(
         label,
-        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Color(0xFF1B1B29)),
+        style: const TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+          color: Color(0xFF1B1B29),
+        ),
       ),
     );
   }
@@ -78,7 +82,10 @@ class ChangePasswordView extends StatelessWidget {
         hintText: hintText,
         hintStyle: const TextStyle(color: Color(0xFFBDBDBD)),
         prefixIcon: const Icon(Icons.lock_outline, color: Color(0xFFBDBDBD)),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 16,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
           borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
