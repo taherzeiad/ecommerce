@@ -16,5 +16,7 @@ class AppAssets {
   static const String lock = '$_baseIcons/lock.svg';
   static const String verify = '$_baseIcons/nument.svg';
   static const String resetPassword = '$_baseIcons/lockcry.svg';
+  static const String changePassword = '$_baseIcons/lockfor.svg';
+  static const String bannerImage = '$_baseImages/image 9.png';
   static const String splash = 'lib/assets/images/splash.svg';
 }

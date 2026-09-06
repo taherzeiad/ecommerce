@@ -69,40 +69,46 @@ flutter:
   uses-material-design: true
 
   assets:
-    - path: lib/assets/icons/
+    - lib/assets/icons/
+    - path: lib/assets/icons/facebook.svg
+      transformers:
+        - package: vector_graphics_compiler
+    - path: lib/assets/icons/linkedin.svg
+      transformers:
+        - package: vector_graphics_compiler
+    - path: lib/assets/icons/pinterest.svg
+      transformers:
+        - package: vector_graphics_compiler
+    - path: lib/assets/icons/lock.svg
+      transformers:
+        - package: vector_graphics_compiler
+    - path: lib/assets/icons/nument.svg
+      transformers:
+        - package: vector_graphics_compiler
+    - path: lib/assets/icons/lockcry.svg
+      transformers:
+        - package: vector_graphics_compiler
+    - path: lib/assets/icons/lockfor.svg
+      transformers:
+        - package: vector_graphics_compiler
+    - path: lib/assets/icons/notification.svg
+      transformers:
+        - package: vector_graphics_compiler
+    - path: lib/assets/icons/moon.svg
+      transformers:
+        - package: vector_graphics_compiler
+    - path: lib/assets/icons/search.svg
+      transformers:
+        - package: vector_graphics_compiler
+    - path: lib/assets/icons/filter.svg
       transformers:
         - package: vector_graphics_compiler
     - lib/assets/images/onboarding_1.png
     - lib/assets/images/onboarding_3.png
+    - lib/assets/images/image 9.png
     - path: lib/assets/images/onboarding_2.svg
       transformers:
         - package: vector_graphics_compiler
     - path: lib/assets/images/splash.svg
       transformers:
         - package: vector_graphics_compiler
-
-  # An image asset can refer to one or more resolution-specific "variants", see
-  # https://flutter.dev/to/resolution-aware-images
-
-  # For details regarding adding assets from package dependencies, see
-  # https://flutter.dev/to/asset-from-package
-
-  # To add custom fonts to your application, add a fonts section here,
-  # in this "flutter" section. Each entry in this list should have a
-  # "family" key with the font family name, and a "fonts" key with a
-  # list giving the asset and other descriptors for the font. For
-  # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
-  #
-  # For details regarding fonts from package dependencies,
-  # see https://flutter.dev/to/font-from-package

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/constants/app_colors.dart';
 
 class AuthHeader extends StatelessWidget {
   final String title;
@@ -69,7 +68,7 @@ class AuthHeader extends StatelessWidget {
               24,
               40,
               24,
-              bottomWidget != null ? 60 : 40,
+              bottomWidget != null ? 80 : 40,
             ),
             child: SizedBox(
               width: double.infinity,
@@ -80,11 +79,15 @@ class AuthHeader extends StatelessWidget {
                 children: [
                   if (titleOnTop) ...[
                     titleWidget,
-                    const SizedBox(height: 8),
-                    subtitleWidget,
+                    if (subtitle.isNotEmpty) ...[
+                      const SizedBox(height: 8),
+                      subtitleWidget,
+                    ],
                   ] else ...[
-                    subtitleWidget,
-                    const SizedBox(height: 16),
+                    if (subtitle.isNotEmpty) ...[
+                      subtitleWidget,
+                      const SizedBox(height: 16),
+                    ],
                     titleWidget,
                   ],
                 ],

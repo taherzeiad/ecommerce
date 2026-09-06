@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:vector_graphics/vector_graphics.dart';
+
+import '../../../core/constants/app_assets.dart';
 import '../../../core/constants/app_colors.dart';
 
 class ChangePasswordView extends StatelessWidget {
@@ -21,9 +24,9 @@ class ChangePasswordView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Center(
-              child: Image.network(
-                'https://cdn-icons-png.flaticon.com/512/6195/6195699.png', // Dummy unlock icon
+            const Center(
+              child: VectorGraphic(
+                loader: AssetBytesLoader(AppAssets.changePassword),
                 height: 150,
               ),
             ),
@@ -63,7 +66,11 @@ class ChangePasswordView extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 8.0),
       child: Text(
         label,
-        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Color(0xFF1B1B29)),
+        style: const TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+          color: Color(0xFF1B1B29),
+        ),
       ),
     );
   }
@@ -75,7 +82,10 @@ class ChangePasswordView extends StatelessWidget {
         hintText: hintText,
         hintStyle: const TextStyle(color: Color(0xFFBDBDBD)),
         prefixIcon: const Icon(Icons.lock_outline, color: Color(0xFFBDBDBD)),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 16,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
           borderSide: const BorderSide(color: Color(0xFFE0E0E0)),

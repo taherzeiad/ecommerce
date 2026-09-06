@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vector_graphics/vector_graphics.dart';
 
-import '../../../../core/constants/app_colors.dart';
 import '../../../../data/models/onboarding_item_model.dart';
 
 /// Renders a single onboarding page: illustration card + title + description.
