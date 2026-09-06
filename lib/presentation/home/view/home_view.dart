@@ -134,9 +134,12 @@ class HomeView extends StatelessWidget {
         ),
         Row(
           children: [
-            _buildHeaderIcon('lib/assets/icons/notification.png', hasBadge: true),
+            _buildHeaderIcon(
+              'lib/assets/icons/notification.svg',
+              hasBadge: true,
+            ),
             const SizedBox(width: 12),
-            _buildHeaderIcon('lib/assets/icons/theme.png'),
+            _buildHeaderIcon('lib/assets/icons/moon.svg'),
           ],
         ),
       ],
@@ -201,7 +204,7 @@ class HomeView extends StatelessWidget {
               child: Row(
                 children: [
                   _buildAssetIcon(
-                    'lib/assets/icons/search.png',
+                    'lib/assets/icons/search.svg',
                     color: AppColors.primary,
                     width: 20,
                     height: 20,
@@ -215,7 +218,7 @@ class HomeView extends StatelessWidget {
           GestureDetector(
             onTap: () => Navigator.pushNamed(context, AppRoutes.filterSort),
             child: _buildAssetIcon(
-              'lib/assets/icons/filter.png',
+              'lib/assets/icons/filter.svg',
               color: AppColors.primary,
               width: 22,
               height: 22,
