@@ -103,8 +103,28 @@ flutter:
     - path: lib/assets/icons/filter.svg
       transformers:
         - package: vector_graphics_compiler
+    - path: lib/assets/icons/home.svg
+      transformers:
+        - package: vector_graphics_compiler
+    - path: lib/assets/icons/cat.svg
+      transformers:
+        - package: vector_graphics_compiler
+    - path: lib/assets/icons/basket.svg
+      transformers:
+        - package: vector_graphics_compiler
+    - path: lib/assets/icons/like.svg
+      transformers:
+        - package: vector_graphics_compiler
+    - path: lib/assets/icons/fillcat.svg
+      transformers:
+        - package: vector_graphics_compiler
+    - path: lib/assets/icons/filllove.svg
+      transformers:
+        - package: vector_graphics_compiler
     - lib/assets/images/onboarding_1.png
     - lib/assets/images/onboarding_3.png
+    - lib/assets/images/phonecolor.png
+    - lib/assets/images/lap.png
     - lib/assets/images/image 9.png
     - path: lib/assets/images/onboarding_2.svg
       transformers:

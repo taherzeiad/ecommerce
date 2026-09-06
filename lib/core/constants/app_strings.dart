@@ -96,7 +96,8 @@ class AppStrings {
   // Wishlist
   static const String wishlist = 'WishList';
   static const String wishlistEmpty = 'My Wishlist is Empty';
-  static const String wishlistEmptyDesc = 'Tap Heart Button to Start Saving\nYour Favorite Item';
+  static const String wishlistEmptyDesc =
+      'Tap Heart Button to Start Saving\nYour Favorite Item';
   static const String explore = 'Explore';
 
   // Notifications

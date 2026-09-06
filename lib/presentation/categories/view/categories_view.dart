@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vector_graphics/vector_graphics.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_strings.dart';
@@ -25,7 +26,12 @@ class CategoriesView extends StatelessWidget {
         centerTitle: true,
         actions: [
           IconButton(
-            icon: const Icon(Icons.nights_stay_outlined, color: Colors.white),
+            icon: const VectorGraphic(
+              loader: AssetBytesLoader('lib/assets/icons/moon.svg'),
+              width: 24,
+              height: 24,
+              colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
+            ),
             onPressed: () {},
           ),
         ],
@@ -54,13 +60,13 @@ class CategoriesView extends StatelessWidget {
               _buildFeaturedCard(
                 AppStrings.latestSmartphones,
                 AppStrings.discoverTech,
-                Icons.phone_iphone,
+                'lib/assets/images/phonecolor.png',
               ),
               const SizedBox(height: 16),
               _buildFeaturedCard(
                 AppStrings.gamingLaptops,
                 AppStrings.highPerformance,
-                Icons.laptop_mac,
+                'lib/assets/images/lap.png',
               ),
               const SizedBox(height: 24),
               GridView.builder(
@@ -116,24 +122,30 @@ class CategoriesView extends StatelessWidget {
       ),
       child: const Row(
         children: [
-          Icon(Icons.search, color: AppColors.primary),
+          VectorGraphic(
+            loader: AssetBytesLoader('lib/assets/icons/search.svg'),
+            colorFilter: ColorFilter.mode(AppColors.primary, BlendMode.srcIn),
+          ),
           SizedBox(width: 12),
           Text(
             AppStrings.searchPlaceholder,
             style: TextStyle(color: Colors.grey),
           ),
           Spacer(),
-          Icon(Icons.tune, color: AppColors.primary),
+          VectorGraphic(
+            loader: AssetBytesLoader('lib/assets/icons/filter.svg'),
+            colorFilter: ColorFilter.mode(AppColors.primary, BlendMode.srcIn),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildFeaturedCard(String title, String subtitle, IconData icon) {
+  Widget _buildFeaturedCard(String title, String subtitle, String imagePath) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppColors.primary.withOpacity(0.4),
+        color: AppColors.primary.withValues(alpha: 0.4),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -148,20 +160,22 @@ class CategoriesView extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
                     color: Colors.white,
+                    letterSpacing: 0,
                   ),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   subtitle,
                   style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.white.withOpacity(0.9),
+                    fontSize: 14,
+                    letterSpacing: 0,
+                    color: Colors.white.withValues(alpha: 0.9),
                   ),
                 ),
               ],
             ),
           ),
-          Icon(icon, size: 60, color: Colors.white.withOpacity(0.8)),
+          Image.asset(imagePath, width: 50, height: 63),
         ],
       ),
     );
@@ -176,7 +190,7 @@ class CategoriesView extends StatelessWidget {
   ) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.primary.withOpacity(0.05),
+        color: AppColors.primary.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Stack(
