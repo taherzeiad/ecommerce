@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:vector_graphics/vector_graphics.dart';
+
 import '../../../core/constants/app_colors.dart';
 
 class CustomBottomNav extends StatelessWidget {
@@ -31,30 +33,29 @@ class CustomBottomNav extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           _NavItem(
-            icon: Icons.home_outlined,
-            activeIcon: Icons.home,
+            assetPath: 'lib/assets/icons/home.svg',
             isActive: currentIndex == 0,
             onTap: () => onTap(0),
           ),
           _NavItem(
-            icon: Icons.dashboard_outlined,
-            activeIcon: Icons.dashboard,
+            assetPath: 'lib/assets/icons/cat.svg',
+            activeAssetPath: 'lib/assets/icons/fillcat.svg',
             isActive: currentIndex == 1,
             onTap: () => onTap(1),
           ),
           _NavItem(
-            icon: Icons.shopping_bag_outlined,
-            activeIcon: Icons.shopping_bag,
+            assetPath: 'lib/assets/icons/basket.svg',
             isActive: currentIndex == 2,
             onTap: () => onTap(2),
           ),
           _NavItem(
-            icon: Icons.favorite_border,
-            activeIcon: Icons.favorite,
+            assetPath: 'lib/assets/icons/like.svg',
+            activeAssetPath: 'lib/assets/icons/filllove.svg',
             isActive: currentIndex == 3,
             onTap: () => onTap(3),
           ),
           _NavItem(
+            // Keeping profile icon as it is or using a default if no SVG provided
             icon: Icons.person_outline,
             activeIcon: Icons.person,
             isActive: currentIndex == 4,
@@ -67,30 +68,48 @@ class CustomBottomNav extends StatelessWidget {
 }
 
 class _NavItem extends StatelessWidget {
-  final IconData icon;
-  final IconData activeIcon;
+  final String? assetPath;
+  final String? activeAssetPath; // مسار الأيقونة الممتلئة (Solid)
+  final IconData? icon;
+  final IconData? activeIcon;
   final bool isActive;
   final VoidCallback onTap;
 
   const _NavItem({
-    required this.icon,
-    required this.activeIcon,
+    this.assetPath,
+    this.activeAssetPath,
+    this.icon,
+    this.activeIcon,
     required this.isActive,
     required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
+    // اختيار المسار الصحيح بناءً على حالة التحديد
+    final String? currentAsset = isActive ? (activeAssetPath ?? assetPath) : assetPath;
+
     return InkWell(
       onTap: onTap,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            isActive ? activeIcon : icon,
-            color: isActive ? AppColors.primary : Colors.grey.shade400,
-            size: 28,
-          ),
+          if (currentAsset != null)
+            VectorGraphic(
+              loader: AssetBytesLoader(currentAsset),
+              width: 28,
+              height: 28,
+              colorFilter: ColorFilter.mode(
+                isActive ? AppColors.primary : Colors.grey.shade400,
+                BlendMode.srcIn,
+              ),
+            )
+          else
+            Icon(
+              isActive ? activeIcon : icon,
+              color: isActive ? AppColors.primary : Colors.grey.shade400,
+              size: 28,
+            ),
           if (isActive) ...[
             const SizedBox(height: 4),
             Container(
