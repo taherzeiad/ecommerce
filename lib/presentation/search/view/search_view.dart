@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/routes/app_routes.dart';
+import '../../../core/widgets/custom_search_bar.dart';
 import '../widgets/search_error_widgets.dart';
 
 class SearchView extends StatefulWidget {
@@ -23,29 +24,20 @@ class _SearchViewState extends State<SearchView> {
         backgroundColor: AppColors.primary,
         elevation: 0,
         automaticallyImplyLeading: false,
-        title: Container(
+        title: CustomSearchBar(
+          hintText: 'Search...',
           height: 44,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(22),
-          ),
-          child: TextField(
-            controller: _searchController,
-            onChanged: (val) => setState(() => _query = val),
-            onSubmitted: (val) {
-              if (val == 'Camera Ex2') {
-                setState(() => _hasResults = false);
-              } else {
-                setState(() => _hasResults = true);
-              }
-            },
-            decoration: InputDecoration(
-              hintText: 'Search...',
-              prefixIcon: const Icon(Icons.search, color: AppColors.primary),
-              border: InputBorder.none,
-              contentPadding: const EdgeInsets.symmetric(vertical: 10),
-            ),
-          ),
+          readOnly: false,
+          controller: _searchController,
+          showFilter: false,
+          onChanged: (val) => setState(() => _query = val),
+          onSubmitted: (val) {
+            if (val == 'Camera Ex2') {
+              setState(() => _hasResults = false);
+            } else {
+              setState(() => _hasResults = true);
+            }
+          },
         ),
         actions: [
           IconButton(
@@ -180,6 +172,15 @@ class _SearchViewState extends State<SearchView> {
                     child: Image.network(
                       'https://m.media-amazon.com/images/I/71TPda7cwUL._AC_SL1500_.jpg', // Macbook image
                       fit: BoxFit.contain,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return const Center(child: CircularProgressIndicator());
+                      },
+                      errorBuilder: (context, error, stackTrace) => const Icon(
+                        Icons.image_not_supported,
+                        color: Colors.grey,
+                        size: 50,
+                      ),
                     ),
                   ),
                 ),

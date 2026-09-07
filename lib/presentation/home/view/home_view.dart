@@ -5,6 +5,7 @@ import '../../../core/constants/app_assets.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_strings.dart';
 import '../../../core/routes/app_routes.dart';
+import '../../../core/widgets/custom_search_bar.dart';
 import '../../../data/models/product_model.dart';
 import '../widgets/product_card.dart';
 
@@ -39,7 +40,14 @@ class HomeView extends StatelessWidget {
             children: [
               _buildHeader(),
               const SizedBox(height: 16),
-              _buildSearch(context),
+              CustomSearchBar(
+                hintText: 'Search',
+                height: 40,
+                hasShadow: true,
+                hasBorder: false,
+                onTap: () => Navigator.pushNamed(context, AppRoutes.search),
+                onFilterTap: () => Navigator.pushNamed(context, AppRoutes.filterSort),
+              ),
               const SizedBox(height: 16),
               _buildBanner(),
               const SizedBox(height: 16),
@@ -60,7 +68,7 @@ class HomeView extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               SizedBox(
-                height: 230,
+                height: 167,
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   itemCount: dummyProducts.length,
@@ -180,55 +188,6 @@ class HomeView extends StatelessWidget {
             ),
           ),
       ],
-    );
-  }
-
-  Widget _buildSearch(BuildContext context) {
-    return Container(
-      width: 361,
-      height: 40,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(26),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 10,
-            offset: const Offset(4, 0),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: GestureDetector(
-              onTap: () => Navigator.pushNamed(context, AppRoutes.search),
-              child: Row(
-                children: [
-                  _buildAssetIcon(
-                    'lib/assets/icons/search.svg',
-                    color: AppColors.primary,
-                    width: 24,
-                    height: 24,
-                  ),
-                  const SizedBox(width: 12),
-                  const Text('Search', style: TextStyle(color: Colors.grey)),
-                ],
-              ),
-            ),
-          ),
-          GestureDetector(
-            onTap: () => Navigator.pushNamed(context, AppRoutes.filterSort),
-            child: _buildAssetIcon(
-              'lib/assets/icons/filter.svg',
-              color: AppColors.primary,
-              width: 22,
-              height: 22,
-            ),
-          ),
-        ],
-      ),
     );
   }
 

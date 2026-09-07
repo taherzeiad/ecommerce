@@ -36,7 +36,7 @@ class ProductCard extends StatelessWidget {
             Stack(
               children: [
                 Container(
-                  height: 110,
+                  height: 80,
                   width: double.infinity,
                   alignment: Alignment.center,
                   child: const Icon(Icons.image, color: Colors.grey, size: 40),
@@ -59,7 +59,7 @@ class ProductCard extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(
                 fontWeight: FontWeight.w600,
-                fontSize: 14,
+                fontSize: 12,
                 color: _kDarkText,
               ),
             ),
@@ -71,7 +71,7 @@ class ProductCard extends StatelessWidget {
                   style: const TextStyle(
                     color: _kDarkText,
                     fontWeight: FontWeight.bold,
-                    fontSize: 16,
+                    fontSize: 12,
                   ),
                 ),
                 if (product.oldPrice != null &&

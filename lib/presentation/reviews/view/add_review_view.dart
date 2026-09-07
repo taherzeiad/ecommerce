@@ -30,6 +30,11 @@ class AddReviewView extends StatelessWidget {
                     width: 100,
                     height: 100,
                     fit: BoxFit.cover,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return const Center(child: CircularProgressIndicator());
+                    },
+                    errorBuilder: (context, error, stackTrace) => const Icon(Icons.image_not_supported),
                   ),
                 ),
                 const SizedBox(width: 24),

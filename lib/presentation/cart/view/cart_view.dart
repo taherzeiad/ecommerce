@@ -85,6 +85,7 @@ class _CartViewState extends State<CartView> {
                   ),
                   const SizedBox(height: 16),
                   ListView.separated(
+                    padding: EdgeInsets.zero,
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: _cartItems.length,
@@ -94,7 +95,7 @@ class _CartViewState extends State<CartView> {
                       return _buildCartItem(index);
                     },
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 15),
                   _buildAddMoreItems(),
                   const SizedBox(height: 32),
                   const Text(
@@ -188,6 +189,28 @@ class _CartViewState extends State<CartView> {
                 width: 90,
                 height: 90,
                 fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    width: 90,
+                    height: 90,
+                    color: Colors.grey.shade200,
+                    child: const Icon(
+                      Icons.image_not_supported,
+                      color: Colors.grey,
+                    ),
+                  );
+                },
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return Container(
+                    width: 90,
+                    height: 90,
+                    color: Colors.grey.shade200,
+                    child: const Center(
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    ),
+                  );
+                },
               ),
             ),
             const SizedBox(width: 16),

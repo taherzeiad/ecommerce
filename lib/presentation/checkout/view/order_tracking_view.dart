@@ -36,7 +36,11 @@ class OrderTrackingView extends StatelessWidget {
       child: Image.network(
         'https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/-73.935242,40.730610,13/600x600?access_token=dummy', // Placeholder map
         fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) => const Center(child: Icon(Icons.map, size: 100, color: Colors.grey)),
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return const Center(child: CircularProgressIndicator());
+        },
+        errorBuilder: (context, error, stackTrace) => const Center(child: Icon(Icons.image_not_supported, size: 100, color: Colors.grey)),
       ),
     );
   }
