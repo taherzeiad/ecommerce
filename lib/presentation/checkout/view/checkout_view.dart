@@ -272,7 +272,15 @@ class _CheckoutViewState extends State<CheckoutView> {
             border: Border.all(color: const Color(0xFFD8E6E3)),
             borderRadius: BorderRadius.circular(8),
           ),
-          child: Image.network(url, fit: BoxFit.contain),
+          child: Image.network(
+            url,
+            fit: BoxFit.contain,
+            loadingBuilder: (context, child, loadingProgress) {
+              if (loadingProgress == null) return child;
+              return const Center(child: CircularProgressIndicator());
+            },
+            errorBuilder: (context, error, stackTrace) => const Icon(Icons.image_not_supported),
+          ),
         ),
       )
           .toList(),
@@ -311,7 +319,17 @@ class _CheckoutViewState extends State<CheckoutView> {
             ),
           ),
           const Spacer(),
-          Image.network(logoUrl, width: 40, height: 24, fit: BoxFit.contain),
+          Image.network(
+            logoUrl,
+            width: 40,
+            height: 24,
+            fit: BoxFit.contain,
+            loadingBuilder: (context, child, loadingProgress) {
+              if (loadingProgress == null) return child;
+              return const Center(child: CircularProgressIndicator());
+            },
+            errorBuilder: (context, error, stackTrace) => const Icon(Icons.image_not_supported),
+          ),
         ],
       ),
     );
@@ -398,6 +416,11 @@ class _CheckoutViewState extends State<CheckoutView> {
               Image.network(
                 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/1280px-Mastercard-logo.svg.png',
                 width: 50,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return const Center(child: CircularProgressIndicator());
+                },
+                errorBuilder: (context, error, stackTrace) => const Icon(Icons.image_not_supported),
               ),
             ],
           ),

@@ -4,6 +4,7 @@ import 'package:vector_graphics/vector_graphics.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_strings.dart';
 import '../../../core/routes/app_routes.dart';
+import '../../../core/widgets/custom_search_bar.dart';
 
 class CategoriesView extends StatelessWidget {
   const CategoriesView({super.key});
@@ -50,7 +51,13 @@ class CategoriesView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildSearch(),
+              CustomSearchBar(
+                hintText: AppStrings.searchPlaceholder,
+                height: 40,
+                onTap: () => Navigator.pushNamed(context, AppRoutes.search),
+                onFilterTap: () =>
+                    Navigator.pushNamed(context, AppRoutes.filterSort),
+              ),
               const SizedBox(height: 24),
               const Text(
                 AppStrings.featuredCategories,
@@ -107,37 +114,6 @@ class CategoriesView extends StatelessWidget {
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildSearch() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      width: 361,
-      height: 40,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(26),
-        border: Border.all(color: Colors.grey.shade200),
-      ),
-      child: const Row(
-        children: [
-          VectorGraphic(
-            loader: AssetBytesLoader('lib/assets/icons/search.svg'),
-            colorFilter: ColorFilter.mode(AppColors.primary, BlendMode.srcIn),
-          ),
-          SizedBox(width: 12),
-          Text(
-            AppStrings.searchPlaceholder,
-            style: TextStyle(color: Colors.grey, fontSize: 14),
-          ),
-          Spacer(),
-          VectorGraphic(
-            loader: AssetBytesLoader('lib/assets/icons/filter.svg'),
-            colorFilter: ColorFilter.mode(AppColors.primary, BlendMode.srcIn),
-          ),
-        ],
       ),
     );
   }

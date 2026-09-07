@@ -115,7 +115,20 @@ class AllProductsView extends StatelessWidget {
           Expanded(
             child: Stack(
               children: [
-                Center(child: Padding(padding: const EdgeInsets.all(12), child: Image.network(images[index], fit: BoxFit.contain))),
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Image.network(
+                      images[index],
+                      fit: BoxFit.contain,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return const Center(child: CircularProgressIndicator());
+                      },
+                      errorBuilder: (context, error, stackTrace) => const Icon(Icons.image_not_supported),
+                    ),
+                  ),
+                ),
                 const Positioned(top: 8, right: 8, child: Icon(Icons.favorite_border, color: Color(0xFFBDBDBD), size: 20)),
               ],
             ),
