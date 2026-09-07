@@ -147,12 +147,12 @@ class _CheckoutViewState extends State<CheckoutView> {
   }
 
   Widget _buildAddressRow(
-    IconData icon,
-    String label,
-    String value, {
-    bool showEdit = false,
-    bool showCheck = false,
-  }) {
+      IconData icon,
+      String label,
+      String value, {
+        bool showEdit = false,
+        bool showCheck = false,
+      }) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -265,25 +265,25 @@ class _CheckoutViewState extends State<CheckoutView> {
       children: icons
           .map(
             (url) => Container(
-              padding: const EdgeInsets.all(8),
-              width: 60,
-              height: 40,
-              decoration: BoxDecoration(
-                border: Border.all(color: const Color(0xFFD8E6E3)),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Image.network(url, fit: BoxFit.contain),
-            ),
-          )
+          padding: const EdgeInsets.all(8),
+          width: 60,
+          height: 40,
+          decoration: BoxDecoration(
+            border: Border.all(color: const Color(0xFFD8E6E3)),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Image.network(url, fit: BoxFit.contain),
+        ),
+      )
           .toList(),
     );
   }
 
   Widget _buildCardOption(
-    String title,
-    String logoUrl, {
-    bool isSelected = false,
-  }) {
+      String title,
+      String logoUrl, {
+        bool isSelected = false,
+      }) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
