@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:vector_graphics/vector_graphics.dart';
 
 import '../../../core/constants/app_assets.dart';
@@ -6,7 +7,7 @@ import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_strings.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../core/widgets/custom_search_bar.dart';
-import '../../../data/models/product_model.dart';
+import '../view_model/home_view_model.dart';
 import '../widgets/product_card.dart';
 
 // Design-system text color used across the home screen (titles, prices).
@@ -17,96 +18,87 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<ProductModel> dummyProducts = List.generate(
-      4,
-      (index) => ProductModel(
-        id: index.toString(),
-        name: index == 0 ? 'Apple MacBook Air M2' : 'Product $index',
-        category: 'Laptop',
-        price: 3300.0,
-        oldPrice: 3500.0,
-        description: 'Description here...',
-        images: [],
-      ),
-    );
+    final viewModel = context.watch<HomeViewModel>();
 
     return Scaffold(
       backgroundColor: const Color(0xFFF3FAF9),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildHeader(),
-              const SizedBox(height: 16),
-              CustomSearchBar(
-                hintText: 'Search',
-                height: 40,
-                hasShadow: true,
-                hasBorder: false,
-                onTap: () => Navigator.pushNamed(context, AppRoutes.search),
-                onFilterTap: () => Navigator.pushNamed(context, AppRoutes.filterSort),
-              ),
-              const SizedBox(height: 16),
-              _buildBanner(),
-              const SizedBox(height: 16),
-              _buildSectionHeader(
-                AppStrings.categories,
-                () => Navigator.pushNamed(
-                  context,
-                  AppRoutes.mainWrapper,
-                  arguments: 1,
-                ),
-              ),
-              const SizedBox(height: 16),
-              _buildCategoryList(context),
-              const SizedBox(height: 16),
-              _buildSectionHeader(
-                AppStrings.flashDeals,
-                () => Navigator.pushNamed(context, AppRoutes.allProducts),
-              ),
-              const SizedBox(height: 16),
-              SizedBox(
-                height: 167,
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: dummyProducts.length,
-                  separatorBuilder: (_, __) => const SizedBox(width: 16),
-                  itemBuilder: (context, index) {
-                    return ProductCard(
-                      product: dummyProducts[index],
-                      onTap: () => Navigator.pushNamed(
+        child: viewModel.isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : SingleChildScrollView(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildHeader(),
+                    const SizedBox(height: 16),
+                    CustomSearchBar(
+                      hintText: 'Search',
+                      height: 40,
+                      hasShadow: true,
+                      hasBorder: false,
+                      onTap: () => Navigator.pushNamed(context, AppRoutes.search),
+                      onFilterTap: () => Navigator.pushNamed(context, AppRoutes.filterSort),
+                    ),
+                    const SizedBox(height: 16),
+                    _buildBanner(),
+                    const SizedBox(height: 16),
+                    _buildSectionHeader(
+                      AppStrings.categories,
+                      () => Navigator.pushNamed(
                         context,
-                        AppRoutes.productDetails,
+                        AppRoutes.mainWrapper,
+                        arguments: 1,
                       ),
-                    );
-                  },
+                    ),
+                    const SizedBox(height: 16),
+                    _buildCategoryList(context),
+                    const SizedBox(height: 16),
+                    _buildSectionHeader(
+                      AppStrings.flashDeals,
+                      () => Navigator.pushNamed(context, AppRoutes.allProducts),
+                    ),
+                    const SizedBox(height: 16),
+                    SizedBox(
+                      height: 167,
+                      child: ListView.separated(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: viewModel.flashDeals.length,
+                        separatorBuilder: (_, __) => const SizedBox(width: 16),
+                        itemBuilder: (context, index) {
+                          return ProductCard(
+                            product: viewModel.flashDeals[index],
+                            onTap: () => Navigator.pushNamed(
+                              context,
+                              AppRoutes.productDetails,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    _buildSectionHeader(AppStrings.popularProduct, () {}),
+                    const SizedBox(height: 16),
+                    GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        childAspectRatio: 0.68,
+                        crossAxisSpacing: 16,
+                        mainAxisSpacing: 16,
+                      ),
+                      itemCount: viewModel.popularProducts.length,
+                      itemBuilder: (context, index) {
+                        return ProductCard(
+                          product: viewModel.popularProducts[index],
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 80), // Space for bottom nav
+                  ],
                 ),
               ),
-              const SizedBox(height: 16),
-              _buildSectionHeader(AppStrings.popularProduct, () {}),
-              const SizedBox(height: 16),
-              GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 0.68,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
-                ),
-                itemCount: 4,
-                itemBuilder: (context, index) {
-                  return ProductCard(
-                    product: dummyProducts[index % dummyProducts.length],
-                  );
-                },
-              ),
-              const SizedBox(height: 80), // Space for bottom nav
-            ],
-          ),
-        ),
       ),
     );
   }

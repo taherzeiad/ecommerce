@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/constants/app_colors.dart';
-import '../../../data/models/product_model.dart';
+import '../../../domain/entities/product_entity.dart';
 
 // Design-system text color used across product cards (name + price).
 const Color _kDarkText = Color(0xFF2C3E50);
 
 class ProductCard extends StatelessWidget {
-  final ProductModel product;
+  final ProductEntity product;
   final VoidCallback? onTap;
 
   const ProductCard({super.key, required this.product, this.onTap});

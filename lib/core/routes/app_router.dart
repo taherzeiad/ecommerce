@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../presentation/auth/forgot_password/forgot_password_view.dart';
 import '../../presentation/auth/forgot_password/reset_password_view.dart';
@@ -12,7 +13,10 @@ import '../../presentation/cart/view/cart_view.dart';
 import '../../presentation/checkout/view/checkout_view.dart';
 import '../../presentation/checkout/view/order_success_view.dart';
 import '../../presentation/checkout/view/order_tracking_view.dart';
+import '../../presentation/categories/view/categories_view.dart';
+import '../../presentation/categories/view_model/categories_view_model.dart';
 import '../../presentation/home/view/home_view.dart';
+import '../../presentation/home/view_model/home_view_model.dart';
 import '../../presentation/main_wrapper/main_wrapper.dart';
 import '../../presentation/notifications/view/notifications_view.dart';
 import '../../presentation/onboarding/view/onboarding_view.dart';
@@ -32,6 +36,7 @@ import '../../presentation/settings/view/privacy_view.dart';
 import '../../presentation/settings/view/settings_view.dart';
 import '../../presentation/settings/view/terms_conditions_view.dart';
 import '../../presentation/splash/view/splash_view.dart';
+import '../di/service_locator.dart';
 import 'app_routes.dart';
 
 /// Single source of truth for navigation. Views never build routes
@@ -61,11 +66,36 @@ class AppRouter {
       case AppRoutes.authSuccess:
         return _fade(const SuccessView(), settings);
       case AppRoutes.mainWrapper:
-        return _fade(const MainWrapper(), settings);
+        return _fade(
+          MultiProvider(
+            providers: [
+              ChangeNotifierProvider(
+                create: (_) => HomeViewModel(productRepository: sl())..fetchHomeData(),
+              ),
+              ChangeNotifierProvider(
+                create: (_) => CategoriesViewModel(productRepository: sl())..fetchProductsByCategory('Smartphones'),
+              ),
+            ],
+            child: const MainWrapper(),
+          ),
+          settings,
+        );
       case AppRoutes.home:
-        return _fade(const HomeView(), settings);
+        return _fade(
+          ChangeNotifierProvider(
+            create: (_) => HomeViewModel(productRepository: sl())..fetchHomeData(),
+            child: const HomeView(),
+          ),
+          settings,
+        );
       case AppRoutes.allProducts:
-        return _fade(const AllProductsView(), settings);
+        return _fade(
+          ChangeNotifierProvider(
+            create: (_) => CategoriesViewModel(productRepository: sl())..fetchProductsByCategory('Smartphones'),
+            child: const AllProductsView(),
+          ),
+          settings,
+        );
       case AppRoutes.productDetails:
         return _fade(const ProductDetailsView(), settings);
       case AppRoutes.notifications:
