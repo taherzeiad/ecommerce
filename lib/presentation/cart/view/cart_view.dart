@@ -74,7 +74,10 @@ class CartView extends StatelessWidget {
                         const SizedBox(height: 32),
                         const Text(
                           AppStrings.discountCoupon,
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         const SizedBox(height: 12),
                         _buildPromoCodeField(),
@@ -119,7 +122,11 @@ class CartView extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.shopping_cart_outlined, size: 100, color: Colors.grey.shade300),
+          Icon(
+            Icons.shopping_cart_outlined,
+            size: 100,
+            color: Colors.grey.shade300,
+          ),
           const SizedBox(height: 24),
           const Text(
             'Your cart is empty',
@@ -135,7 +142,11 @@ class CartView extends StatelessWidget {
     );
   }
 
-  Widget _buildCartItem(BuildContext context, CartViewModel viewModel, int index) {
+  Widget _buildCartItem(
+    BuildContext context,
+    CartViewModel viewModel,
+    int index,
+  ) {
     final item = viewModel.items[index];
     return Dismissible(
       key: Key(item.product.id),
@@ -344,9 +355,19 @@ class CartView extends StatelessWidget {
   Widget _buildPriceBreakdown(CartViewModel viewModel) {
     return Column(
       children: [
-        _buildPriceRow(AppStrings.subTotal, '\$${viewModel.subtotal.toStringAsFixed(2)}'),
-        _buildPriceRow(AppStrings.deliveryFees, '\$${viewModel.deliveryFees.toStringAsFixed(2)}'),
-        _buildPriceRow(AppStrings.taxes, '\$${viewModel.taxes.toStringAsFixed(2)}', isRed: true),
+        _buildPriceRow(
+          AppStrings.subTotal,
+          '\$${viewModel.subtotal.toStringAsFixed(2)}',
+        ),
+        _buildPriceRow(
+          AppStrings.deliveryFees,
+          '\$${viewModel.deliveryFees.toStringAsFixed(2)}',
+        ),
+        _buildPriceRow(
+          AppStrings.taxes,
+          '\$${viewModel.taxes.toStringAsFixed(2)}',
+          isRed: true,
+        ),
         const SizedBox(height: 16),
         LayoutBuilder(
           builder: (context, constraints) {
@@ -370,148 +391,11 @@ class CartView extends StatelessWidget {
           },
         ),
         const SizedBox(height: 16),
-        _buildPriceRow(AppStrings.total, '\$${viewModel.totalPrice.toStringAsFixed(2)}', isBold: true),
-      ],
-    );
-  }
-
-  Widget _buildPriceRow(
-    String label,
-    String value, {
-    bool isRed = false,
-    bool isBold = false,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: isBold ? FontWeight.bold : FontWeight.w500,
-              color: isRed ? const Color(0xFFE57373) : const Color(0xFF616161),
-            ),
-          ),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: isBold ? FontWeight.bold : FontWeight.w500,
-              color: isRed ? const Color(0xFFE57373) : const Color(0xFF1B1B29),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-  Widget _buildQtyBtn(IconData icon, VoidCallback onTap) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        alignment: Alignment.center,
-        child: Icon(icon, size: 18, color: const Color(0xFF1B1B29)),
-      ),
-    );
-  }
-
-  Widget _buildAddMoreItems() {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        border: Border.all(color: const Color(0xFFD8E6E3)),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: TextButton.icon(
-        onPressed: () {},
-        style: TextButton.styleFrom(
-          foregroundColor: AppColors.primary,
-          minimumSize: const Size(double.infinity, 52),
-          padding: const EdgeInsets.symmetric(vertical: 14),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
+        _buildPriceRow(
+          AppStrings.total,
+          '\$${viewModel.totalPrice.toStringAsFixed(2)}',
+          isBold: true,
         ),
-        icon: const Icon(Icons.add, size: 20),
-        label: const Text(
-          AppStrings.addMoreItems,
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildPromoCodeField() {
-    return Row(
-      children: [
-        Expanded(
-          child: TextField(
-            decoration: InputDecoration(
-              hintText: AppStrings.promoCode,
-              hintStyle: const TextStyle(color: Color(0xFFBDBDBD)),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(width: 16),
-        ElevatedButton(
-          onPressed: () {},
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.primary,
-            foregroundColor: Colors.white,
-            minimumSize: const Size(100, 48),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-          ),
-          child: const Text(AppStrings.apply),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildPriceBreakdown() {
-    return Column(
-      children: [
-        _buildPriceRow(AppStrings.subTotal, '\$5.95'),
-        _buildPriceRow(AppStrings.deliveryFees, '\$1.00'),
-        _buildPriceRow(AppStrings.taxes, '\$50.10', isRed: true),
-        const SizedBox(height: 16),
-        LayoutBuilder(
-          builder: (context, constraints) {
-            final boxWidth = constraints.constrainWidth();
-            const dashWidth = 5.0;
-            const dashHeight = 1.2;
-            final dashCount = (boxWidth / (2 * dashWidth)).floor();
-            return Flex(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              direction: Axis.horizontal,
-              children: List.generate(dashCount, (_) {
-                return const SizedBox(
-                  width: dashWidth,
-                  height: dashHeight,
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(color: Color(0xFFD8E6E3)),
-                  ),
-                );
-              }),
-            );
-          },
-        ),
-        const SizedBox(height: 16),
-        _buildPriceRow(AppStrings.total, '\$100.00', isBold: true),
       ],
     );
   }

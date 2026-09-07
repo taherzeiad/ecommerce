@@ -1,42 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../presentation/auth/forgot_password/forgot_password_view.dart';
-import '../../presentation/auth/forgot_password/reset_password_view.dart';
-import '../../presentation/auth/forgot_password/verify_account_view.dart';
-import '../../presentation/auth/login/login_view.dart';
-import '../../presentation/auth/signup/signup_view.dart';
-import '../../presentation/auth/success/success_view.dart';
-import '../../presentation/address/view/add_address_view.dart';
-import '../../presentation/address/view/edit_address_view.dart';
-import '../../presentation/cart/view/cart_view.dart';
-import '../../presentation/checkout/view/checkout_view.dart';
-import '../../presentation/checkout/view/order_success_view.dart';
-import '../../presentation/checkout/view/order_tracking_view.dart';
-import '../../presentation/categories/view/categories_view.dart';
-import '../../presentation/categories/view_model/categories_view_model.dart';
-import '../../presentation/home/view/home_view.dart';
-import '../../presentation/home/view_model/home_view_model.dart';
-import '../../presentation/main_wrapper/main_wrapper.dart';
-import '../../presentation/notifications/view/notifications_view.dart';
-import '../../presentation/onboarding/view/onboarding_view.dart';
-import '../../presentation/payment/view/add_card_view.dart';
-import '../../presentation/product_details/view/all_products_view.dart';
-import '../../presentation/product_details/view/product_details_view.dart';
-import '../../presentation/profile/view/change_password_view.dart';
-import '../../presentation/profile/view/edit_profile_view.dart';
-import '../../presentation/profile/view/profile_view.dart';
-import '../../presentation/reviews/view/add_review_view.dart';
-import '../../presentation/reviews/view/reviews_view.dart';
-import '../../presentation/search/view/filter_sort_view.dart';
-import '../../presentation/search/view/search_view.dart';
-import '../../presentation/settings/view/about_us_view.dart';
-import '../../presentation/settings/view/help_center_view.dart';
-import '../../presentation/settings/view/privacy_view.dart';
-import '../../presentation/settings/view/settings_view.dart';
-import '../../presentation/settings/view/terms_conditions_view.dart';
-import '../../presentation/splash/view/splash_view.dart';
-import '../di/service_locator.dart';
+import 'package:ecommerce/domain/entities/product_entity.dart';
+import 'package:ecommerce/presentation/auth/forgot_password/forgot_password_view.dart';
+import 'package:ecommerce/presentation/auth/forgot_password/reset_password_view.dart';
+import 'package:ecommerce/presentation/auth/forgot_password/verify_account_view.dart';
+import 'package:ecommerce/presentation/auth/login/login_view.dart';
+import 'package:ecommerce/presentation/auth/signup/signup_view.dart';
+import 'package:ecommerce/presentation/auth/success/success_view.dart';
+import 'package:ecommerce/presentation/address/view/add_address_view.dart';
+import 'package:ecommerce/presentation/address/view/edit_address_view.dart';
+import 'package:ecommerce/presentation/cart/view/cart_view.dart';
+import 'package:ecommerce/presentation/checkout/view/checkout_view.dart';
+import 'package:ecommerce/presentation/checkout/view/order_success_view.dart';
+import 'package:ecommerce/presentation/checkout/view/order_tracking_view.dart';
+import 'package:ecommerce/presentation/categories/view/categories_view.dart';
+import 'package:ecommerce/presentation/categories/view_model/categories_view_model.dart';
+import 'package:ecommerce/presentation/home/view/home_view.dart';
+import 'package:ecommerce/presentation/home/view_model/home_view_model.dart';
+import 'package:ecommerce/presentation/main_wrapper/main_wrapper.dart';
+import 'package:ecommerce/presentation/notifications/view/notifications_view.dart';
+import 'package:ecommerce/presentation/onboarding/view/onboarding_view.dart';
+import 'package:ecommerce/presentation/payment/view/add_card_view.dart';
+import 'package:ecommerce/presentation/product_details/view/all_products_view.dart';
+import 'package:ecommerce/presentation/product_details/view/product_details_view.dart';
+import 'package:ecommerce/presentation/profile/view/change_password_view.dart';
+import 'package:ecommerce/presentation/profile/view/edit_profile_view.dart';
+import 'package:ecommerce/presentation/profile/view/profile_view.dart';
+import 'package:ecommerce/presentation/reviews/view/add_review_view.dart';
+import 'package:ecommerce/presentation/reviews/view/reviews_view.dart';
+import 'package:ecommerce/presentation/search/view/filter_sort_view.dart';
+import 'package:ecommerce/presentation/search/view/search_view.dart';
+import 'package:ecommerce/presentation/search/view_model/search_view_model.dart';
+import 'package:ecommerce/presentation/settings/view/about_us_view.dart';
+import 'package:ecommerce/presentation/settings/view/help_center_view.dart';
+import 'package:ecommerce/presentation/settings/view/privacy_view.dart';
+import 'package:ecommerce/presentation/settings/view/settings_view.dart';
+import 'package:ecommerce/presentation/settings/view/terms_conditions_view.dart';
+import 'package:ecommerce/presentation/splash/view/splash_view.dart';
+import 'package:ecommerce/core/di/service_locator.dart';
 import 'app_routes.dart';
 
 /// Single source of truth for navigation. Views never build routes
@@ -70,10 +72,13 @@ class AppRouter {
           MultiProvider(
             providers: [
               ChangeNotifierProvider(
-                create: (_) => HomeViewModel(productRepository: sl())..fetchHomeData(),
+                create: (_) =>
+                    HomeViewModel(productRepository: sl())..fetchHomeData(),
               ),
               ChangeNotifierProvider(
-                create: (_) => CategoriesViewModel(productRepository: sl())..fetchProductsByCategory('Smartphones'),
+                create: (_) =>
+                    CategoriesViewModel(productRepository: sl())
+                      ..fetchProductsByCategory('Smartphones'),
               ),
             ],
             child: const MainWrapper(),
@@ -83,21 +88,26 @@ class AppRouter {
       case AppRoutes.home:
         return _fade(
           ChangeNotifierProvider(
-            create: (_) => HomeViewModel(productRepository: sl())..fetchHomeData(),
+            create: (_) =>
+                HomeViewModel(productRepository: sl())..fetchHomeData(),
             child: const HomeView(),
           ),
           settings,
         );
       case AppRoutes.allProducts:
+        final category = (settings.arguments as String?) ?? 'Smartphones';
         return _fade(
           ChangeNotifierProvider(
-            create: (_) => CategoriesViewModel(productRepository: sl())..fetchProductsByCategory('Smartphones'),
+            create: (_) =>
+                CategoriesViewModel(productRepository: sl())
+                  ..fetchProductsByCategory(category),
             child: const AllProductsView(),
           ),
           settings,
         );
       case AppRoutes.productDetails:
-        return _fade(const ProductDetailsView(), settings);
+        final product = settings.arguments as ProductEntity;
+        return _fade(ProductDetailsView(product: product), settings);
       case AppRoutes.notifications:
         return _fade(const NotificationsView(), settings);
       case AppRoutes.reviews:
@@ -121,7 +131,13 @@ class AppRouter {
       case AppRoutes.termsConditions:
         return _fade(const TermsConditionsView(), settings);
       case AppRoutes.search:
-        return _fade(const SearchView(), settings);
+        return _fade(
+          ChangeNotifierProvider(
+            create: (_) => SearchViewModel(productRepository: sl()),
+            child: const SearchView(),
+          ),
+          settings,
+        );
       case AppRoutes.filterSort:
         return _fade(const FilterSortView(), settings);
       case AppRoutes.cart:

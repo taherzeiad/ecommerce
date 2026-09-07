@@ -37,8 +37,10 @@ class HomeView extends StatelessWidget {
                       height: 40,
                       hasShadow: true,
                       hasBorder: false,
-                      onTap: () => Navigator.pushNamed(context, AppRoutes.search),
-                      onFilterTap: () => Navigator.pushNamed(context, AppRoutes.filterSort),
+                      onTap: () =>
+                          Navigator.pushNamed(context, AppRoutes.search),
+                      onFilterTap: () =>
+                          Navigator.pushNamed(context, AppRoutes.filterSort),
                     ),
                     const SizedBox(height: 16),
                     _buildBanner(),
@@ -66,11 +68,13 @@ class HomeView extends StatelessWidget {
                         itemCount: viewModel.flashDeals.length,
                         separatorBuilder: (_, __) => const SizedBox(width: 16),
                         itemBuilder: (context, index) {
+                          final product = viewModel.flashDeals[index];
                           return ProductCard(
-                            product: viewModel.flashDeals[index],
+                            product: product,
                             onTap: () => Navigator.pushNamed(
                               context,
                               AppRoutes.productDetails,
+                              arguments: product,
                             ),
                           );
                         },
@@ -82,16 +86,23 @@ class HomeView extends StatelessWidget {
                     GridView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        childAspectRatio: 0.68,
-                        crossAxisSpacing: 16,
-                        mainAxisSpacing: 16,
-                      ),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            childAspectRatio: 0.68,
+                            crossAxisSpacing: 16,
+                            mainAxisSpacing: 16,
+                          ),
                       itemCount: viewModel.popularProducts.length,
                       itemBuilder: (context, index) {
+                        final product = viewModel.popularProducts[index];
                         return ProductCard(
-                          product: viewModel.popularProducts[index],
+                          product: product,
+                          onTap: () => Navigator.pushNamed(
+                            context,
+                            AppRoutes.productDetails,
+                            arguments: product,
+                          ),
                         );
                       },
                     ),

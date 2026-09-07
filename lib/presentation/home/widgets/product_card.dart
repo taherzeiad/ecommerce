@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../domain/entities/product_entity.dart';
+import '../../wishlist/view_model/wishlist_view_model.dart';
 
 // Design-system text color used across product cards (name + price).
 const Color _kDarkText = Color(0xFF2C3E50);
@@ -14,6 +16,9 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final wishlistViewModel = context.watch<WishlistViewModel>();
+    final isFavorite = wishlistViewModel.isInWishlist(product.id);
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -39,15 +44,20 @@ class ProductCard extends StatelessWidget {
                   height: 80,
                   width: double.infinity,
                   alignment: Alignment.center,
-                  child: const Icon(Icons.image, color: Colors.grey, size: 40),
+                  child: product.images.isNotEmpty
+                      ? Image.network(product.images.first, fit: BoxFit.contain)
+                      : const Icon(Icons.image, color: Colors.grey, size: 40),
                 ),
-                const Positioned(
+                Positioned(
                   top: 0,
                   right: 0,
-                  child: Icon(
-                    Icons.favorite_border,
-                    size: 20,
-                    color: AppColors.primary,
+                  child: InkWell(
+                    onTap: () => wishlistViewModel.toggleWishlist(product),
+                    child: Icon(
+                      isFavorite ? Icons.favorite : Icons.favorite_border,
+                      size: 20,
+                      color: isFavorite ? Colors.red : AppColors.primary,
+                    ),
                   ),
                 ),
               ],
@@ -81,7 +91,7 @@ class ProductCard extends StatelessWidget {
                     '\$${product.oldPrice!.toStringAsFixed(2)}',
                     style: TextStyle(
                       color: Colors.grey.shade400,
-                      fontSize: 13,
+                      fontSize: 11,
                       decoration: TextDecoration.lineThrough,
                     ),
                   ),

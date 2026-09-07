@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_strings.dart';
 import '../../../core/routes/app_routes.dart';
+import '../../../domain/entities/product_entity.dart';
+import '../../cart/view_model/cart_view_model.dart';
+import '../view_model/wishlist_view_model.dart';
 
 class WishlistView extends StatelessWidget {
   const WishlistView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Toggle this to see the list state
+    final viewModel = context.watch<WishlistViewModel>();
 
     return Scaffold(
       appBar: AppBar(
@@ -27,28 +31,54 @@ class WishlistView extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.shopping_bag_outlined, color: Colors.white),
-            onPressed: () {},
+            onPressed: () => Navigator.pushNamed(context, AppRoutes.cart),
           ),
         ],
       ),
-      body: _buildWishlist(context),
+      body: viewModel.items.isEmpty
+          ? _buildEmptyState(context)
+          : ListView.separated(
+              padding: const EdgeInsets.all(24),
+              itemCount: viewModel.items.length,
+              separatorBuilder: (_, __) => const SizedBox(height: 16),
+              itemBuilder: (context, index) {
+                return _buildWishlistItem(context, viewModel.items[index]);
+              },
+            ),
     );
   }
 
-  Widget _buildWishlist(BuildContext context) {
-    return ListView.separated(
-      padding: const EdgeInsets.all(24),
-      itemCount: 5,
-      separatorBuilder: (_, __) => const SizedBox(height: 16),
-      itemBuilder: (context, index) {
-        return _buildWishlistItem(context);
-      },
+  Widget _buildEmptyState(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.favorite_border, size: 100, color: Colors.grey.shade300),
+          const SizedBox(height: 24),
+          const Text(
+            'Your wishlist is empty',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 12),
+          ElevatedButton(
+            onPressed: () => Navigator.pushNamed(context, AppRoutes.mainWrapper, arguments: 0),
+            child: const Text('Explore Products'),
+          ),
+        ],
+      ),
     );
   }
 
-  Widget _buildWishlistItem(BuildContext context) {
+  Widget _buildWishlistItem(BuildContext context, ProductEntity product) {
+    final wishlistViewModel = context.read<WishlistViewModel>();
+    final cartViewModel = context.read<CartViewModel>();
+
     return GestureDetector(
-      onTap: () => Navigator.pushNamed(context, AppRoutes.productDetails),
+      onTap: () => Navigator.pushNamed(
+        context,
+        AppRoutes.productDetails,
+        arguments: product,
+      ),
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
@@ -71,16 +101,24 @@ class WishlistView extends StatelessWidget {
                 color: AppColors.cardBackground,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: const Icon(Icons.headphones, color: Colors.blue, size: 40),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.network(
+                  product.images.first,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) =>
+                      const Icon(Icons.image_not_supported),
+                ),
+              ),
             ),
             const SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Besound AI',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  Text(
+                    product.name,
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                   const SizedBox(height: 4),
                   Row(
@@ -92,9 +130,9 @@ class WishlistView extends StatelessWidget {
                           fontSize: 12,
                         ),
                       ),
-                      const Text(
-                        '(4.5)',
-                        style: TextStyle(
+                      Text(
+                        '(${product.rating})',
+                        style: const TextStyle(
                           color: AppColors.primary,
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
@@ -108,9 +146,9 @@ class WishlistView extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 8),
-                  const Text(
-                    '\$120',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  Text(
+                    '\$${product.price}',
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                 ],
               ),
@@ -120,15 +158,23 @@ class WishlistView extends StatelessWidget {
               children: [
                 IconButton(
                   icon: const Icon(Icons.delete_outline, color: Colors.red),
-                  onPressed: () {},
+                  onPressed: () => wishlistViewModel.toggleWishlist(product),
                 ),
-                Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: const BoxDecoration(
-                    color: AppColors.primary,
-                    shape: BoxShape.circle,
+                InkWell(
+                  onTap: () {
+                    cartViewModel.addToCart(product);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Added to cart')),
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: const BoxDecoration(
+                      color: AppColors.primary,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(Icons.add, color: Colors.white, size: 16),
                   ),
-                  child: const Icon(Icons.add, color: Colors.white, size: 16),
                 ),
               ],
             ),
