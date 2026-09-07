@@ -126,6 +126,12 @@ flutter:
     - path: lib/assets/icons/filllove.svg
       transformers:
         - package: vector_graphics_compiler
+    - path: lib/assets/icons/loveex.svg
+      transformers:
+        - package: vector_graphics_compiler
+    - path: lib/assets/icons/bas.svg
+      transformers:
+        - package: vector_graphics_compiler
     - lib/assets/images/onboarding_1.png
     - lib/assets/images/onboarding_3.png
     - lib/assets/images/phonecolor.png

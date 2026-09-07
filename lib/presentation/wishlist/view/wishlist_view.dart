@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:vector_graphics/vector_graphics.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_strings.dart';
@@ -21,7 +22,7 @@ class WishlistView extends StatelessWidget {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () {},
+          onPressed: () => Navigator.of(context).maybePop(),
         ),
         title: const Text(
           AppStrings.wishlist,
@@ -30,7 +31,12 @@ class WishlistView extends StatelessWidget {
         centerTitle: true,
         actions: [
           IconButton(
-            icon: const Icon(Icons.shopping_bag_outlined, color: Colors.white),
+            icon: const VectorGraphic(
+              loader: AssetBytesLoader('lib/assets/icons/bas.svg'),
+              width: 24,
+              height: 24,
+              colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
+            ),
             onPressed: () => Navigator.pushNamed(context, AppRoutes.cart),
           ),
         ],
@@ -49,22 +55,62 @@ class WishlistView extends StatelessWidget {
   }
 
   Widget _buildEmptyState(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.favorite_border, size: 100, color: Colors.grey.shade300),
-          const SizedBox(height: 24),
-          const Text(
-            'Your wishlist is empty',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 12),
-          ElevatedButton(
-            onPressed: () => Navigator.pushNamed(context, AppRoutes.mainWrapper, arguments: 0),
-            child: const Text('Explore Products'),
-          ),
-        ],
+    return Padding(
+      padding: const EdgeInsets.all(24.0),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const VectorGraphic(
+              loader: AssetBytesLoader('lib/assets/icons/loveex.svg'),
+              width: 200,
+              height: 200,
+            ),
+            const SizedBox(height: 30),
+            const Text(
+              'My Wishlist is Empty',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF129883),
+              ),
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              'Tap Heart Button to Start Saving\nYour Favorite Item',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 16,
+                color: Color(0xFF4A5568),
+                height: 1.5,
+              ),
+            ),
+            const SizedBox(height: 30),
+            SizedBox(
+              width: double.infinity,
+              height: 48,
+              child: ElevatedButton(
+                onPressed: () => Navigator.pushNamed(
+                  context,
+                  AppRoutes.mainWrapper,
+                  arguments: 0,
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primary,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  elevation: 0,
+                ),
+                child: const Text(
+                  'Explore',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -118,7 +164,10 @@ class WishlistView extends StatelessWidget {
                 children: [
                   Text(
                     product.name,
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
                   ),
                   const SizedBox(height: 4),
                   Row(
@@ -148,7 +197,10 @@ class WishlistView extends StatelessWidget {
                   const SizedBox(height: 8),
                   Text(
                     '\$${product.price}',
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
                   ),
                 ],
               ),
