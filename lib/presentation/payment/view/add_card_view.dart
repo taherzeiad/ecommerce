@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../core/constants/app_colors.dart';
 
 class AddCardView extends StatelessWidget {
@@ -41,21 +42,25 @@ class AddCardView extends StatelessWidget {
             const SizedBox(height: 24),
             Row(
               children: [
-                Expanded(child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildFieldLabel('Expiration Date'),
-                    _buildTextField(hintText: 'dd/mm/yy'),
-                  ],
-                )),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildFieldLabel('Expiration Date'),
+                      _buildTextField(hintText: 'dd/mm/yy'),
+                    ],
+                  ),
+                ),
                 const SizedBox(width: 16),
-                Expanded(child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildFieldLabel('CVV'),
-                    _buildTextField(hintText: 'cvv'),
-                  ],
-                )),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildFieldLabel('CVV'),
+                      _buildTextField(hintText: 'cvv'),
+                    ],
+                  ),
+                ),
               ],
             ),
             const SizedBox(height: 40),
@@ -74,7 +79,11 @@ class AddCardView extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 8.0),
       child: Text(
         label,
-        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Color(0xFF1B1B29)),
+        style: const TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+          color: Color(0xFF1B1B29),
+        ),
       ),
     );
   }
@@ -84,9 +93,18 @@ class AddCardView extends StatelessWidget {
       decoration: InputDecoration(
         hintText: hintText,
         hintStyle: const TextStyle(color: Color(0xFFBDBDBD)),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: const BorderSide(color: Color(0xFFE0E0E0))),
-        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: const BorderSide(color: Color(0xFFE0E0E0))),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 16,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
+        ),
       ),
     );
   }
