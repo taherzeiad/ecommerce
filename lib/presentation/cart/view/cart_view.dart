@@ -1,47 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:vector_graphics/vector_graphics.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_strings.dart';
 import '../../../core/routes/app_routes.dart';
+import '../view_model/cart_view_model.dart';
 
-class CartView extends StatefulWidget {
+class CartView extends StatelessWidget {
   const CartView({super.key});
 
   @override
-  State<CartView> createState() => _CartViewState();
-}
-
-class _CartViewState extends State<CartView> {
-  final List<Map<String, dynamic>> _cartItems = [
-    {
-      'name': 'Samsung M13',
-      'detail': '"256GB inch Display"',
-      'priceLabel': '\$550.00',
-      'quantity': 1,
-      'image':
-          'https://m.media-amazon.com/images/I/817WWpa7xIL._AC_SL1500_.jpg',
-    },
-    {
-      'name': 'LG Refrigerator',
-      'detail': 'Smart Cooling',
-      'priceLabel': '\$ 820.00',
-      'quantity': 1,
-      'image':
-          'https://m.media-amazon.com/images/I/61iVusLwA4L._AC_SL1500_.jpg',
-    },
-    {
-      'name': 'Summer Dress',
-      'detail': 'Women\'s Fashion',
-      'priceLabel': '\$ 820.00',
-      'quantity': 1,
-      'image':
-          'https://m.media-amazon.com/images/I/61M-c19nQdL._AC_SL1001_.jpg',
-    },
-  ];
-
-  @override
   Widget build(BuildContext context) {
+    final viewModel = context.watch<CartViewModel>();
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.primary,
@@ -67,83 +39,106 @@ class _CartViewState extends State<CartView> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    AppStrings.orderSummary,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey,
+      body: viewModel.items.isEmpty
+          ? _buildEmptyState(context)
+          : Column(
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(24),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          AppStrings.orderSummary,
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        ListView.separated(
+                          padding: EdgeInsets.zero,
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: viewModel.items.length,
+                          separatorBuilder: (context, index) =>
+                              const SizedBox(height: 16),
+                          itemBuilder: (context, index) {
+                            return _buildCartItem(context, viewModel, index);
+                          },
+                        ),
+                        const SizedBox(height: 15),
+                        _buildAddMoreItems(context),
+                        const SizedBox(height: 32),
+                        const Text(
+                          AppStrings.discountCoupon,
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 12),
+                        _buildPromoCodeField(),
+                        const SizedBox(height: 32),
+                        _buildPriceBreakdown(viewModel),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 16),
-                  ListView.separated(
-                    padding: EdgeInsets.zero,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: _cartItems.length,
-                    separatorBuilder: (context, index) =>
-                        const SizedBox(height: 16),
-                    itemBuilder: (context, index) {
-                      return _buildCartItem(index);
-                    },
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: SizedBox(
+                    width: double.infinity,
+                    height: 56,
+                    child: ElevatedButton(
+                      onPressed: () =>
+                          Navigator.pushNamed(context, AppRoutes.checkout),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(28),
+                        ),
+                      ),
+                      child: const Text(
+                        AppStrings.checkout,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
                   ),
-                  const SizedBox(height: 15),
-                  _buildAddMoreItems(),
-                  const SizedBox(height: 32),
-                  const Text(
-                    AppStrings.discountCoupon,
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 12),
-                  _buildPromoCodeField(),
-                  const SizedBox(height: 32),
-                  _buildPriceBreakdown(),
-                ],
-              ),
+                ),
+              ],
             ),
+    );
+  }
+
+  Widget _buildEmptyState(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.shopping_cart_outlined, size: 100, color: Colors.grey.shade300),
+          const SizedBox(height: 24),
+          const Text(
+            'Your cart is empty',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
-          Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: SizedBox(
-              width: double.infinity,
-              height: 56,
-              child: ElevatedButton(
-                onPressed: () =>
-                    Navigator.pushNamed(context, AppRoutes.checkout),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(28),
-                  ),
-                ),
-                child: const Text(
-                  AppStrings.checkout,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                ),
-              ),
-            ),
+          const SizedBox(height: 12),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Go Shopping'),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildCartItem(int index) {
-    final item = _cartItems[index];
+  Widget _buildCartItem(BuildContext context, CartViewModel viewModel, int index) {
+    final item = viewModel.items[index];
     return Dismissible(
-      key: Key(item['name']),
+      key: Key(item.product.id),
       direction: DismissDirection.endToStart,
       background: Container(
         alignment: Alignment.centerRight,
@@ -169,9 +164,7 @@ class _CartViewState extends State<CartView> {
         ),
       ),
       onDismissed: (direction) {
-        setState(() {
-          _cartItems.removeAt(index);
-        });
+        viewModel.removeFromCart(item.product.id);
       },
       child: Container(
         padding: const EdgeInsets.all(12),
@@ -185,7 +178,7 @@ class _CartViewState extends State<CartView> {
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: Image.network(
-                item['image'],
+                item.product.images.first,
                 width: 90,
                 height: 90,
                 fit: BoxFit.cover,
@@ -200,17 +193,6 @@ class _CartViewState extends State<CartView> {
                     ),
                   );
                 },
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress == null) return child;
-                  return Container(
-                    width: 90,
-                    height: 90,
-                    color: Colors.grey.shade200,
-                    child: const Center(
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    ),
-                  );
-                },
               ),
             ),
             const SizedBox(width: 16),
@@ -219,7 +201,7 @@ class _CartViewState extends State<CartView> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    item['name'],
+                    item.product.name,
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
@@ -227,7 +209,7 @@ class _CartViewState extends State<CartView> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    item['detail'],
+                    item.product.category,
                     style: TextStyle(color: Colors.grey.shade400, fontSize: 13),
                   ),
                   const SizedBox(height: 12),
@@ -235,7 +217,7 @@ class _CartViewState extends State<CartView> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        item['priceLabel'],
+                        '\$${item.product.price.toStringAsFixed(2)}',
                         style: const TextStyle(
                           color: Color(0xFF1B1B29),
                           fontWeight: FontWeight.bold,
@@ -252,9 +234,7 @@ class _CartViewState extends State<CartView> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             _buildQtyBtn(Icons.remove, () {
-                              if (item['quantity'] > 1) {
-                                setState(() => item['quantity']--);
-                              }
+                              viewModel.decrementQuantity(item.product.id);
                             }),
                             const VerticalDivider(width: 1, thickness: 1),
                             Padding(
@@ -262,7 +242,7 @@ class _CartViewState extends State<CartView> {
                                 horizontal: 12,
                               ),
                               child: Text(
-                                '${item['quantity']}',
+                                '${item.quantity}',
                                 style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Color(0xFF1B1B29),
@@ -271,7 +251,7 @@ class _CartViewState extends State<CartView> {
                             ),
                             const VerticalDivider(width: 1, thickness: 1),
                             _buildQtyBtn(Icons.add, () {
-                              setState(() => item['quantity']++);
+                              viewModel.incrementQuantity(item.product.id);
                             }),
                           ],
                         ),
@@ -286,6 +266,147 @@ class _CartViewState extends State<CartView> {
       ),
     );
   }
+
+  Widget _buildQtyBtn(IconData icon, VoidCallback onTap) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        alignment: Alignment.center,
+        child: Icon(icon, size: 18, color: const Color(0xFF1B1B29)),
+      ),
+    );
+  }
+
+  Widget _buildAddMoreItems(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        border: Border.all(color: const Color(0xFFD8E6E3)),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: TextButton.icon(
+        onPressed: () => Navigator.pop(context),
+        style: TextButton.styleFrom(
+          foregroundColor: AppColors.primary,
+          minimumSize: const Size(double.infinity, 52),
+          padding: const EdgeInsets.symmetric(vertical: 14),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+        icon: const Icon(Icons.add, size: 20),
+        label: const Text(
+          AppStrings.addMoreItems,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPromoCodeField() {
+    return Row(
+      children: [
+        Expanded(
+          child: TextField(
+            decoration: InputDecoration(
+              hintText: AppStrings.promoCode,
+              hintStyle: const TextStyle(color: Color(0xFFBDBDBD)),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(width: 16),
+        ElevatedButton(
+          onPressed: () {},
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.primary,
+            foregroundColor: Colors.white,
+            minimumSize: const Size(100, 48),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+          child: const Text(AppStrings.apply),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPriceBreakdown(CartViewModel viewModel) {
+    return Column(
+      children: [
+        _buildPriceRow(AppStrings.subTotal, '\$${viewModel.subtotal.toStringAsFixed(2)}'),
+        _buildPriceRow(AppStrings.deliveryFees, '\$${viewModel.deliveryFees.toStringAsFixed(2)}'),
+        _buildPriceRow(AppStrings.taxes, '\$${viewModel.taxes.toStringAsFixed(2)}', isRed: true),
+        const SizedBox(height: 16),
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final boxWidth = constraints.constrainWidth();
+            const dashWidth = 5.0;
+            const dashHeight = 1.2;
+            final dashCount = (boxWidth / (2 * dashWidth)).floor();
+            return Flex(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              direction: Axis.horizontal,
+              children: List.generate(dashCount, (_) {
+                return const SizedBox(
+                  width: dashWidth,
+                  height: dashHeight,
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(color: Color(0xFFD8E6E3)),
+                  ),
+                );
+              }),
+            );
+          },
+        ),
+        const SizedBox(height: 16),
+        _buildPriceRow(AppStrings.total, '\$${viewModel.totalPrice.toStringAsFixed(2)}', isBold: true),
+      ],
+    );
+  }
+
+  Widget _buildPriceRow(
+    String label,
+    String value, {
+    bool isRed = false,
+    bool isBold = false,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: isBold ? FontWeight.bold : FontWeight.w500,
+              color: isRed ? const Color(0xFFE57373) : const Color(0xFF616161),
+            ),
+          ),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: isBold ? FontWeight.bold : FontWeight.w500,
+              color: isRed ? const Color(0xFFE57373) : const Color(0xFF1B1B29),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
 
   Widget _buildQtyBtn(IconData icon, VoidCallback onTap) {
     return InkWell(
