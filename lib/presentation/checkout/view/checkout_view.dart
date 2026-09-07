@@ -21,6 +21,10 @@ class _CheckoutViewState extends State<CheckoutView> {
         backgroundColor: AppColors.primary,
         elevation: 0,
         centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.pop(context),
+        ),
         title: const Text(
           'Check Out',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
@@ -52,18 +56,31 @@ class _CheckoutViewState extends State<CheckoutView> {
   Widget _buildStepHeader() {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 24),
-      padding: const EdgeInsets.all(4),
+      height: 50,
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(30),
-        border: Border.all(color: const Color(0xFFF1F1F1)),
+        borderRadius: BorderRadius.circular(25),
+        border: Border.all(color: Colors.grey.shade200),
       ),
-      child: Row(
-        children: [
-          _buildStepTab('Address', 0),
-          _buildStepTab('Payment', 1),
-          _buildStepTab('Confirm', 2),
-        ],
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(25),
+        child: Row(
+          children: [
+            _buildStepTab('Address', 0),
+            const VerticalDivider(
+              width: 1,
+              thickness: 1,
+              color: Color(0xFFEEEEEE),
+            ),
+            _buildStepTab('Payment', 1),
+            const VerticalDivider(
+              width: 1,
+              thickness: 1,
+              color: Color(0xFFEEEEEE),
+            ),
+            _buildStepTab('Confirm', 2),
+          ],
+        ),
       ),
     );
   }
@@ -71,7 +88,7 @@ class _CheckoutViewState extends State<CheckoutView> {
   Widget _buildStepTab(String label, int index) {
     final isActive = _currentStep == index;
     return Expanded(
-      child: GestureDetector(
+      child: InkWell(
         onTap: () {
           setState(() {
             _currentStep = index;
@@ -79,17 +96,15 @@ class _CheckoutViewState extends State<CheckoutView> {
           });
         },
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          decoration: BoxDecoration(
-            color: isActive ? AppColors.primary : Colors.transparent,
-            borderRadius: BorderRadius.circular(26),
-          ),
+          height: double.infinity,
+          alignment: Alignment.center,
+          color: isActive ? AppColors.primary : Colors.white,
           child: Text(
             label,
-            textAlign: TextAlign.center,
             style: TextStyle(
-              color: isActive ? Colors.white : Colors.grey,
-              fontWeight: FontWeight.bold,
+              color: isActive ? Colors.white : Colors.grey.shade600,
+              fontWeight: FontWeight.w500,
+              fontSize: 16,
             ),
           ),
         ),
@@ -147,12 +162,12 @@ class _CheckoutViewState extends State<CheckoutView> {
   }
 
   Widget _buildAddressRow(
-      IconData icon,
-      String label,
-      String value, {
-        bool showEdit = false,
-        bool showCheck = false,
-      }) {
+    IconData icon,
+    String label,
+    String value, {
+    bool showEdit = false,
+    bool showCheck = false,
+  }) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -237,13 +252,13 @@ class _CheckoutViewState extends State<CheckoutView> {
           const SizedBox(height: 12),
           _buildCardOption(
             'Mastercard – **** 4956',
-            'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/1280px-Mastercard-logo.svg.png',
+            'lib/assets/icons/mastercard.png',
             isSelected: true,
           ),
           const SizedBox(height: 16),
           _buildCardOption(
             'Axis Bank **** 1453',
-            'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/PayPal.svg/1200px-PayPal.svg.png',
+            'lib/assets/icons/paypal.png',
           ),
           const SizedBox(height: 32),
           _buildOrderSummary(orderNumber: '#135792'),
@@ -254,45 +269,40 @@ class _CheckoutViewState extends State<CheckoutView> {
 
   Widget _buildPaymentIcons() {
     final icons = [
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/1280px-Mastercard-logo.svg.png',
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/PayPal.svg/1200px-PayPal.svg.png',
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Apple_logo_black.svg/800px-Apple_logo_black.svg.png',
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_\"G\"_Logo.svg/588px-Google_\"G\"_Logo.svg.png',
+      'lib/assets/icons/mastercard.png',
+      'lib/assets/icons/paypal.png',
+      'lib/assets/icons/apple.png',
+      'lib/assets/icons/google.png',
     ];
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: icons
           .map(
-            (url) => Container(
-          padding: const EdgeInsets.all(8),
-          width: 60,
-          height: 40,
-          decoration: BoxDecoration(
-            border: Border.all(color: const Color(0xFFD8E6E3)),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Image.network(
-            url,
-            fit: BoxFit.contain,
-            loadingBuilder: (context, child, loadingProgress) {
-              if (loadingProgress == null) return child;
-              return const Center(child: CircularProgressIndicator());
-            },
-            errorBuilder: (context, error, stackTrace) => const Icon(Icons.image_not_supported),
-          ),
-        ),
-      )
+            (path) => Container(
+              padding: const EdgeInsets.all(8),
+              width: 60,
+              height: 45,
+              child: Image.asset(
+                path,
+                fit: BoxFit.contain,
+                errorBuilder: (context, error, stackTrace) =>
+                    const Icon(Icons.image_not_supported),
+              ),
+            ),
+          )
           .toList(),
     );
   }
 
   Widget _buildCardOption(
-      String title,
-      String logoUrl, {
-        bool isSelected = false,
-      }) {
+    String title,
+    String logoPath, {
+    bool isSelected = false,
+  }) {
     return Container(
+      width: 361,
+      height: 51,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -319,16 +329,13 @@ class _CheckoutViewState extends State<CheckoutView> {
             ),
           ),
           const Spacer(),
-          Image.network(
-            logoUrl,
+          Image.asset(
+            logoPath,
             width: 40,
             height: 24,
             fit: BoxFit.contain,
-            loadingBuilder: (context, child, loadingProgress) {
-              if (loadingProgress == null) return child;
-              return const Center(child: CircularProgressIndicator());
-            },
-            errorBuilder: (context, error, stackTrace) => const Icon(Icons.image_not_supported),
+            errorBuilder: (context, error, stackTrace) =>
+                const Icon(Icons.image_not_supported),
           ),
         ],
       ),
@@ -400,9 +407,9 @@ class _CheckoutViewState extends State<CheckoutView> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
+              const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
+                children: [
                   Text(
                     'Expiration:',
                     style: TextStyle(color: Colors.white70, fontSize: 12),
@@ -413,14 +420,11 @@ class _CheckoutViewState extends State<CheckoutView> {
                   ),
                 ],
               ),
-              Image.network(
-                'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/1280px-Mastercard-logo.svg.png',
+              Image.asset(
+                'lib/assets/icons/mastercard.png',
                 width: 50,
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress == null) return child;
-                  return const Center(child: CircularProgressIndicator());
-                },
-                errorBuilder: (context, error, stackTrace) => const Icon(Icons.image_not_supported),
+                errorBuilder: (context, error, stackTrace) =>
+                    const Icon(Icons.image_not_supported),
               ),
             ],
           ),

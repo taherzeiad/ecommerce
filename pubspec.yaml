@@ -70,6 +70,7 @@ flutter:
 
   assets:
     - lib/assets/icons/
+    - lib/assets/images/
     - path: lib/assets/icons/facebook.svg
       transformers:
         - package: vector_graphics_compiler
