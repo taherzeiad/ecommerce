@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/constants/app_colors.dart';
 
 
 class AuthHeader extends StatelessWidget {
@@ -23,7 +24,7 @@ class AuthHeader extends StatelessWidget {
       title,
       textAlign: centerTitle ? TextAlign.center : TextAlign.start,
       style: const TextStyle(
-        color: Colors.white,
+        color: AppColors.white,
         fontSize: 32,
         fontWeight: FontWeight.bold,
         height: 1.2,
@@ -34,7 +35,7 @@ class AuthHeader extends StatelessWidget {
       subtitle,
       textAlign: centerTitle ? TextAlign.center : TextAlign.start,
       style: TextStyle(
-        color: Colors.white.withOpacity(0.9),
+        color: AppColors.white.withValues(alpha: 0.9),
         fontSize: 18,
         fontWeight: FontWeight.w500,
       ),
@@ -119,7 +120,7 @@ class _Circle extends StatelessWidget {
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(opacity),
+        color: AppColors.white.withValues(alpha: opacity),
         shape: BoxShape.circle,
       ),
     );

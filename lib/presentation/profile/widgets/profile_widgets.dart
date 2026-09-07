@@ -35,7 +35,7 @@ class ProfileAvatar extends StatelessWidget {
           ),
           child: Container(
             decoration: const BoxDecoration(
-              color: Colors.white,
+              color: AppColors.white,
               shape: BoxShape.circle,
             ),
             padding: const EdgeInsets.all(4),
@@ -71,9 +71,9 @@ class ProfileListItem extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 1),
       decoration: const BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         border: Border(
-          bottom: BorderSide(color: Color(0xFFF1F1F1)),
+          bottom: BorderSide(color: AppColors.borderExtraLight),
         ),
       ),
       child: ListTile(
@@ -88,13 +88,13 @@ class ProfileListItem extends StatelessWidget {
           style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w500,
-            color: Color(0xFF1B1B29),
+            color: AppColors.textPrimary,
           ),
         ),
         trailing: const Icon(
           Icons.arrow_forward_ios,
           size: 16,
-          color: Color(0xFFBDBDBD),
+          color: AppColors.textLight,
         ),
         contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
       ),

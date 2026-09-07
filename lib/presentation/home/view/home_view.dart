@@ -10,9 +10,6 @@ import '../../../core/widgets/custom_search_bar.dart';
 import '../view_model/home_view_model.dart';
 import '../widgets/product_card.dart';
 
-// Design-system text color used across the home screen (titles, prices).
-const Color _kDarkText = Color(0xFF2C3E50);
-
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
 
@@ -21,7 +18,7 @@ class HomeView extends StatelessWidget {
     final viewModel = context.watch<HomeViewModel>();
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF3FAF9),
+      backgroundColor: AppColors.homeBackground,
       body: SafeArea(
         child: viewModel.isLoading
             ? const Center(child: CircularProgressIndicator())
@@ -66,7 +63,7 @@ class HomeView extends StatelessWidget {
                       child: ListView.separated(
                         scrollDirection: Axis.horizontal,
                         itemCount: viewModel.flashDeals.length,
-                        separatorBuilder: (_, __) => const SizedBox(width: 16),
+                        separatorBuilder: (_, _) => const SizedBox(width: 16),
                         itemBuilder: (context, index) {
                           final product = viewModel.flashDeals[index];
                           return ProductCard(
@@ -122,8 +119,8 @@ class HomeView extends StatelessWidget {
           children: [
             const CircleAvatar(
               radius: 24,
-              backgroundColor: Colors.grey,
-              child: Icon(Icons.person, color: Colors.white),
+              backgroundColor: AppColors.grey,
+              child: Icon(Icons.person, color: AppColors.white),
             ),
             const SizedBox(width: 12),
             Column(
@@ -131,14 +128,14 @@ class HomeView extends StatelessWidget {
               children: [
                 Text(
                   'Hello',
-                  style: TextStyle(color: Colors.grey.shade500, fontSize: 16),
+                  style: TextStyle(color: AppColors.textSecondary, fontSize: 16),
                 ),
                 const Text(
                   'Let’s Shop!',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
-                    color: _kDarkText,
+                    color: AppColors.textDark,
                   ),
                 ),
               ],
@@ -186,7 +183,7 @@ class HomeView extends StatelessWidget {
               decoration: BoxDecoration(
                 color: AppColors.primary,
                 shape: BoxShape.circle,
-                border: Border.all(color: Colors.white, width: 1),
+                border: Border.all(color: AppColors.white, width: 1),
               ),
             ),
           ),
@@ -203,8 +200,8 @@ class HomeView extends StatelessWidget {
           begin: Alignment.centerLeft,
           end: Alignment.centerRight,
           colors: [
-            Color(0xFF5AB6AC), // Teal
-            Color(0xFFE1F2F1), // Very light teal
+            AppColors.bannerTeal,
+            AppColors.illustrationBackground,
           ],
         ),
         borderRadius: BorderRadius.circular(24),
@@ -222,7 +219,7 @@ class HomeView extends StatelessWidget {
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 20,
-                    color: Colors.white,
+                    color: AppColors.white,
                     height: 1.1,
                   ),
                 ),
@@ -232,7 +229,7 @@ class HomeView extends StatelessWidget {
                   style: TextStyle(
                     fontWeight: FontWeight.w900,
                     fontSize: 24,
-                    color: Color(0xFF2C3E50),
+                    color: AppColors.textDark,
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -242,8 +239,8 @@ class HomeView extends StatelessWidget {
                   child: ElevatedButton(
                     onPressed: () {},
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: const Color(0xFF5AB6AC),
+                      backgroundColor: AppColors.white,
+                      foregroundColor: AppColors.bannerTeal,
                       elevation: 0,
                       shape: const StadiumBorder(),
                       padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -289,7 +286,7 @@ class HomeView extends StatelessWidget {
       width: active ? 35 : 10,
       height: 10,
       decoration: BoxDecoration(
-        color: active ? const Color(0xFF0E7A69) : Colors.white,
+        color: active ? AppColors.primaryDark : AppColors.white,
         borderRadius: BorderRadius.circular(5),
       ),
     );
@@ -308,7 +305,7 @@ class HomeView extends StatelessWidget {
           style: const TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 16,
-            color: _kDarkText,
+            color: AppColors.textDark,
           ),
         ),
         InkWell(
@@ -332,7 +329,7 @@ class HomeView extends StatelessWidget {
                 child: const Icon(
                   Icons.chevron_right,
                   size: 16.67,
-                  color: Colors.white,
+                  color: AppColors.white,
                 ),
               ),
             ],
@@ -357,7 +354,7 @@ class HomeView extends StatelessWidget {
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         itemCount: categories.length,
-        separatorBuilder: (_, __) => const SizedBox(width: 20),
+        separatorBuilder: (_, _) => const SizedBox(width: 20),
         itemBuilder: (context, index) {
           return InkWell(
             onTap: () => Navigator.pushNamed(context, AppRoutes.allProducts),
@@ -366,7 +363,7 @@ class HomeView extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: AppColors.white,
                     shape: BoxShape.circle,
                     border: Border.all(color: AppColors.primary, width: 2),
                   ),
@@ -374,7 +371,7 @@ class HomeView extends StatelessWidget {
                     categoryIcons[index],
                     width: 25,
                     height: 35,
-                    color: Colors.grey.shade700,
+                    color: AppColors.textDark,
                   ),
                 ),
                 const SizedBox(height: 5),
@@ -383,7 +380,7 @@ class HomeView extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
-                    color: _kDarkText,
+                    color: AppColors.textDark,
                   ),
                 ),
               ],

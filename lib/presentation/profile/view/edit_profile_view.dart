@@ -16,7 +16,7 @@ class EditProfileView extends StatelessWidget {
         centerTitle: true,
         title: const Text(
           'Edit Profile',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
         ),
         actions: [
           TextButton(
@@ -24,7 +24,7 @@ class EditProfileView extends StatelessWidget {
             child: const Text(
               'Save',
               style: TextStyle(
-                color: Colors.white,
+                color: AppColors.white,
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -46,8 +46,8 @@ class EditProfileView extends StatelessWidget {
                 label: const Text('Change Photo'),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: AppColors.primary,
-                  side: const BorderSide(color: Color(0xFFD8E6E3)),
-                  backgroundColor: const Color(0xFFE7F5F3),
+                  side: const BorderSide(color: AppColors.borderTeal),
+                  backgroundColor: AppColors.primaryLight,
                   padding: const EdgeInsets.symmetric(
                     horizontal: 16,
                     vertical: 8,
@@ -99,7 +99,7 @@ class EditProfileView extends StatelessWidget {
         style: const TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w500,
-          color: Color(0xFF1B1B29),
+          color: AppColors.textPrimary,
         ),
       ),
     );
@@ -110,18 +110,18 @@ class EditProfileView extends StatelessWidget {
       initialValue: initialValue,
       decoration: InputDecoration(
         hintText: hintText,
-        hintStyle: const TextStyle(color: Color(0xFFBDBDBD)),
+        hintStyle: const TextStyle(color: AppColors.textLight),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 16,
           vertical: 16,
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
+          borderSide: const BorderSide(color: AppColors.borderLight),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
+          borderSide: const BorderSide(color: AppColors.borderLight),
         ),
       ),
     );
@@ -137,9 +137,9 @@ class EditProfileView extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColors.white,
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: const Color(0xFFF1F1F1)),
+          border: Border.all(color: AppColors.borderExtraLight),
         ),
         child: Row(
           children: [
@@ -153,7 +153,7 @@ class EditProfileView extends StatelessWidget {
             const Icon(
               Icons.arrow_forward_ios,
               size: 16,
-              color: Color(0xFFBDBDBD),
+              color: AppColors.textLight,
             ),
           ],
         ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../core/constants/app_colors.dart';
 
 class NoResultsWidget extends StatelessWidget {
@@ -21,7 +22,7 @@ class NoResultsWidget extends StatelessWidget {
           const Icon(
             Icons.search_off_outlined,
             size: 120,
-            color: Color(0xFF8A8FA3),
+            color: AppColors.textSecondary,
           ),
           const SizedBox(height: 24),
           const Text(
@@ -29,7 +30,7 @@ class NoResultsWidget extends StatelessWidget {
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF1B1B29),
+              color: AppColors.textPrimary,
             ),
           ),
           const SizedBox(height: 12),
@@ -38,14 +39,11 @@ class NoResultsWidget extends StatelessWidget {
             textAlign: TextAlign.center,
             style: const TextStyle(
               fontSize: 16,
-              color: Color(0xFF8A8FA3),
+              color: AppColors.textSecondary,
             ),
           ),
           const SizedBox(height: 48),
-          ElevatedButton(
-            onPressed: onTryAgain,
-            child: const Text('Try Again'),
-          ),
+          ElevatedButton(onPressed: onTryAgain, child: const Text('Try Again')),
         ],
       ),
     );
@@ -55,10 +53,7 @@ class NoResultsWidget extends StatelessWidget {
 class NoInternetWidget extends StatelessWidget {
   final VoidCallback onRetry;
 
-  const NoInternetWidget({
-    super.key,
-    required this.onRetry,
-  });
+  const NoInternetWidget({super.key, required this.onRetry});
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +76,7 @@ class NoInternetWidget extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.all(4),
                   decoration: const BoxDecoration(
-                    color: Colors.white,
+                    color: AppColors.white,
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
@@ -99,20 +94,17 @@ class NoInternetWidget extends StatelessWidget {
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF1B1B29),
+              color: AppColors.textPrimary,
             ),
           ),
           const SizedBox(height: 12),
           const Text(
             'Please check your connection and try again.',
             textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 16,
-              color: Color(0xFF8A8FA3),
-            ),
+            style: TextStyle(fontSize: 16, color: AppColors.textSecondary),
           ),
           const SizedBox(height: 48),
-          // We'll use a transparent box if it's just the text in design, 
+          // We'll use a transparent box if it's just the text in design,
           // but the design shows a button in similar screens.
         ],
       ),

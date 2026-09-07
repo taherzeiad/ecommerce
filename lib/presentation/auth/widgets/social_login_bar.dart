@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:vector_graphics/vector_graphics.dart';
 
 import '../../../core/constants/app_assets.dart';
+import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_strings.dart';
 
 class SocialLoginBar extends StatelessWidget {
@@ -15,7 +16,7 @@ class SocialLoginBar extends StatelessWidget {
           children: [
             const Expanded(
               child: Divider(
-                color: Color(0xFFCBD5E0),
+                color: AppColors.authHint,
                 thickness: 1,
               ),
             ),
@@ -24,7 +25,7 @@ class SocialLoginBar extends StatelessWidget {
               child: Text(
                 AppStrings.orSignInWith,
                 style: const TextStyle(
-                  color: Color(0xFF718096),
+                  color: AppColors.authTextBody,
                   fontSize: 16,
                   fontWeight: FontWeight.w400,
                 ),
@@ -32,7 +33,7 @@ class SocialLoginBar extends StatelessWidget {
             ),
             const Expanded(
               child: Divider(
-                color: Color(0xFFCBD5E0),
+                color: AppColors.authHint,
                 thickness: 1,
               ),
             ),

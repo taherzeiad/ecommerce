@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../../../core/constants/app_colors.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../core/widgets/custom_search_bar.dart';
@@ -43,7 +44,7 @@ class _SearchViewState extends State<SearchView> {
         actions: [
           IconButton(
             onPressed: () => Navigator.pushNamed(context, AppRoutes.filterSort),
-            icon: const Icon(Icons.tune, color: Colors.white),
+            icon: const Icon(Icons.tune, color: AppColors.white),
           ),
         ],
       ),
@@ -98,19 +99,14 @@ class _SearchViewState extends State<SearchView> {
   }
 
   Widget _buildPopularChips(SearchViewModel viewModel) {
-    final popular = [
-      'Apple MacBook',
-      'Samsung',
-      'Sony',
-      'Gaming',
-    ];
+    final popular = ['Apple MacBook', 'Samsung', 'Sony', 'Gaming'];
 
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFF1F1F1)),
+        border: Border.all(color: AppColors.borderExtraLight),
       ),
       child: Wrap(
         spacing: 8,
@@ -124,7 +120,7 @@ class _SearchViewState extends State<SearchView> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
-                color: AppColors.primary.withOpacity(0.1),
+                color: AppColors.primary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
@@ -132,7 +128,7 @@ class _SearchViewState extends State<SearchView> {
                 style: const TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w500,
-                  color: Color(0xFF1B1B29),
+                  color: AppColors.textPrimary,
                 ),
               ),
             ),
@@ -161,15 +157,19 @@ class _SearchViewState extends State<SearchView> {
 
   Widget _buildProductCard(ProductEntity product) {
     return InkWell(
-      onTap: () => Navigator.pushNamed(context, AppRoutes.productDetails, arguments: product),
+      onTap: () => Navigator.pushNamed(
+        context,
+        AppRoutes.productDetails,
+        arguments: product,
+      ),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColors.white,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: const Color(0xFFF1F1F1)),
+          border: Border.all(color: AppColors.borderExtraLight),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.02),
+              color: AppColors.black.withValues(alpha: 0.02),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -189,7 +189,11 @@ class _SearchViewState extends State<SearchView> {
                               product.images.first,
                               fit: BoxFit.contain,
                             )
-                          : const Icon(Icons.image, size: 50, color: Colors.grey),
+                          : const Icon(
+                              Icons.image,
+                              size: 50,
+                              color: AppColors.grey,
+                            ),
                     ),
                   ),
                 ],

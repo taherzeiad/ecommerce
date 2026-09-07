@@ -78,7 +78,7 @@ class _SettingsViewState extends State<SettingsView> {
             _buildSettingsItem(
               icon: Icons.logout_outlined,
               title: 'Log out',
-              iconColor: const Color(0xFFE57373),
+              iconColor: AppColors.error,
               onTap: () => _showLogoutDialog(context),
             ),
           ],
@@ -97,16 +97,16 @@ class _SettingsViewState extends State<SettingsView> {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFF1F1F1)),
+        border: Border.all(color: AppColors.borderExtraLight),
       ),
       child: ListTile(
         onTap: onTap,
         leading: Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: (iconColor ?? AppColors.primary).withOpacity(0.1),
+            color: (iconColor ?? AppColors.primary).withValues(alpha: 0.1),
             shape: BoxShape.circle,
           ),
           child: Icon(icon, color: iconColor ?? AppColors.primary, size: 24),
@@ -118,7 +118,7 @@ class _SettingsViewState extends State<SettingsView> {
         trailing: const Icon(
           Icons.arrow_forward_ios,
           size: 16,
-          color: Color(0xFFBDBDBD),
+          color: AppColors.textLight,
         ),
       ),
     );
@@ -133,15 +133,15 @@ class _SettingsViewState extends State<SettingsView> {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFF1F1F1)),
+        border: Border.all(color: AppColors.borderExtraLight),
       ),
       child: ListTile(
         leading: Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: AppColors.primary.withOpacity(0.1),
+            color: AppColors.primary.withValues(alpha: 0.1),
             shape: BoxShape.circle,
           ),
           child: const Icon(
@@ -171,7 +171,7 @@ class _SettingsViewState extends State<SettingsView> {
           children: [
             const Icon(
               Icons.power_settings_new,
-              color: Color(0xFFE57373),
+              color: AppColors.error,
               size: 64,
             ),
             const SizedBox(height: 24),
@@ -200,7 +200,7 @@ class _SettingsViewState extends State<SettingsView> {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFE57373),
+                      backgroundColor: AppColors.error,
                     ),
                     child: const Text('Log out'),
                   ),

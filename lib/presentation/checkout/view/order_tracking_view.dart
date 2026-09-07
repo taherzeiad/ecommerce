@@ -13,10 +13,10 @@ class OrderTrackingView extends StatelessWidget {
         centerTitle: true,
         title: const Text(
           'Order Tracking',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
         ),
         actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.wb_sunny_outlined, color: Colors.white)),
+          IconButton(onPressed: () {}, icon: const Icon(Icons.wb_sunny_outlined, color: AppColors.white)),
         ],
       ),
       body: Stack(
@@ -32,7 +32,7 @@ class OrderTrackingView extends StatelessWidget {
     return Container(
       width: double.infinity,
       height: double.infinity,
-      color: Colors.grey.shade200,
+      color: AppColors.dividerExtraLight,
       child: Image.network(
         'https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/-73.935242,40.730610,13/600x600?access_token=dummy', // Placeholder map
         fit: BoxFit.cover,
@@ -40,7 +40,7 @@ class OrderTrackingView extends StatelessWidget {
           if (loadingProgress == null) return child;
           return const Center(child: CircularProgressIndicator());
         },
-        errorBuilder: (context, error, stackTrace) => const Center(child: Icon(Icons.image_not_supported, size: 100, color: Colors.grey)),
+        errorBuilder: (context, error, stackTrace) => const Center(child: Icon(Icons.image_not_supported, size: 100, color: AppColors.grey)),
       ),
     );
   }
@@ -54,7 +54,7 @@ class OrderTrackingView extends StatelessWidget {
         return Container(
           padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
           decoration: const BoxDecoration(
-            color: Colors.white,
+            color: AppColors.white,
             borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
             boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10)],
           ),
@@ -65,7 +65,7 @@ class OrderTrackingView extends StatelessWidget {
                 child: Container(
                   width: 40,
                   height: 4,
-                  decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(2)),
+                  decoration: BoxDecoration(color: AppColors.borderLight, borderRadius: BorderRadius.circular(2)),
                 ),
               ),
               const SizedBox(height: 24),
@@ -88,9 +88,9 @@ class OrderTrackingView extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFD8E6E3)),
+        border: Border.all(color: AppColors.borderTeal),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,11 +98,11 @@ class OrderTrackingView extends StatelessWidget {
           _buildLocationRow(Icons.location_on_outlined, 'John F. Kennedy Int’l Airport, Queens, NY'),
           Padding(
             padding: const EdgeInsets.only(left: 11),
-            child: Container(width: 2, height: 20, color: Colors.grey.shade300),
+            child: Container(width: 2, height: 20, color: AppColors.borderLight),
           ),
           _buildLocationRow(Icons.access_time, 'The Times Square Edition, 475 Lefant plz.'),
           const SizedBox(height: 24),
-          const Text('MORE', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey, letterSpacing: 1.2)),
+          const Text('MORE', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.grey, letterSpacing: 1.2)),
           const SizedBox(height: 16),
           _buildDetailRow('Order ID:', '#BH-2391'),
           const Divider(height: 24),
@@ -119,7 +119,7 @@ class OrderTrackingView extends StatelessWidget {
   Widget _buildLocationRow(IconData icon, String text) {
     return Row(
       children: [
-        Icon(icon, size: 22, color: Colors.black),
+        Icon(icon, size: 22, color: AppColors.black),
         const SizedBox(width: 12),
         Expanded(child: Text(text, style: const TextStyle(fontWeight: FontWeight.w500))),
       ],
@@ -130,8 +130,8 @@ class OrderTrackingView extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(label, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black)),
-        Text(value, style: const TextStyle(color: Colors.grey)),
+        Text(label, style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.black)),
+        Text(value, style: const TextStyle(color: AppColors.grey)),
       ],
     );
   }

@@ -5,9 +5,6 @@ import '../../../core/constants/app_colors.dart';
 import '../../../domain/entities/product_entity.dart';
 import '../../wishlist/view_model/wishlist_view_model.dart';
 
-// Design-system text color used across product cards (name + price).
-const Color _kDarkText = Color(0xFF2C3E50);
-
 class ProductCard extends StatelessWidget {
   final ProductEntity product;
   final VoidCallback? onTap;
@@ -25,11 +22,11 @@ class ProductCard extends StatelessWidget {
         width: 160,
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColors.white,
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
+              color: AppColors.black.withValues(alpha: 0.05),
               blurRadius: 10,
               offset: const Offset(0, 5),
             ),
@@ -46,7 +43,7 @@ class ProductCard extends StatelessWidget {
                   alignment: Alignment.center,
                   child: product.images.isNotEmpty
                       ? Image.network(product.images.first, fit: BoxFit.contain)
-                      : const Icon(Icons.image, color: Colors.grey, size: 40),
+                      : const Icon(Icons.image, color: AppColors.grey, size: 40),
                 ),
                 Positioned(
                   top: 0,
@@ -56,7 +53,7 @@ class ProductCard extends StatelessWidget {
                     child: Icon(
                       isFavorite ? Icons.favorite : Icons.favorite_border,
                       size: 20,
-                      color: isFavorite ? Colors.red : AppColors.primary,
+                      color: isFavorite ? AppColors.error : AppColors.primary,
                     ),
                   ),
                 ),
@@ -70,7 +67,7 @@ class ProductCard extends StatelessWidget {
               style: const TextStyle(
                 fontWeight: FontWeight.w600,
                 fontSize: 12,
-                color: _kDarkText,
+                color: AppColors.textDark,
               ),
             ),
             const SizedBox(height: 6),
@@ -79,7 +76,7 @@ class ProductCard extends StatelessWidget {
                 Text(
                   '\$${product.price.toStringAsFixed(2)}',
                   style: const TextStyle(
-                    color: _kDarkText,
+                    color: AppColors.textDark,
                     fontWeight: FontWeight.bold,
                     fontSize: 12,
                   ),
@@ -89,8 +86,8 @@ class ProductCard extends StatelessWidget {
                   const SizedBox(width: 8),
                   Text(
                     '\$${product.oldPrice!.toStringAsFixed(2)}',
-                    style: TextStyle(
-                      color: Colors.grey.shade400,
+                    style: const TextStyle(
+                      color: AppColors.textLight,
                       fontSize: 11,
                       decoration: TextDecoration.lineThrough,
                     ),

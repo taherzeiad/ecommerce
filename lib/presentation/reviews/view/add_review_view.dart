@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../core/constants/app_colors.dart';
 
 class AddReviewView extends StatelessWidget {
@@ -13,7 +14,7 @@ class AddReviewView extends StatelessWidget {
         centerTitle: true,
         title: const Text(
           'Reviews & Rating',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
         ),
       ),
       body: SingleChildScrollView(
@@ -34,19 +35,24 @@ class AddReviewView extends StatelessWidget {
                       if (loadingProgress == null) return child;
                       return const Center(child: CircularProgressIndicator());
                     },
-                    errorBuilder: (context, error, stackTrace) => const Icon(Icons.image_not_supported),
+                    errorBuilder: (context, error, stackTrace) =>
+                        const Icon(Icons.image_not_supported),
                   ),
                 ),
                 const SizedBox(width: 24),
-                Column(
+                const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     Text(
                       'Apple MacBook\nAir M2',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1B1B29)),
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.textPrimary,
+                      ),
                     ),
                     SizedBox(height: 8),
-                    Text('Laptop', style: TextStyle(color: Colors.grey)),
+                    Text('Laptop', style: TextStyle(color: AppColors.grey)),
                   ],
                 ),
               ],
@@ -55,13 +61,24 @@ class AddReviewView extends StatelessWidget {
             const Center(
               child: Text(
                 'Your overall rating of this product',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.grey),
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.grey,
+                ),
               ),
             ),
             const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(5, (index) => const Icon(Icons.star, size: 40, color: Color(0xFFD8E6E3))),
+              children: List.generate(
+                5,
+                (index) => const Icon(
+                  Icons.star,
+                  size: 40,
+                  color: AppColors.borderTeal,
+                ),
+              ),
             ),
             const SizedBox(height: 48),
             const Text(
@@ -73,9 +90,9 @@ class AddReviewView extends StatelessWidget {
               maxLines: 6,
               decoration: InputDecoration(
                 hintText: 'Share Your thoughts',
-                hintStyle: const TextStyle(color: Color(0xFFBDBDBD)),
+                hintStyle: const TextStyle(color: AppColors.textLight),
                 filled: true,
-                fillColor: const Color(0xFFF1F5F9).withOpacity(0.5),
+                fillColor: AppColors.dividerExtraLight.withValues(alpha: 0.5),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none,
@@ -84,7 +101,10 @@ class AddReviewView extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 8),
-            const Text('3000 Character', style: TextStyle(color: Colors.grey, fontSize: 12)),
+            const Text(
+              '3000 Character',
+              style: TextStyle(color: AppColors.grey, fontSize: 12),
+            ),
             const SizedBox(height: 48),
             ElevatedButton(
               onPressed: () => Navigator.pop(context),

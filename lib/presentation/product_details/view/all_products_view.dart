@@ -23,12 +23,12 @@ class AllProductsView extends StatelessWidget {
         centerTitle: true,
         title: const Text(
           'Products',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
         ),
         actions: [
           IconButton(
             onPressed: () {},
-            icon: const Icon(Icons.dark_mode_outlined, color: Colors.white),
+            icon: const Icon(Icons.dark_mode_outlined, color: AppColors.white),
           ),
         ],
       ),
@@ -90,7 +90,7 @@ class AllProductsView extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 24),
         scrollDirection: Axis.horizontal,
         itemCount: filters.length,
-        separatorBuilder: (_, __) => const SizedBox(width: 12),
+        separatorBuilder: (_, _) => const SizedBox(width: 12),
         itemBuilder: (context, index) {
           final isSelected = viewModel.selectedCategory == filters[index];
           return InkWell(
@@ -99,13 +99,13 @@ class AllProductsView extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 20),
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                color: isSelected ? AppColors.primary : const Color(0xFFE7F5F3),
+                color: isSelected ? AppColors.primary : AppColors.primaryLight,
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
                 filters[index],
                 style: TextStyle(
-                  color: isSelected ? Colors.white : AppColors.primary,
+                  color: isSelected ? AppColors.white : AppColors.primary,
                   fontWeight: FontWeight.bold,
                   fontSize: 13,
                 ),
@@ -123,12 +123,12 @@ class AllProductsView extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFF1F1F1)),
+        border: Border.all(color: AppColors.borderExtraLight),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.02),
+            color: AppColors.black.withValues(alpha: 0.02),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -155,7 +155,7 @@ class AllProductsView extends StatelessWidget {
                             errorBuilder: (context, error, stackTrace) =>
                                 const Icon(Icons.image_not_supported),
                           )
-                        : const Icon(Icons.image, color: Colors.grey, size: 50),
+                        : const Icon(Icons.image, color: AppColors.grey, size: 50),
                   ),
                 ),
                 Positioned(
@@ -173,8 +173,8 @@ class AllProductsView extends StatelessWidget {
                           context.watch<WishlistViewModel>().isInWishlist(
                             product.id,
                           )
-                          ? Colors.red
-                          : const Color(0xFFBDBDBD),
+                          ? AppColors.error
+                          : AppColors.textLight,
                       size: 20,
                     ),
                   ),
@@ -202,7 +202,7 @@ class AllProductsView extends StatelessWidget {
                   children: [
                     Text(
                       product.category,
-                      style: const TextStyle(color: Colors.grey, fontSize: 12),
+                      style: const TextStyle(color: AppColors.grey, fontSize: 12),
                     ),
                     Text(
                       '\$${product.price}',
@@ -251,7 +251,7 @@ class AllProductsView extends StatelessWidget {
                         ),
                         child: const Icon(
                           Icons.add,
-                          color: Colors.white,
+                          color: AppColors.white,
                           size: 20,
                         ),
                       ),

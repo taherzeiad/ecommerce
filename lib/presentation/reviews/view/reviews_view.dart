@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_strings.dart';
 import '../../../core/routes/app_routes.dart';
@@ -30,7 +31,8 @@ class ReviewsView extends StatelessWidget {
             _buildRatingSummary(),
             const SizedBox(height: 24),
             ElevatedButton(
-              onPressed: () => Navigator.pushNamed(context, AppRoutes.addReview),
+              onPressed: () =>
+                  Navigator.pushNamed(context, AppRoutes.addReview),
               child: const Text('Add Reviews & Rating'),
             ),
             const SizedBox(height: 32),
@@ -43,7 +45,7 @@ class ReviewsView extends StatelessWidget {
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemCount: 3,
-              separatorBuilder: (_, __) => const SizedBox(height: 16),
+              separatorBuilder: (_, _) => const SizedBox(height: 16),
               itemBuilder: (context, index) {
                 return _buildUserReviewItem();
               },
@@ -71,7 +73,11 @@ class ReviewsView extends StatelessWidget {
               color: AppColors.cardBackground,
               borderRadius: BorderRadius.circular(12),
             ),
-            child: const Icon(Icons.laptop_mac, size: 50, color: Colors.black54),
+            child: const Icon(
+              Icons.laptop_mac,
+              size: 50,
+              color: Colors.black54,
+            ),
           ),
           const SizedBox(width: 16),
           const Expanded(
@@ -88,7 +94,10 @@ class ReviewsView extends StatelessWidget {
                     SizedBox(width: 12),
                     Text(
                       '4.8',
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
                     ),
                   ],
                 ),
@@ -113,18 +122,18 @@ class ReviewsView extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.grey.shade200),
       ),
-      child: Column(
+      child: const Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              const CircleAvatar(
+              CircleAvatar(
                 radius: 20,
                 backgroundColor: Colors.grey,
                 child: Icon(Icons.person, color: Colors.white),
               ),
-              const SizedBox(width: 12),
-              const Expanded(
+              SizedBox(width: 12),
+              Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -139,16 +148,13 @@ class ReviewsView extends StatelessWidget {
                   ],
                 ),
               ),
-              const Icon(Icons.star, color: Colors.amber, size: 20),
-              const SizedBox(width: 4),
-              const Text(
-                '4.9',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
+              Icon(Icons.star, color: Colors.amber, size: 20),
+              SizedBox(width: 4),
+              Text('4.9', style: TextStyle(fontWeight: FontWeight.bold)),
             ],
           ),
-          const SizedBox(height: 16),
-          const Text(
+          SizedBox(height: 16),
+          Text(
             'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the standard Lorem Ipsum has been the industry',
             style: TextStyle(color: Colors.grey, height: 1.5),
           ),
