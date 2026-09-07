@@ -45,18 +45,18 @@ class AuthHeader extends StatelessWidget {
       clipBehavior: Clip.none,
       children: [
         // Background circles
-        Positioned(
+        const Positioned(
           top: -40,
           left: -30,
           child: _Circle(size: 150, opacity: 0.15),
         ),
-        Positioned(top: 60, right: 20, child: _Circle(size: 40, opacity: 0.1)),
-        Positioned(
+        const Positioned(top: 60, right: 20, child: _Circle(size: 40, opacity: 0.1)),
+        const Positioned(
           bottom: -20,
           left: 100,
           child: _Circle(size: 100, opacity: 0.1),
         ),
-        Positioned(
+        const Positioned(
           top: 150,
           right: -50,
           child: _Circle(size: 180, opacity: 0.05),

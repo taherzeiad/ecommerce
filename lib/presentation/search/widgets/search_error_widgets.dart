@@ -68,7 +68,7 @@ class NoInternetWidget extends StatelessWidget {
               Icon(
                 Icons.wifi_off_outlined,
                 size: 140,
-                color: AppColors.primary.withOpacity(0.8),
+                color: AppColors.primary.withValues(alpha: 0.8),
               ),
               Positioned(
                 right: 30,
