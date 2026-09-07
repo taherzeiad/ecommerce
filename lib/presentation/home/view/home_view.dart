@@ -60,7 +60,7 @@ class HomeView extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               SizedBox(
-                height: 230,
+                height: 167,
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   itemCount: dummyProducts.length,
