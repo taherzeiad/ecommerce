@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:country_picker/country_picker.dart';
 
 import '../../../core/constants/app_colors.dart';
 
-class EditAddressView extends StatelessWidget {
+class EditAddressView extends StatefulWidget {
   const EditAddressView({super.key});
+
+  @override
+  State<EditAddressView> createState() => _EditAddressViewState();
+}
+
+class _EditAddressViewState extends State<EditAddressView> {
+  Country? _selectedCountry;
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +62,7 @@ class EditAddressView extends StatelessWidget {
             _buildTextField(hintText: 'ZIP / Postal code'),
             const SizedBox(height: 16),
             _buildFieldLabel('Country'),
-            _buildDropdownField('Select Country'),
+            _buildCountryPickerField('Select Country'),
             const SizedBox(height: 40),
             ElevatedButton(
               onPressed: () => Navigator.pop(context),
@@ -102,22 +110,39 @@ class EditAddressView extends StatelessWidget {
     );
   }
 
-  Widget _buildDropdownField(String hintText) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      decoration: BoxDecoration(
-        border: Border.all(color: const Color(0xFFE0E0E0)),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton<String>(
-          isExpanded: true,
-          hint: Text(
-            hintText,
-            style: const TextStyle(color: Color(0xFFBDBDBD)),
-          ),
-          items: const [],
-          onChanged: (val) {},
+  Widget _buildCountryPickerField(String hintText) {
+    return InkWell(
+      onTap: () {
+        showCountryPicker(
+          context: context,
+          showPhoneCode: false,
+          onSelect: (Country country) {
+            setState(() {
+              _selectedCountry = country;
+            });
+          },
+        );
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        decoration: BoxDecoration(
+          border: Border.all(color: const Color(0xFFE0E0E0)),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              _selectedCountry?.name ?? hintText,
+              style: TextStyle(
+                color: _selectedCountry == null
+                    ? const Color(0xFFBDBDBD)
+                    : const Color(0xFF1B1B29),
+                fontSize: 16,
+              ),
+            ),
+            const Icon(Icons.keyboard_arrow_down, color: Color(0xFFBDBDBD)),
+          ],
         ),
       ),
     );

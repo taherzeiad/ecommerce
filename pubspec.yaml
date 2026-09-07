@@ -37,9 +37,13 @@ dependencies:
   cupertino_icons: ^1.0.8
   # State management (MVVM: View <-> ViewModel binding)
   provider: ^6.1.2
+  get_it: ^7.7.0
 
   # Onboarding page indicator dots
   smooth_page_indicator: ^1.1.0
+
+  # Country picker for address
+  country_picker: ^2.0.28
 
   # Persist "onboarding completed" flag across app launches
   shared_preferences: ^2.2.3
@@ -120,6 +124,12 @@ flutter:
       transformers:
         - package: vector_graphics_compiler
     - path: lib/assets/icons/filllove.svg
+      transformers:
+        - package: vector_graphics_compiler
+    - path: lib/assets/icons/loveex.svg
+      transformers:
+        - package: vector_graphics_compiler
+    - path: lib/assets/icons/bas.svg
       transformers:
         - package: vector_graphics_compiler
     - lib/assets/images/onboarding_1.png

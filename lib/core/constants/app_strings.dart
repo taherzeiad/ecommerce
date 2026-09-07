@@ -23,6 +23,7 @@ class AppStrings {
 
   static const String onboardingCompletedPrefKey = 'onboarding_completed';
 
+  //
   // Login
   static const String loginTitle = 'Welcome back to E-commerce App 👋';
   static const String loginSubtitle =

@@ -1,10 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_strings.dart';
 import '../../../core/routes/app_routes.dart';
+import '../../../domain/entities/product_entity.dart';
+import '../../cart/view_model/cart_view_model.dart';
+import '../../wishlist/view_model/wishlist_view_model.dart';
 
-class ProductDetailsView extends StatelessWidget {
-  const ProductDetailsView({super.key});
+class ProductDetailsView extends StatefulWidget {
+  final ProductEntity product;
+
+  const ProductDetailsView({super.key, required this.product});
+
+  @override
+  State<ProductDetailsView> createState() => _ProductDetailsViewState();
+}
+
+class _ProductDetailsViewState extends State<ProductDetailsView> {
+  int _quantity = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -28,16 +42,27 @@ class ProductDetailsView extends StatelessWidget {
   }
 
   Widget _buildImageSection(BuildContext context) {
+    final wishlistViewModel = context.watch<WishlistViewModel>();
+    final isFavorite = wishlistViewModel.isInWishlist(widget.product.id);
+
     return Container(
       height: MediaQuery.of(context).size.height * 0.45,
       width: double.infinity,
-      decoration: const BoxDecoration(
-        color: AppColors.cardBackground,
-      ),
+      decoration: const BoxDecoration(color: AppColors.cardBackground),
       child: Stack(
         children: [
-          const Center(
-            child: Icon(Icons.laptop_mac, size: 200, color: Colors.black54),
+          Center(
+            child: widget.product.images.isNotEmpty
+                ? Image.network(
+                    widget.product.images.first,
+                    height: 250,
+                    fit: BoxFit.contain,
+                  )
+                : const Icon(
+                    Icons.laptop_mac,
+                    size: 200,
+                    color: Colors.black54,
+                  ),
           ),
           SafeArea(
             child: Padding(
@@ -45,38 +70,52 @@ class ProductDetailsView extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _buildCircleIcon(Icons.arrow_back, () => Navigator.pop(context)),
-                  _buildCircleIcon(Icons.favorite, () {}, iconColor: AppColors.primary),
+                  _buildCircleIcon(
+                    Icons.arrow_back,
+                    () => Navigator.pop(context),
+                  ),
+                  _buildCircleIcon(
+                    isFavorite ? Icons.favorite : Icons.favorite_border,
+                    () => wishlistViewModel.toggleWishlist(widget.product),
+                    iconColor: isFavorite ? Colors.red : AppColors.primary,
+                  ),
                 ],
               ),
             ),
           ),
-          Positioned(
-            bottom: 20,
-            left: 0,
-            right: 0,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(
-                4,
-                (index) => Container(
-                  width: 8,
-                  height: 8,
-                  margin: const EdgeInsets.symmetric(horizontal: 4),
-                  decoration: BoxDecoration(
-                    color: index == 1 ? AppColors.primary : Colors.grey.shade300,
-                    shape: BoxShape.circle,
+          if (widget.product.images.length > 1)
+            Positioned(
+              bottom: 20,
+              left: 0,
+              right: 0,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(
+                  widget.product.images.length,
+                  (index) => Container(
+                    width: 8,
+                    height: 8,
+                    margin: const EdgeInsets.symmetric(horizontal: 4),
+                    decoration: BoxDecoration(
+                      color: index == 0
+                          ? AppColors.primary
+                          : Colors.grey.shade300,
+                      shape: BoxShape.circle,
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
         ],
       ),
     );
   }
 
-  Widget _buildCircleIcon(IconData icon, VoidCallback onTap, {Color? iconColor}) {
+  Widget _buildCircleIcon(
+    IconData icon,
+    VoidCallback onTap, {
+    Color? iconColor,
+  }) {
     return InkWell(
       onTap: onTap,
       child: Container(
@@ -103,21 +142,24 @@ class ProductDetailsView extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Apple MacBook Air M2',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+          Text(
+            widget.product.name,
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
           ),
           const SizedBox(height: 12),
           Row(
             children: [
-              _buildTag(Icons.laptop, 'Laptop'),
+              _buildTag(Icons.category, widget.product.category),
               const SizedBox(width: 12),
-              _buildTag(Icons.star_border, '(4.8) Review'),
+              _buildTag(Icons.star_border, '(${widget.product.rating}) Review'),
               const SizedBox(width: 12),
               GestureDetector(
                 onTap: () => Navigator.pushNamed(context, AppRoutes.reviews),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
                   decoration: BoxDecoration(
                     border: Border.all(color: AppColors.primary),
                     borderRadius: BorderRadius.circular(20),
@@ -135,14 +177,29 @@ class ProductDetailsView extends StatelessWidget {
             children: [
               const Text(
                 AppStrings.qty,
-                style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey),
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey,
+                ),
               ),
               const SizedBox(width: 16),
-              _buildQtyBtn(Icons.remove, () {}),
+              _buildQtyBtn(Icons.remove, () {
+                if (_quantity > 1) {
+                  setState(() => _quantity--);
+                }
+              }),
               const SizedBox(width: 16),
-              const Text('2', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+              Text(
+                '$_quantity',
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
               const SizedBox(width: 16),
-              _buildQtyBtn(Icons.add, () {}),
+              _buildQtyBtn(Icons.add, () {
+                setState(() => _quantity++);
+              }),
             ],
           ),
           const SizedBox(height: 24),
@@ -154,9 +211,13 @@ class ProductDetailsView extends StatelessWidget {
             ),
             child: Row(
               children: [
-                const Text(
-                  '\$3300.00',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: AppColors.primary),
+                Text(
+                  '\$${widget.product.price.toStringAsFixed(2)}',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                    color: AppColors.primary,
+                  ),
                 ),
                 const SizedBox(width: 8),
                 Text(
@@ -169,9 +230,9 @@ class ProductDetailsView extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 24),
-          const Text(
-            'The Apple MacBook Air M2 is a sleek, lightweight, and powerful laptop designed for performance and portability. Powered by Apple\'s advanced M2 chip, it delivers faster processing, smooth multitasking, and impressive energy efficiency ...Read More',
-            style: TextStyle(color: Colors.grey, height: 1.5),
+          Text(
+            widget.product.description,
+            style: const TextStyle(color: Colors.grey, height: 1.5),
           ),
           const SizedBox(height: 100),
         ],
@@ -202,7 +263,7 @@ class ProductDetailsView extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(4),
         decoration: BoxDecoration(
-          color: AppColors.primary.withOpacity(0.1),
+          color: AppColors.primary.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(4),
         ),
         child: Icon(icon, size: 16, color: AppColors.primary),
@@ -211,6 +272,8 @@ class ProductDetailsView extends StatelessWidget {
   }
 
   Widget _buildBottomBar(BuildContext context) {
+    final cartViewModel = context.read<CartViewModel>();
+
     return Positioned(
       bottom: 0,
       left: 0,
@@ -221,7 +284,7 @@ class ProductDetailsView extends StatelessWidget {
           color: Colors.white,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 10,
               offset: const Offset(0, -5),
             ),
@@ -231,22 +294,35 @@ class ProductDetailsView extends StatelessWidget {
           children: [
             Expanded(
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  for (int i = 0; i < _quantity; i++) {
+                    cartViewModel.addToCart(widget.product);
+                  }
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Added $_quantity to cart')),
+                  );
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
-                  minimumSize: const Size.fromHeight(56),
+                  minimumSize: const Size(double.infinity, 56),
                 ),
                 child: const Text(AppStrings.buyNow),
               ),
             ),
             const SizedBox(width: 16),
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.grey.shade100,
-                borderRadius: BorderRadius.circular(16),
+            InkWell(
+              onTap: () => Navigator.pushNamed(context, AppRoutes.cart),
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade100,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: const Icon(
+                  Icons.shopping_cart_outlined,
+                  color: AppColors.primary,
+                ),
               ),
-              child: const Icon(Icons.shopping_cart_outlined, color: AppColors.primary),
             ),
           ],
         ),

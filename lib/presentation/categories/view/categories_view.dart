@@ -198,7 +198,11 @@ class CategoriesView extends StatelessWidget {
             ),
           Center(
             child: InkWell(
-              onTap: () => Navigator.pushNamed(context, AppRoutes.allProducts),
+              onTap: () => Navigator.pushNamed(
+                context,
+                AppRoutes.allProducts,
+                arguments: title,
+              ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

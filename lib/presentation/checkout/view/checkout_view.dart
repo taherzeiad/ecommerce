@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/routes/app_routes.dart';
+import '../../cart/view_model/cart_view_model.dart';
 
 class CheckoutView extends StatefulWidget {
   const CheckoutView({super.key});
@@ -16,6 +18,8 @@ class _CheckoutViewState extends State<CheckoutView> {
 
   @override
   Widget build(BuildContext context) {
+    final cartViewModel = context.watch<CartViewModel>();
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.primary,
@@ -41,13 +45,13 @@ class _CheckoutViewState extends State<CheckoutView> {
               physics: const NeverScrollableScrollPhysics(),
               onPageChanged: (index) => setState(() => _currentStep = index),
               children: [
-                _buildAddressStep(),
-                _buildPaymentStep(),
+                _buildAddressStep(cartViewModel),
+                _buildPaymentStep(cartViewModel),
                 _buildConfirmStep(),
               ],
             ),
           ),
-          _buildBottomAction(),
+          _buildBottomAction(cartViewModel),
         ],
       ),
     );
@@ -112,7 +116,7 @@ class _CheckoutViewState extends State<CheckoutView> {
     );
   }
 
-  Widget _buildAddressStep() {
+  Widget _buildAddressStep(CartViewModel cartViewModel) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Column(
@@ -121,7 +125,7 @@ class _CheckoutViewState extends State<CheckoutView> {
           const SizedBox(height: 24),
           _buildAddAddressBtn(),
           const SizedBox(height: 32),
-          _buildOrderSummary(orderNumber: '#135792'),
+          _buildOrderSummary(cartViewModel: cartViewModel, orderNumber: '#135792'),
         ],
       ),
     );
@@ -222,7 +226,7 @@ class _CheckoutViewState extends State<CheckoutView> {
     );
   }
 
-  Widget _buildPaymentStep() {
+  Widget _buildPaymentStep(CartViewModel cartViewModel) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Column(
@@ -261,7 +265,7 @@ class _CheckoutViewState extends State<CheckoutView> {
             'lib/assets/icons/paypal.png',
           ),
           const SizedBox(height: 16),
-          _buildOrderSummary(orderNumber: '#135792'),
+          _buildOrderSummary(cartViewModel: cartViewModel, orderNumber: '#135792'),
         ],
       ),
     );
@@ -456,7 +460,7 @@ class _CheckoutViewState extends State<CheckoutView> {
     );
   }
 
-  Widget _buildOrderSummary({required String orderNumber}) {
+  Widget _buildOrderSummary({required CartViewModel cartViewModel, required String orderNumber}) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -481,11 +485,11 @@ class _CheckoutViewState extends State<CheckoutView> {
             ],
           ),
           const SizedBox(height: 16),
-          _buildSummaryRow('Total Items', '3 Items'),
-          _buildSummaryRow('Subtotal', '13,00\$'),
-          _buildSummaryRow('Delivery Fees', '12.00\$'),
+          _buildSummaryRow('Total Items', '${cartViewModel.totalItems} Items'),
+          _buildSummaryRow('Subtotal', '${cartViewModel.subtotal.toStringAsFixed(2)}\$'),
+          _buildSummaryRow('Delivery Fees', '${cartViewModel.deliveryFees.toStringAsFixed(2)}\$'),
           const Divider(height: 24),
-          _buildSummaryRow('Total Price', '1312.00\$', isBold: true),
+          _buildSummaryRow('Total Price', '${cartViewModel.totalPrice.toStringAsFixed(2)}\$', isBold: true),
           const SizedBox(height: 16),
           const Center(
             child: Text(
@@ -523,7 +527,7 @@ class _CheckoutViewState extends State<CheckoutView> {
     );
   }
 
-  Widget _buildBottomAction() {
+  Widget _buildBottomAction(CartViewModel cartViewModel) {
     String text = 'Go To Payment';
     IconData? icon = Icons.arrow_forward;
     VoidCallback? onTap;
@@ -542,7 +546,10 @@ class _CheckoutViewState extends State<CheckoutView> {
     } else {
       text = 'Confirm';
       icon = null;
-      onTap = () => Navigator.pushNamed(context, AppRoutes.orderSuccess);
+      onTap = () {
+        cartViewModel.clearCart();
+        Navigator.pushNamed(context, AppRoutes.orderSuccess);
+      };
     }
 
     return Padding(

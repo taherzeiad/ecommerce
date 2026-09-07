@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import '../../../core/constants/app_colors.dart';
 import '../../../core/routes/app_routes.dart';
+
+import 'package:ecommerce/domain/entities/product_entity.dart';
+import 'package:ecommerce/presentation/cart/view_model/cart_view_model.dart';
+import 'package:ecommerce/presentation/categories/view_model/categories_view_model.dart';
+import 'package:ecommerce/presentation/wishlist/view_model/wishlist_view_model.dart';
 
 class AllProductsView extends StatelessWidget {
   const AllProductsView({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final viewModel = context.watch<CategoriesViewModel>();
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.primary,
@@ -26,7 +35,7 @@ class AllProductsView extends StatelessWidget {
       body: Column(
         children: [
           const SizedBox(height: 16),
-          _buildCategoryFilters(),
+          _buildCategoryFilters(context, viewModel),
           const SizedBox(height: 16),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -34,32 +43,47 @@ class AllProductsView extends StatelessWidget {
               alignment: Alignment.centerRight,
               child: TextButton(
                 onPressed: () {},
-                child: const Text('Viwe All', style: TextStyle(decoration: TextDecoration.underline)),
+                child: const Text(
+                  'View All',
+                  style: TextStyle(decoration: TextDecoration.underline),
+                ),
               ),
             ),
           ),
           Expanded(
-            child: GridView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 0.65,
-                crossAxisSpacing: 16,
-                mainAxisSpacing: 16,
-              ),
-              itemCount: 6,
-              itemBuilder: (context, index) {
-                return _buildProductCard(context, index);
-              },
-            ),
+            child: viewModel.isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : GridView.builder(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 8,
+                    ),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          childAspectRatio: 0.65,
+                          crossAxisSpacing: 16,
+                          mainAxisSpacing: 16,
+                        ),
+                    itemCount: viewModel.categoryProducts.length,
+                    itemBuilder: (context, index) {
+                      return _buildProductCard(
+                        context,
+                        viewModel.categoryProducts[index],
+                      );
+                    },
+                  ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildCategoryFilters() {
-    final filters = ['ALL', 'Refrigerator', 'Laptops', 'Mobiles'];
+  Widget _buildCategoryFilters(
+    BuildContext context,
+    CategoriesViewModel viewModel,
+  ) {
+    final filters = ['Smartphones', 'Audio', 'Gaming', 'Laptop'];
     return SizedBox(
       height: 40,
       child: ListView.separated(
@@ -68,20 +92,23 @@ class AllProductsView extends StatelessWidget {
         itemCount: filters.length,
         separatorBuilder: (_, __) => const SizedBox(width: 12),
         itemBuilder: (context, index) {
-          final isFirst = index == 0;
-          return Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: isFirst ? AppColors.primary : const Color(0xFFE7F5F3),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Text(
-              filters[index],
-              style: TextStyle(
-                color: isFirst ? Colors.white : AppColors.primary,
-                fontWeight: FontWeight.bold,
-                fontSize: 13,
+          final isSelected = viewModel.selectedCategory == filters[index];
+          return InkWell(
+            onTap: () => viewModel.fetchProductsByCategory(filters[index]),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: isSelected ? AppColors.primary : const Color(0xFFE7F5F3),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                filters[index],
+                style: TextStyle(
+                  color: isSelected ? Colors.white : AppColors.primary,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 13,
+                ),
               ),
             ),
           );
@@ -90,25 +117,22 @@ class AllProductsView extends StatelessWidget {
     );
   }
 
-  Widget _buildProductCard(BuildContext context, int index) {
-    final names = ['LG Refrigerator', 'Canon LaserJet Pro', 'LG TwinWash', 'SamsungS23', 'Dell XPS 13', 'LG Refrigerator'];
-    final cats = ['Refrigerator', 'Laser Printers', 'Washing LG', 'Mobiles', 'Laptops', 'Refrigerator'];
-    final prices = ['550', '200', '600', '100', '300', '550'];
-    final images = [
-      'https://m.media-amazon.com/images/I/61iVusLwA4L._AC_SL1500_.jpg',
-      'https://m.media-amazon.com/images/I/61vYpX1S9XL._AC_SL1500_.jpg',
-      'https://m.media-amazon.com/images/I/71TPda7cwUL._AC_SL1500_.jpg', // Placeholder
-      'https://m.media-amazon.com/images/I/817WWpa7xIL._AC_SL1500_.jpg',
-      'https://m.media-amazon.com/images/I/71TPda7cwUL._AC_SL1500_.jpg',
-      'https://m.media-amazon.com/images/I/61iVusLwA4L._AC_SL1500_.jpg',
-    ];
+  Widget _buildProductCard(BuildContext context, ProductEntity product) {
+    final wishlistViewModel = context.read<WishlistViewModel>();
+    final cartViewModel = context.read<CartViewModel>();
 
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: const Color(0xFFF1F1F1)),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10, offset: const Offset(0, 4))],
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.02),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
         children: [
@@ -118,18 +142,43 @@ class AllProductsView extends StatelessWidget {
                 Center(
                   child: Padding(
                     padding: const EdgeInsets.all(12),
-                    child: Image.network(
-                      images[index],
-                      fit: BoxFit.contain,
-                      loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return const Center(child: CircularProgressIndicator());
-                      },
-                      errorBuilder: (context, error, stackTrace) => const Icon(Icons.image_not_supported),
+                    child: product.images.isNotEmpty
+                        ? Image.network(
+                            product.images.first,
+                            fit: BoxFit.contain,
+                            loadingBuilder: (context, child, loadingProgress) {
+                              if (loadingProgress == null) return child;
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            },
+                            errorBuilder: (context, error, stackTrace) =>
+                                const Icon(Icons.image_not_supported),
+                          )
+                        : const Icon(Icons.image, color: Colors.grey, size: 50),
+                  ),
+                ),
+                Positioned(
+                  top: 8,
+                  right: 8,
+                  child: InkWell(
+                    onTap: () => wishlistViewModel.toggleWishlist(product),
+                    child: Icon(
+                      context.watch<WishlistViewModel>().isInWishlist(
+                            product.id,
+                          )
+                          ? Icons.favorite
+                          : Icons.favorite_border,
+                      color:
+                          context.watch<WishlistViewModel>().isInWishlist(
+                            product.id,
+                          )
+                          ? Colors.red
+                          : const Color(0xFFBDBDBD),
+                      size: 20,
                     ),
                   ),
                 ),
-                const Positioned(top: 8, right: 8, child: Icon(Icons.favorite_border, color: Color(0xFFBDBDBD), size: 20)),
               ],
             ),
           ),
@@ -138,13 +187,30 @@ class AllProductsView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(names[index], style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14), maxLines: 1, overflow: TextOverflow.ellipsis),
+                Text(
+                  product.name,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
                 const SizedBox(height: 4),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(cats[index], style: const TextStyle(color: Colors.grey, fontSize: 12)),
-                    Text('\$${prices[index]}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                    Text(
+                      product.category,
+                      style: const TextStyle(color: Colors.grey, fontSize: 12),
+                    ),
+                    Text(
+                      '\$${product.price}',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 12),
@@ -152,21 +218,43 @@ class AllProductsView extends StatelessWidget {
                   children: [
                     Expanded(
                       child: ElevatedButton(
-                        onPressed: () => Navigator.pushNamed(context, AppRoutes.productDetails),
+                        onPressed: () => Navigator.pushNamed(
+                          context,
+                          AppRoutes.productDetails,
+                          arguments: product,
+                        ),
                         style: ElevatedButton.styleFrom(
                           minimumSize: const Size.fromHeight(36),
                           padding: EdgeInsets.zero,
-                          textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                          textStyle: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         child: const Text('View Details'),
                       ),
                     ),
                     const SizedBox(width: 8),
-                    Container(
-                      width: 36,
-                      height: 36,
-                      decoration: const BoxDecoration(color: AppColors.primary, shape: BoxShape.circle),
-                      child: const Icon(Icons.add, color: Colors.white, size: 20),
+                    InkWell(
+                      onTap: () {
+                        cartViewModel.addToCart(product);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Added to cart')),
+                        );
+                      },
+                      child: Container(
+                        width: 36,
+                        height: 36,
+                        decoration: const BoxDecoration(
+                          color: AppColors.primary,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.add,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                      ),
                     ),
                   ],
                 ),
