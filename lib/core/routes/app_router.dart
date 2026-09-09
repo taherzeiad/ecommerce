@@ -121,7 +121,7 @@ class AppRouter {
       case AppRoutes.changePassword:
         return _fade(const ChangePasswordView(), settings);
       case AppRoutes.settings:
-        return _fade(const SettingsView(), settings);
+        return _fade(const SettingsView() as Widget, settings);
       case AppRoutes.aboutUs:
         return _fade(const AboutUsView(), settings);
       case AppRoutes.helpCenter:
@@ -173,12 +173,18 @@ class AppRouter {
         const end = Offset.zero;
         final curve = Curves.easeOutQuart;
 
-        var slideTween =
-            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-        var scaleTween =
-            Tween<double>(begin: 0.96, end: 1.0).chain(CurveTween(curve: curve));
-        var fadeTween =
-            Tween<double>(begin: 0.0, end: 1.0).chain(CurveTween(curve: curve));
+        var slideTween = Tween(
+          begin: begin,
+          end: end,
+        ).chain(CurveTween(curve: curve));
+        var scaleTween = Tween<double>(
+          begin: 0.96,
+          end: 1.0,
+        ).chain(CurveTween(curve: curve));
+        var fadeTween = Tween<double>(
+          begin: 0.0,
+          end: 1.0,
+        ).chain(CurveTween(curve: curve));
 
         return FadeTransition(
           opacity: animation.drive(fadeTween),

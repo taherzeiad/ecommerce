@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/routes/app_routes.dart';
+import '../../theme/view_model/theme_view_model.dart';
+import '../../theme/view_model/locale_view_model.dart';
+import '../../../core/localization/translations.dart';
 
 class SettingsView extends StatefulWidget {
   const SettingsView({super.key});
@@ -12,17 +16,32 @@ class SettingsView extends StatefulWidget {
 
 class _SettingsViewState extends State<SettingsView> {
   bool _notificationsEnabled = true;
+  bool _soundEnabled = true;
+  bool _vibrationEnabled = false;
+
+  String _tr(String key) {
+    final locale = context.watch<LocaleViewModel>().locale.languageCode;
+    return AppTranslations.translations[locale]?[key] ?? key;
+  }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final themeViewModel = context.watch<ThemeViewModel>();
+
     return Scaffold(
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         backgroundColor: AppColors.primary,
         elevation: 0,
         centerTitle: true,
-        title: const Text(
-          'Settings',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: Text(
+          _tr('settings'),
+          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
       body: SingleChildScrollView(
@@ -30,64 +49,135 @@ class _SettingsViewState extends State<SettingsView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Account Setting',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
+            _buildSectionHeader(theme, _tr('account_setting')),
             const SizedBox(height: 16),
             _buildSettingsItem(
-              icon: Icons.language,
-              title: 'Language',
-              subtitle: 'English',
+              theme,
+              icon: Icons.person_outlined,
+              title: _tr('edit_profile'),
+              onTap: () => Navigator.pushNamed(context, AppRoutes.editProfile),
+            ),
+            _buildSettingsItem(
+              theme,
+              icon: Icons.lock_outlined,
+              title: _tr('change_password'),
+              onTap: () => Navigator.pushNamed(context, AppRoutes.changePassword),
+            ),
+            _buildSettingsItem(
+              theme,
+              icon: Icons.location_on_outlined,
+              title: _tr('shipping_address'),
+              onTap: () => Navigator.pushNamed(context, AppRoutes.checkout), // Or specific address view if exists
+            ),
+            _buildSettingsItem(
+              theme,
+              icon: Icons.payment_outlined,
+              title: _tr('payment_methods'),
               onTap: () {},
             ),
+            _buildSettingsItem(
+              theme,
+              icon: Icons.language,
+              title: _tr('language'),
+              subtitle: context.watch<LocaleViewModel>().locale.languageCode == 'en' ? 'English' : 'العربية',
+              onTap: () => _showLanguagePicker(context),
+            ),
+            _buildSettingsItem(
+              theme,
+              icon: Icons.monetization_on_outlined,
+              title: _tr('currency'),
+              subtitle: 'USD (\$)',
+              onTap: () => _showCurrencyPicker(context),
+            ),
+            const SizedBox(height: 32),
+            _buildSectionHeader(theme, _tr('preferences')),
+            const SizedBox(height: 16),
             _buildSettingsToggle(
+              theme,
+              icon: Icons.dark_mode_outlined,
+              title: _tr('dark_mode'),
+              value: themeViewModel.isDarkMode,
+              onChanged: (val) => themeViewModel.toggleTheme(),
+            ),
+            _buildSettingsToggle(
+              theme,
               icon: Icons.notifications_none,
-              title: 'Notification',
+              title: _tr('notification'),
               value: _notificationsEnabled,
               onChanged: (val) => setState(() => _notificationsEnabled = val),
             ),
-            _buildSettingsItem(
-              icon: Icons.privacy_tip_outlined,
-              title: 'Privacy',
-              onTap: () => Navigator.pushNamed(context, AppRoutes.privacy),
-            ),
+            if (_notificationsEnabled) ...[
+              _buildSettingsToggle(
+                theme,
+                icon: Icons.volume_up_outlined,
+                title: _tr('notification_sound'),
+                value: _soundEnabled,
+                onChanged: (val) => setState(() => _soundEnabled = val),
+              ),
+              _buildSettingsToggle(
+                theme,
+                icon: Icons.vibration,
+                title: _tr('vibration'),
+                value: _vibrationEnabled,
+                onChanged: (val) => setState(() => _vibrationEnabled = val),
+              ),
+            ],
             const SizedBox(height: 32),
-            const Text(
-              'Support & Other',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
+            _buildSectionHeader(theme, _tr('support_other')),
             const SizedBox(height: 16),
             _buildSettingsItem(
+              theme,
+              icon: Icons.privacy_tip_outlined,
+              title: _tr('privacy'),
+              onTap: () => Navigator.pushNamed(context, AppRoutes.privacy),
+            ),
+            _buildSettingsItem(
+              theme,
               icon: Icons.help_outline,
-              title: 'Helps Center',
+              title: _tr('help_center'),
               onTap: () => Navigator.pushNamed(context, AppRoutes.helpCenter),
             ),
             _buildSettingsItem(
+              theme,
               icon: Icons.description_outlined,
-              title: 'Terms & Condition',
+              title: _tr('terms_condition'),
               onTap: () =>
                   Navigator.pushNamed(context, AppRoutes.termsConditions),
             ),
             _buildSettingsItem(
-              icon: Icons.info_outline,
-              title: 'About Us',
+              theme,
+              icon: Icons.info_outlined,
+              title: _tr('about_us'),
               onTap: () => Navigator.pushNamed(context, AppRoutes.aboutUs),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 32),
             _buildSettingsItem(
+              theme,
               icon: Icons.logout_outlined,
-              title: 'Log out',
+              title: _tr('logout'),
               iconColor: AppColors.error,
               onTap: () => _showLogoutDialog(context),
             ),
+            const SizedBox(height: 40),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildSettingsItem({
+  Widget _buildSectionHeader(ThemeData theme, String title) {
+    return Text(
+      title,
+      style: TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
+        color: theme.colorScheme.onSurface,
+      ),
+    );
+  }
+
+  Widget _buildSettingsItem(
+    ThemeData theme, {
     required IconData icon,
     required String title,
     String? subtitle,
@@ -97,9 +187,9 @@ class _SettingsViewState extends State<SettingsView> {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.borderExtraLight),
+        border: Border.all(color: theme.dividerColor.withValues(alpha: 0.1)),
       ),
       child: ListTile(
         onTap: onTap,
@@ -111,20 +201,27 @@ class _SettingsViewState extends State<SettingsView> {
           ),
           child: Icon(icon, color: iconColor ?? AppColors.primary, size: 24),
         ),
-        title: Text(title, style: const TextStyle(fontWeight: FontWeight.w500)),
+        title: Text(
+          title,
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
+            color: theme.colorScheme.onSurface,
+          ),
+        ),
         subtitle: subtitle != null
             ? Text(subtitle, style: const TextStyle(color: AppColors.primary))
             : null,
-        trailing: const Icon(
+        trailing: Icon(
           Icons.arrow_forward_ios,
           size: 16,
-          color: AppColors.textLight,
+          color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
         ),
       ),
     );
   }
 
-  Widget _buildSettingsToggle({
+  Widget _buildSettingsToggle(
+    ThemeData theme, {
     required IconData icon,
     required String title,
     required bool value,
@@ -133,9 +230,9 @@ class _SettingsViewState extends State<SettingsView> {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.borderExtraLight),
+        border: Border.all(color: theme.dividerColor.withValues(alpha: 0.1)),
       ),
       child: ListTile(
         leading: Container(
@@ -144,27 +241,121 @@ class _SettingsViewState extends State<SettingsView> {
             color: AppColors.primary.withValues(alpha: 0.1),
             shape: BoxShape.circle,
           ),
-          child: const Icon(
-            Icons.notifications_none,
+          child: Icon(
+            icon,
             color: AppColors.primary,
             size: 24,
           ),
         ),
-        title: Text(title, style: const TextStyle(fontWeight: FontWeight.w500)),
+        title: Text(
+          title,
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
+            color: theme.colorScheme.onSurface,
+          ),
+        ),
         trailing: Switch(
           value: value,
           onChanged: onChanged,
-          activeThumbColor: AppColors.primary,
+          activeColor: AppColors.primary,
         ),
       ),
     );
   }
 
+  void _showLanguagePicker(BuildContext context) {
+    final localeViewModel = context.read<LocaleViewModel>();
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                _tr('select_language'),
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 20),
+              _buildLanguageItem(
+                'English',
+                localeViewModel.locale.languageCode == 'en',
+                () => localeViewModel.setLocale(const Locale('en')),
+              ),
+              _buildLanguageItem(
+                'العربية',
+                localeViewModel.locale.languageCode == 'ar',
+                () => localeViewModel.setLocale(const Locale('ar')),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildLanguageItem(
+      String language, bool isSelected, VoidCallback onTap) {
+    return ListTile(
+      title: Text(language),
+      trailing: isSelected
+          ? const Icon(Icons.check_circle, color: AppColors.primary)
+          : null,
+      onTap: () {
+        onTap();
+        Navigator.pop(context);
+      },
+    );
+  }
+
+  void _showCurrencyPicker(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'Select Currency',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 20),
+              _buildCurrencyItem('USD (\$)', true),
+              _buildCurrencyItem('EUR (€)', false),
+              _buildCurrencyItem('SAR (ر.س)', false),
+              _buildCurrencyItem('GBP (£)', false),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildCurrencyItem(String currency, bool isSelected) {
+    return ListTile(
+      title: Text(currency),
+      trailing: isSelected
+          ? const Icon(Icons.check_circle, color: AppColors.primary)
+          : null,
+      onTap: () => Navigator.pop(context),
+    );
+  }
+
   void _showLogoutDialog(BuildContext context) {
-    // Reusing the same dialog logic as in ProfileView
+    final theme = Theme.of(context);
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
+        backgroundColor: theme.dialogBackgroundColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -175,10 +366,12 @@ class _SettingsViewState extends State<SettingsView> {
               size: 64,
             ),
             const SizedBox(height: 24),
-            const Text(
-              'Are You Sure to wont to Log out ?',
+            Text(
+              _tr('are_you_sure_logout'),
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 24),
             Row(
@@ -186,13 +379,21 @@ class _SettingsViewState extends State<SettingsView> {
                 Expanded(
                   child: OutlinedButton(
                     onPressed: () => Navigator.pop(context),
-                    child: const Text('Cancel'),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: theme.colorScheme.onSurface,
+                      side: BorderSide(color: theme.dividerColor),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: Text(_tr('cancel')),
                   ),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
+                      Navigator.pop(context);
                       Navigator.pushNamedAndRemoveUntil(
                         context,
                         AppRoutes.login,
@@ -201,8 +402,11 @@ class _SettingsViewState extends State<SettingsView> {
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.error,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                     ),
-                    child: const Text('Log out'),
+                    child: Text(_tr('logout')),
                   ),
                 ),
               ],

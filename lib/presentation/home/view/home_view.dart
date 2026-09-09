@@ -10,6 +10,8 @@ import '../../../core/widgets/custom_search_bar.dart';
 import '../view_model/home_view_model.dart';
 import '../widgets/product_card.dart';
 import '../../theme/view_model/theme_view_model.dart';
+import '../../../core/extensions/context_extension.dart';
+import '../../theme/view_model/locale_view_model.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -32,7 +34,7 @@ class HomeView extends StatelessWidget {
                     _buildHeader(context),
                     const SizedBox(height: 16),
                     CustomSearchBar(
-                      hintText: 'Search',
+                      hintText: context.tr('search'),
                       height: 40,
                       hasShadow: true,
                       hasBorder: false,
@@ -46,7 +48,7 @@ class HomeView extends StatelessWidget {
                     const SizedBox(height: 16),
                     _buildSectionHeader(
                       context,
-                      AppStrings.categories,
+                      context.tr('categories'),
                       () => Navigator.pushNamed(
                         context,
                         AppRoutes.mainWrapper,
@@ -58,7 +60,7 @@ class HomeView extends StatelessWidget {
                     const SizedBox(height: 16),
                     _buildSectionHeader(
                       context,
-                      AppStrings.flashDeals,
+                      context.tr('flash_deals'),
                       () => Navigator.pushNamed(context, AppRoutes.allProducts),
                     ),
                     const SizedBox(height: 16),
@@ -98,7 +100,7 @@ class HomeView extends StatelessWidget {
                     const SizedBox(height: 16),
                     _buildSectionHeader(
                       context,
-                      AppStrings.popularProduct,
+                      context.tr('popular_product'),
                       () {},
                     ),
                     const SizedBox(height: 16),
@@ -164,14 +166,14 @@ class HomeView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Hello',
+                  context.tr('hello'),
                   style: TextStyle(
                     color: theme.textTheme.bodyMedium?.color,
                     fontSize: 16,
                   ),
                 ),
                 Text(
-                  'Let’s Shop!',
+                  context.tr('lets_shop'),
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,

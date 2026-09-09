@@ -5,6 +5,7 @@ import 'package:vector_graphics/vector_graphics.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_strings.dart';
 import '../../../core/routes/app_routes.dart';
+import '../../../core/extensions/context_extension.dart';
 import '../../theme/view_model/theme_view_model.dart';
 import '../view_model/cart_view_model.dart';
 
@@ -25,9 +26,9 @@ class CartView extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
           icon: const Icon(Icons.arrow_back, color: AppColors.white),
         ),
-        title: const Text(
-          AppStrings.shoppingCart,
-          style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
+        title: Text(
+          context.tr('shopping_cart'),
+          style: const TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
         ),
         actions: [
           IconButton(
@@ -58,9 +59,9 @@ class CartView extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          AppStrings.orderSummary,
-                          style: TextStyle(
+                        Text(
+                          context.tr('order_summary'),
+                          style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
@@ -80,9 +81,9 @@ class CartView extends StatelessWidget {
                         const SizedBox(height: 15),
                         _buildAddMoreItems(context),
                         const SizedBox(height: 32),
-                        const Text(
-                          AppStrings.discountCoupon,
-                          style: TextStyle(
+                        Text(
+                          context.tr('discount_coupon'),
+                          style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
@@ -109,9 +110,9 @@ class CartView extends StatelessWidget {
                           borderRadius: BorderRadius.circular(28),
                         ),
                       ),
-                      child: const Text(
-                        AppStrings.checkout,
-                        style: TextStyle(
+                      child: Text(
+                        context.tr('checkout'),
+                        style: const TextStyle(
                           color: AppColors.white,
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
@@ -136,14 +137,14 @@ class CartView extends StatelessWidget {
             color: AppColors.borderLight,
           ),
           const SizedBox(height: 24),
-          const Text(
-            'Your cart is empty',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          Text(
+            context.tr('cart_empty'),
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 12),
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Go Shopping'),
+            child: Text(context.tr('go_shopping')),
           ),
         ],
       ),
@@ -166,14 +167,14 @@ class CartView extends StatelessWidget {
           color: AppColors.error,
           borderRadius: BorderRadius.circular(12),
         ),
-        child: const Column(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.delete_outline, color: AppColors.white, size: 28),
-            SizedBox(height: 4),
+            const Icon(Icons.delete_outline, color: AppColors.white, size: 28),
+            const SizedBox(height: 4),
             Text(
-              'delete',
-              style: TextStyle(
+              context.tr('delete'),
+              style: const TextStyle(
                 color: AppColors.white,
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
@@ -328,9 +329,9 @@ class CartView extends StatelessWidget {
           ),
         ),
         icon: const Icon(Icons.add, size: 20),
-        label: const Text(
-          AppStrings.addMoreItems,
-          style: TextStyle(fontWeight: FontWeight.bold),
+        label: Text(
+          context.tr('add_more_items'),
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
     );
@@ -343,7 +344,7 @@ class CartView extends StatelessWidget {
         Expanded(
           child: TextField(
             decoration: InputDecoration(
-              hintText: AppStrings.promoCode,
+              hintText: context.tr('promo_code'),
               hintStyle: TextStyle(color: theme.textTheme.bodySmall?.color),
               contentPadding: const EdgeInsets.symmetric(horizontal: 16),
               border: OutlineInputBorder(
@@ -368,7 +369,7 @@ class CartView extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
             ),
           ),
-          child: const Text(AppStrings.apply),
+          child: Text(context.tr('apply')),
         ),
       ],
     );
@@ -379,17 +380,17 @@ class CartView extends StatelessWidget {
       children: [
         _buildPriceRow(
           context,
-          AppStrings.subTotal,
+          context.tr('sub_total'),
           '\$${viewModel.subtotal.toStringAsFixed(2)}',
         ),
         _buildPriceRow(
           context,
-          AppStrings.deliveryFees,
+          context.tr('delivery_fees'),
           '\$${viewModel.deliveryFees.toStringAsFixed(2)}',
         ),
         _buildPriceRow(
           context,
-          AppStrings.taxes,
+          context.tr('taxes'),
           '\$${viewModel.taxes.toStringAsFixed(2)}',
           isRed: true,
         ),
@@ -418,7 +419,7 @@ class CartView extends StatelessWidget {
         const SizedBox(height: 16),
         _buildPriceRow(
           context,
-          AppStrings.total,
+          context.tr('total'),
           '\$${viewModel.totalPrice.toStringAsFixed(2)}',
           isBold: true,
         ),
