@@ -112,12 +112,26 @@ class CategoriesView extends StatelessWidget {
                     'lib/assets/icons/laptop.png',
                   ];
 
-                  return _buildCategoryGridItem(
-                    context,
-                    titles[index],
-                    counts[index],
-                    icons[index],
-                    index == 0,
+                  return TweenAnimationBuilder<double>(
+                    duration: Duration(milliseconds: 300 + (index * 50)),
+                    tween: Tween(begin: 0.0, end: 1.0),
+                    curve: Curves.easeOutCubic,
+                    builder: (context, value, child) {
+                      return Opacity(
+                        opacity: value,
+                        child: Transform.translate(
+                          offset: Offset(0, 20 * (1 - value)),
+                          child: child,
+                        ),
+                      );
+                    },
+                    child: _buildCategoryGridItem(
+                      context,
+                      titles[index],
+                      counts[index],
+                      icons[index],
+                      index == 0,
+                    ),
                   );
                 },
               ),
