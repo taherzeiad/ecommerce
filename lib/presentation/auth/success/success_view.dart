@@ -23,7 +23,7 @@ class SuccessView extends StatelessWidget {
               ),
               child: const Icon(
                 Icons.check,
-                color: Colors.white,
+                color: AppColors.white,
                 size: 80,
               ),
             ),
@@ -41,7 +41,7 @@ class SuccessView extends StatelessWidget {
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 18,
-                color: Colors.grey,
+                color: AppColors.grey,
               ),
             ),
             const Spacer(),

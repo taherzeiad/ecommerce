@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/constants/app_colors.dart';
 
 
 class AuthHeader extends StatelessWidget {
@@ -23,7 +24,7 @@ class AuthHeader extends StatelessWidget {
       title,
       textAlign: centerTitle ? TextAlign.center : TextAlign.start,
       style: const TextStyle(
-        color: Colors.white,
+        color: AppColors.white,
         fontSize: 32,
         fontWeight: FontWeight.bold,
         height: 1.2,
@@ -34,7 +35,7 @@ class AuthHeader extends StatelessWidget {
       subtitle,
       textAlign: centerTitle ? TextAlign.center : TextAlign.start,
       style: TextStyle(
-        color: Colors.white.withOpacity(0.9),
+        color: AppColors.white.withValues(alpha: 0.9),
         fontSize: 18,
         fontWeight: FontWeight.w500,
       ),
@@ -44,18 +45,18 @@ class AuthHeader extends StatelessWidget {
       clipBehavior: Clip.none,
       children: [
         // Background circles
-        Positioned(
+        const Positioned(
           top: -40,
           left: -30,
           child: _Circle(size: 150, opacity: 0.15),
         ),
-        Positioned(top: 60, right: 20, child: _Circle(size: 40, opacity: 0.1)),
-        Positioned(
+        const Positioned(top: 60, right: 20, child: _Circle(size: 40, opacity: 0.1)),
+        const Positioned(
           bottom: -20,
           left: 100,
           child: _Circle(size: 100, opacity: 0.1),
         ),
-        Positioned(
+        const Positioned(
           top: 150,
           right: -50,
           child: _Circle(size: 180, opacity: 0.05),
@@ -119,7 +120,7 @@ class _Circle extends StatelessWidget {
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(opacity),
+        color: AppColors.white.withValues(alpha: opacity),
         shape: BoxShape.circle,
       ),
     );

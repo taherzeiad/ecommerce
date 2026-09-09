@@ -46,7 +46,7 @@ class WishlistView extends StatelessWidget {
           : ListView.separated(
               padding: const EdgeInsets.all(24),
               itemCount: viewModel.items.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 16),
+              separatorBuilder: (_, _) => const SizedBox(height: 16),
               itemBuilder: (context, index) {
                 return _buildWishlistItem(context, viewModel.items[index]);
               },
@@ -128,11 +128,11 @@ class WishlistView extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColors.white,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: AppColors.black.withValues(alpha: 0.05),
               blurRadius: 10,
               offset: const Offset(0, 5),
             ),

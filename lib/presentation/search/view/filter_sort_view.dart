@@ -22,7 +22,7 @@ class _FilterSortViewState extends State<FilterSortView> {
         centerTitle: true,
         title: const Text(
           'Filter & Sort',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
         ),
         actions: [
           TextButton(
@@ -35,7 +35,7 @@ class _FilterSortViewState extends State<FilterSortView> {
             },
             child: const Text(
               'Reset',
-              style: TextStyle(color: Colors.white, fontSize: 16),
+              style: TextStyle(color: AppColors.white, fontSize: 16),
             ),
           ),
         ],
@@ -81,7 +81,7 @@ class _FilterSortViewState extends State<FilterSortView> {
       style: const TextStyle(
         fontSize: 18,
         fontWeight: FontWeight.bold,
-        color: Color(0xFF1B1B29),
+        color: AppColors.textPrimary,
       ),
     );
   }
@@ -90,9 +90,9 @@ class _FilterSortViewState extends State<FilterSortView> {
     final options = ['Popular', 'Newest', 'Price : Low To High', 'Price : High To Low'];
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFF1F1F1)),
+        border: Border.all(color: AppColors.borderExtraLight),
       ),
       child: Column(
         children: options.map((option) {
@@ -107,7 +107,7 @@ class _FilterSortViewState extends State<FilterSortView> {
                 activeColor: AppColors.primary,
                 contentPadding: const EdgeInsets.symmetric(horizontal: 16),
               ),
-              if (!isLast) const Divider(height: 1, color: Color(0xFFF1F1F1)),
+              if (!isLast) const Divider(height: 1, color: AppColors.borderExtraLight),
             ],
           );
         }).toList(),
@@ -119,9 +119,9 @@ class _FilterSortViewState extends State<FilterSortView> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFF1F1F1)),
+        border: Border.all(color: AppColors.borderExtraLight),
       ),
       child: Column(
         children: [
@@ -137,7 +137,7 @@ class _FilterSortViewState extends State<FilterSortView> {
             min: 0,
             max: 500,
             activeColor: AppColors.primary,
-            inactiveColor: const Color(0xFFE0E0E0),
+            inactiveColor: AppColors.borderLight,
             onChanged: (val) => setState(() => _priceRange = val),
           ),
         ],
@@ -149,9 +149,9 @@ class _FilterSortViewState extends State<FilterSortView> {
     final categories = ['Phone', 'Audio', 'Fashion', 'Camera'];
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFF1F1F1)),
+        border: Border.all(color: AppColors.borderExtraLight),
       ),
       child: Column(
         children: categories.map((cat) {
@@ -167,7 +167,7 @@ class _FilterSortViewState extends State<FilterSortView> {
                 checkboxShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                 contentPadding: const EdgeInsets.symmetric(horizontal: 16),
               ),
-              if (!isLast) const Divider(height: 1, color: Color(0xFFF1F1F1)),
+              if (!isLast) const Divider(height: 1, color: AppColors.borderExtraLight),
             ],
           );
         }).toList(),

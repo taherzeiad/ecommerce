@@ -14,7 +14,7 @@ class OrderSuccessView extends StatelessWidget {
         centerTitle: true,
         title: const Text(
           'Check Out',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
         ),
       ),
       body: Padding(
@@ -26,13 +26,13 @@ class OrderSuccessView extends StatelessWidget {
             const SizedBox(height: 32),
             const Text(
               'Payment Successful',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Color(0xFF1B1B29)),
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
             ),
             const SizedBox(height: 16),
             const Text(
               'Your order number is #135792. You\'ll need this number to track your order. You will receive the order confirmation shortly.',
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 16, color: Colors.grey, height: 1.4),
+              style: TextStyle(fontSize: 16, color: AppColors.grey, height: 1.4),
             ),
             const Spacer(),
             const Text(
@@ -82,7 +82,7 @@ class OrderSuccessView extends StatelessWidget {
           width: 150,
           height: 150,
           decoration: BoxDecoration(
-            color: AppColors.primary.withOpacity(0.1),
+            color: AppColors.primary.withValues(alpha: 0.1),
             shape: BoxShape.circle,
           ),
         ),
@@ -90,7 +90,7 @@ class OrderSuccessView extends StatelessWidget {
           width: 110,
           height: 110,
           decoration: BoxDecoration(
-            color: AppColors.primary.withOpacity(0.2),
+            color: AppColors.primary.withValues(alpha: 0.2),
             shape: BoxShape.circle,
           ),
         ),

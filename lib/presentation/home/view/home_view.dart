@@ -10,9 +10,6 @@ import '../../../core/widgets/custom_search_bar.dart';
 import '../view_model/home_view_model.dart';
 import '../widgets/product_card.dart';
 
-// Design-system text color used across the home screen (titles, prices).
-const Color _kDarkText = Color(0xFF2C3E50);
-
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
 
@@ -21,124 +18,130 @@ class HomeView extends StatelessWidget {
     final viewModel = context.watch<HomeViewModel>();
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF3FAF9),
+      backgroundColor: AppColors.homeBackground,
       body: SafeArea(
         child: viewModel.isLoading
             ? const Center(child: CircularProgressIndicator())
             : SingleChildScrollView(
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildHeader(),
-                    const SizedBox(height: 16),
-                    CustomSearchBar(
-                      hintText: 'Search',
-                      height: 40,
-                      hasShadow: true,
-                      hasBorder: false,
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildHeader(context),
+              const SizedBox(height: 16),
+              CustomSearchBar(
+                hintText: 'Search',
+                height: 40,
+                hasShadow: true,
+                hasBorder: false,
+                onTap: () =>
+                    Navigator.pushNamed(context, AppRoutes.search),
+                onFilterTap: () =>
+                    Navigator.pushNamed(context, AppRoutes.filterSort),
+              ),
+              const SizedBox(height: 16),
+              _buildBanner(),
+              const SizedBox(height: 16),
+              _buildSectionHeader(
+                AppStrings.categories,
+                    () =>
+                    Navigator.pushNamed(
+                      context,
+                      AppRoutes.mainWrapper,
+                      arguments: 1,
+                    ),
+              ),
+              const SizedBox(height: 16),
+              _buildCategoryList(context),
+              const SizedBox(height: 16),
+              _buildSectionHeader(
+                AppStrings.flashDeals,
+                    () => Navigator.pushNamed(context, AppRoutes.allProducts),
+              ),
+              const SizedBox(height: 16),
+              SizedBox(
+                height: 167,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: viewModel.flashDeals.length,
+                  separatorBuilder: (_, _) => const SizedBox(width: 16),
+                  itemBuilder: (context, index) {
+                    final product = viewModel.flashDeals[index];
+                    return ProductCard(
+                      product: product,
                       onTap: () =>
-                          Navigator.pushNamed(context, AppRoutes.search),
-                      onFilterTap: () =>
-                          Navigator.pushNamed(context, AppRoutes.filterSort),
-                    ),
-                    const SizedBox(height: 16),
-                    _buildBanner(),
-                    const SizedBox(height: 16),
-                    _buildSectionHeader(
-                      AppStrings.categories,
-                      () => Navigator.pushNamed(
-                        context,
-                        AppRoutes.mainWrapper,
-                        arguments: 1,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    _buildCategoryList(context),
-                    const SizedBox(height: 16),
-                    _buildSectionHeader(
-                      AppStrings.flashDeals,
-                      () => Navigator.pushNamed(context, AppRoutes.allProducts),
-                    ),
-                    const SizedBox(height: 16),
-                    SizedBox(
-                      height: 167,
-                      child: ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: viewModel.flashDeals.length,
-                        separatorBuilder: (_, __) => const SizedBox(width: 16),
-                        itemBuilder: (context, index) {
-                          final product = viewModel.flashDeals[index];
-                          return ProductCard(
-                            product: product,
-                            onTap: () => Navigator.pushNamed(
-                              context,
-                              AppRoutes.productDetails,
-                              arguments: product,
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    _buildSectionHeader(AppStrings.popularProduct, () {}),
-                    const SizedBox(height: 16),
-                    GridView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            childAspectRatio: 0.68,
-                            crossAxisSpacing: 16,
-                            mainAxisSpacing: 16,
-                          ),
-                      itemCount: viewModel.popularProducts.length,
-                      itemBuilder: (context, index) {
-                        final product = viewModel.popularProducts[index];
-                        return ProductCard(
-                          product: product,
-                          onTap: () => Navigator.pushNamed(
+                          Navigator.pushNamed(
                             context,
                             AppRoutes.productDetails,
                             arguments: product,
                           ),
-                        );
-                      },
-                    ),
-                    const SizedBox(height: 80), // Space for bottom nav
-                  ],
+                    );
+                  },
                 ),
               ),
+              const SizedBox(height: 16),
+              _buildSectionHeader(AppStrings.popularProduct, () {}),
+              const SizedBox(height: 16),
+              GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate:
+                const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 0.68,
+                  crossAxisSpacing: 16,
+                  mainAxisSpacing: 16,
+                ),
+                itemCount: viewModel.popularProducts.length,
+                itemBuilder: (context, index) {
+                  final product = viewModel.popularProducts[index];
+                  return ProductCard(
+                    product: product,
+                    onTap: () =>
+                        Navigator.pushNamed(
+                          context,
+                          AppRoutes.productDetails,
+                          arguments: product,
+                        ),
+                  );
+                },
+              ),
+              const SizedBox(height: 80), // Space for bottom nav
+            ],
+          ),
+        ),
       ),
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Row(
+        const Row(
           children: [
-            const CircleAvatar(
+            CircleAvatar(
               radius: 24,
-              backgroundColor: Colors.grey,
-              child: Icon(Icons.person, color: Colors.white),
+              backgroundColor: AppColors.grey,
+              child: Icon(Icons.person, color: AppColors.white),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   'Hello',
-                  style: TextStyle(color: Colors.grey.shade500, fontSize: 16),
+                  style: TextStyle(
+                    color: AppColors.textSecondary,
+                    fontSize: 16,
+                  ),
                 ),
-                const Text(
+                Text(
                   'Let’s Shop!',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
-                    color: _kDarkText,
+                    color: AppColors.textDark,
                   ),
                 ),
               ],
@@ -147,9 +150,14 @@ class HomeView extends StatelessWidget {
         ),
         Row(
           children: [
-            _buildHeaderIcon(
-              'lib/assets/icons/notification.svg',
-              hasBadge: true,
+            InkWell(
+              onTap: () =>
+                  Navigator.pushNamed(context, AppRoutes.notifications),
+              borderRadius: BorderRadius.circular(30),
+              child: _buildHeaderIcon(
+                'lib/assets/icons/notification.svg',
+                hasBadge: true,
+              ),
             ),
             const SizedBox(width: 12),
             _buildHeaderIcon('lib/assets/icons/moon.svg'),
@@ -186,7 +194,7 @@ class HomeView extends StatelessWidget {
               decoration: BoxDecoration(
                 color: AppColors.primary,
                 shape: BoxShape.circle,
-                border: Border.all(color: Colors.white, width: 1),
+                border: Border.all(color: AppColors.white, width: 1),
               ),
             ),
           ),
@@ -202,53 +210,53 @@ class HomeView extends StatelessWidget {
         gradient: const LinearGradient(
           begin: Alignment.centerLeft,
           end: Alignment.centerRight,
-          colors: [
-            Color(0xFF5AB6AC), // Teal
-            Color(0xFFE1F2F1), // Very light teal
-          ],
+          colors: [AppColors.bannerTeal, AppColors.illustrationBackground],
         ),
         borderRadius: BorderRadius.circular(24),
       ),
       child: Stack(
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text(
+                Text(
                   'Get Discount on Shop\nday',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 20,
-                    color: Colors.white,
+                    color: AppColors.white,
                     height: 1.1,
                   ),
                 ),
-                const SizedBox(height: 12),
-                const Text(
+                SizedBox(height: 12),
+                Text(
                   'UP to 50%',
                   style: TextStyle(
                     fontWeight: FontWeight.w900,
                     fontSize: 24,
-                    color: Color(0xFF2C3E50),
+                    color: AppColors.textDark,
                   ),
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
                 SizedBox(
                   height: 30,
                   width: 100,
                   child: ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: const Color(0xFF5AB6AC),
-                      elevation: 0,
-                      shape: const StadiumBorder(),
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                    onPressed: null, // Placeholder action
+                    style: ButtonStyle(
+                      backgroundColor: WidgetStatePropertyAll(AppColors.white),
+                      foregroundColor: WidgetStatePropertyAll(
+                        AppColors.bannerTeal,
+                      ),
+                      elevation: WidgetStatePropertyAll(0),
+                      padding: WidgetStatePropertyAll(
+                        EdgeInsets.symmetric(horizontal: 24),
+                      ),
                     ),
-                    child: const Text(
+                    child: Text(
                       'Get Now',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
@@ -284,15 +292,16 @@ class HomeView extends StatelessWidget {
   }
 
   Widget _buildBannerDots() {
-    Widget dot({bool active = false}) => Container(
-      margin: const EdgeInsets.symmetric(horizontal: 4),
-      width: active ? 35 : 10,
-      height: 10,
-      decoration: BoxDecoration(
-        color: active ? const Color(0xFF0E7A69) : Colors.white,
-        borderRadius: BorderRadius.circular(5),
-      ),
-    );
+    Widget dot({bool active = false}) =>
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: 4),
+          width: active ? 35 : 10,
+          height: 10,
+          decoration: BoxDecoration(
+            color: active ? AppColors.primaryDark : AppColors.white,
+            borderRadius: BorderRadius.circular(5),
+          ),
+        );
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [dot(), dot(active: true), dot()],
@@ -308,7 +317,7 @@ class HomeView extends StatelessWidget {
           style: const TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 16,
-            color: _kDarkText,
+            color: AppColors.textDark,
           ),
         ),
         InkWell(
@@ -332,7 +341,7 @@ class HomeView extends StatelessWidget {
                 child: const Icon(
                   Icons.chevron_right,
                   size: 16.67,
-                  color: Colors.white,
+                  color: AppColors.white,
                 ),
               ),
             ],
@@ -357,7 +366,7 @@ class HomeView extends StatelessWidget {
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         itemCount: categories.length,
-        separatorBuilder: (_, __) => const SizedBox(width: 20),
+        separatorBuilder: (_, _) => const SizedBox(width: 20),
         itemBuilder: (context, index) {
           return InkWell(
             onTap: () => Navigator.pushNamed(context, AppRoutes.allProducts),
@@ -366,7 +375,7 @@ class HomeView extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: AppColors.white,
                     shape: BoxShape.circle,
                     border: Border.all(color: AppColors.primary, width: 2),
                   ),
@@ -374,7 +383,7 @@ class HomeView extends StatelessWidget {
                     categoryIcons[index],
                     width: 25,
                     height: 35,
-                    color: Colors.grey.shade700,
+                    color: AppColors.textDark,
                   ),
                 ),
                 const SizedBox(height: 5),
@@ -383,7 +392,7 @@ class HomeView extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
-                    color: _kDarkText,
+                    color: AppColors.textDark,
                   ),
                 ),
               ],
@@ -395,8 +404,7 @@ class HomeView extends StatelessWidget {
   }
 
   // Helper widget to display icons from Assets
-  Widget _buildAssetIcon(
-    String path, {
+  Widget _buildAssetIcon(String path, {
     double width = 24,
     double height = 24,
     Color? color,

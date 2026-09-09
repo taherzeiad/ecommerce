@@ -45,7 +45,7 @@ class _VerifyAccountContent extends StatelessWidget {
             child: Container(
               width: double.infinity,
               decoration: const BoxDecoration(
-                color: Color(0xFFF7FAFC),
+                color: AppColors.scaffoldBackground,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(40),
                   topRight: Radius.circular(40),
@@ -58,7 +58,7 @@ class _VerifyAccountContent extends StatelessWidget {
                     AppStrings.verifyAccountDesc,
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      color: Color(0xFF4A5568),
+                      color: AppColors.authTextHeader,
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
                     ),
@@ -67,7 +67,7 @@ class _VerifyAccountContent extends StatelessWidget {
                   Text(
                     viewModel.emailController.text,
                     style: const TextStyle(
-                      color: Color(0xFF4A5568),
+                      color: AppColors.authTextHeader,
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
                     ),
@@ -86,10 +86,10 @@ class _VerifyAccountContent extends StatelessWidget {
                           width: 65,
                           height: 70,
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: AppColors.white,
                             border: Border.all(
                               color: char.isEmpty
-                                  ? const Color(0xFFE2E8F0)
+                                  ? AppColors.authBorder
                                   : AppColors.primary,
                               width: 1.5,
                             ),
@@ -102,8 +102,8 @@ class _VerifyAccountContent extends StatelessWidget {
                               fontSize: 28,
                               fontWeight: FontWeight.bold,
                               color: char.isEmpty
-                                  ? const Color(0xFFCBD5E0)
-                                  : const Color(0xFF2D3748),
+                                  ? AppColors.authHint
+                                  : AppColors.textDark,
                             ),
                           ),
                         );
@@ -117,7 +117,7 @@ class _VerifyAccountContent extends StatelessWidget {
                       const Text(
                         'Didn’t receive the code ? ',
                         style: TextStyle(
-                          color: Color(0xFF4A5568),
+                          color: AppColors.authTextHeader,
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                         ),
@@ -127,7 +127,7 @@ class _VerifyAccountContent extends StatelessWidget {
                         child: const Text(
                           'Resend',
                           style: TextStyle(
-                            color: Color(0xFF38B2AC),
+                            color: AppColors.authLink,
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
                           ),
@@ -137,21 +137,21 @@ class _VerifyAccountContent extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   RichText(
-                    text: TextSpan(
-                      style: const TextStyle(
-                        color: Color(0xFFA0AEC0),
+                    text: const TextSpan(
+                      style: TextStyle(
+                        color: AppColors.textSecondary,
                         fontSize: 14,
                       ),
                       children: [
-                        const TextSpan(text: 'The code will expire in '),
+                        TextSpan(text: 'The code will expire in '),
                         TextSpan(
                           text: '2:00',
                           style: TextStyle(
-                            color: Colors.red.shade400,
+                            color: AppColors.error,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        const TextSpan(text: ' seconds'),
+                        TextSpan(text: ' seconds'),
                       ],
                     ),
                   ),
@@ -199,7 +199,7 @@ class _NumericKeypad extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
+      color: AppColors.white,
       child: Column(
         children: [
           _buildRow(['1', '2', '3']),
@@ -214,7 +214,7 @@ class _NumericKeypad extends StatelessWidget {
   Widget _buildRow(List<String> keys) {
     return Container(
       decoration: const BoxDecoration(
-        border: Border(top: BorderSide(color: Color(0xFFEDF2F7))),
+        border: Border(top: BorderSide(color: AppColors.dividerExtraLight)),
       ),
       child: Row(
         children: keys.map((key) => Expanded(child: _buildKey(key))).toList(),
@@ -225,7 +225,7 @@ class _NumericKeypad extends StatelessWidget {
   Widget _buildBottomRow() {
     return Container(
       decoration: const BoxDecoration(
-        border: Border(top: BorderSide(color: Color(0xFFEDF2F7))),
+        border: Border(top: BorderSide(color: AppColors.dividerExtraLight)),
       ),
       child: Row(
         children: [
@@ -237,7 +237,7 @@ class _NumericKeypad extends StatelessWidget {
                 alignment: Alignment.center,
                 child: const Text(
                   'Reset PIN?',
-                  style: TextStyle(color: Color(0xFF4A5568), fontSize: 16),
+                  style: TextStyle(color: AppColors.authTextHeader, fontSize: 16),
                 ),
               ),
             ),
@@ -251,7 +251,7 @@ class _NumericKeypad extends StatelessWidget {
                 alignment: Alignment.center,
                 child: const Icon(
                   Icons.backspace,
-                  color: Colors.black,
+                  color: AppColors.black,
                   size: 24,
                 ),
               ),
@@ -269,12 +269,12 @@ class _NumericKeypad extends StatelessWidget {
         height: 70,
         alignment: Alignment.center,
         decoration: const BoxDecoration(
-          border: Border(left: BorderSide(color: Color(0xFFEDF2F7))),
+          border: Border(left: BorderSide(color: AppColors.dividerExtraLight)),
         ),
         child: Text(
           key,
           style: const TextStyle(
-            color: Color(0xFF2D3748),
+            color: AppColors.textDark,
             fontSize: 26,
             fontWeight: FontWeight.w500,
           ),

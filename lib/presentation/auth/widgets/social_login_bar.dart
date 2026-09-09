@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:vector_graphics/vector_graphics.dart';
 
 import '../../../core/constants/app_assets.dart';
+import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_strings.dart';
 
 class SocialLoginBar extends StatelessWidget {
@@ -9,44 +10,34 @@ class SocialLoginBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return const Column(
       children: [
         Row(
           children: [
-            const Expanded(
-              child: Divider(
-                color: Color(0xFFCBD5E0),
-                thickness: 1,
-              ),
-            ),
+            Expanded(child: Divider(color: AppColors.authHint, thickness: 1)),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: EdgeInsets.symmetric(horizontal: 16),
               child: Text(
                 AppStrings.orSignInWith,
-                style: const TextStyle(
-                  color: Color(0xFF718096),
+                style: TextStyle(
+                  color: AppColors.authTextBody,
                   fontSize: 16,
                   fontWeight: FontWeight.w400,
                 ),
               ),
             ),
-            const Expanded(
-              child: Divider(
-                color: Color(0xFFCBD5E0),
-                thickness: 1,
-              ),
-            ),
+            Expanded(child: Divider(color: AppColors.authHint, thickness: 1)),
           ],
         ),
-        const SizedBox(height: 32),
+        SizedBox(height: 32),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _SocialButton(iconPath: AppAssets.facebook, onPressed: () {}),
-            const SizedBox(width: 20),
-            _SocialButton(iconPath: AppAssets.pinterest, onPressed: () {}),
-            const SizedBox(width: 20),
-            _SocialButton(iconPath: AppAssets.linkedin, onPressed: () {}),
+            _SocialButton(iconPath: AppAssets.facebook),
+            SizedBox(width: 20),
+            _SocialButton(iconPath: AppAssets.pinterest),
+            SizedBox(width: 20),
+            _SocialButton(iconPath: AppAssets.linkedin),
           ],
         ),
       ],
@@ -56,14 +47,13 @@ class SocialLoginBar extends StatelessWidget {
 
 class _SocialButton extends StatelessWidget {
   final String iconPath;
-  final VoidCallback onPressed;
 
-  const _SocialButton({required this.iconPath, required this.onPressed});
+  const _SocialButton({required this.iconPath});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onPressed,
+      onTap: () {},
       borderRadius: BorderRadius.circular(30),
       child: Container(
         padding: const EdgeInsets.all(12),

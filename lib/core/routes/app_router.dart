@@ -14,7 +14,6 @@ import 'package:ecommerce/presentation/cart/view/cart_view.dart';
 import 'package:ecommerce/presentation/checkout/view/checkout_view.dart';
 import 'package:ecommerce/presentation/checkout/view/order_success_view.dart';
 import 'package:ecommerce/presentation/checkout/view/order_tracking_view.dart';
-import 'package:ecommerce/presentation/categories/view/categories_view.dart';
 import 'package:ecommerce/presentation/categories/view_model/categories_view_model.dart';
 import 'package:ecommerce/presentation/home/view/home_view.dart';
 import 'package:ecommerce/presentation/home/view_model/home_view_model.dart';
@@ -39,6 +38,7 @@ import 'package:ecommerce/presentation/settings/view/settings_view.dart';
 import 'package:ecommerce/presentation/settings/view/terms_conditions_view.dart';
 import 'package:ecommerce/presentation/splash/view/splash_view.dart';
 import 'package:ecommerce/core/di/service_locator.dart';
+
 import 'app_routes.dart';
 
 /// Single source of truth for navigation. Views never build routes
@@ -167,8 +167,8 @@ class AppRouter {
   static Route<dynamic> _fade(Widget page, RouteSettings settings) {
     return PageRouteBuilder(
       settings: settings,
-      pageBuilder: (_, __, ___) => page,
-      transitionsBuilder: (_, animation, __, child) {
+      pageBuilder: (context, _, __) => page,
+      transitionsBuilder: (context, animation, _, child) {
         return FadeTransition(opacity: animation, child: child);
       },
       transitionDuration: const Duration(milliseconds: 350),

@@ -26,12 +26,12 @@ class _CheckoutViewState extends State<CheckoutView> {
         elevation: 0,
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back, color: AppColors.white),
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
           'Check Out',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
         ),
       ),
       body: Column(
@@ -62,9 +62,9 @@ class _CheckoutViewState extends State<CheckoutView> {
       margin: const EdgeInsets.symmetric(horizontal: 24),
       height: 50,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(25),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: AppColors.borderExtraLight),
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(25),
@@ -74,13 +74,13 @@ class _CheckoutViewState extends State<CheckoutView> {
             const VerticalDivider(
               width: 1,
               thickness: 1,
-              color: Color(0xFFEEEEEE),
+              color: AppColors.divider,
             ),
             _buildStepTab('Payment', 1),
             const VerticalDivider(
               width: 1,
               thickness: 1,
-              color: Color(0xFFEEEEEE),
+              color: AppColors.divider,
             ),
             _buildStepTab('Confirm', 2),
           ],
@@ -102,11 +102,11 @@ class _CheckoutViewState extends State<CheckoutView> {
         child: Container(
           height: double.infinity,
           alignment: Alignment.center,
-          color: isActive ? AppColors.primary : Colors.white,
+          color: isActive ? AppColors.primary : AppColors.white,
           child: Text(
             label,
             style: TextStyle(
-              color: isActive ? Colors.white : Colors.grey.shade600,
+              color: isActive ? AppColors.white : AppColors.textGrey,
               fontWeight: FontWeight.w500,
               fontSize: 16,
             ),
@@ -135,9 +135,9 @@ class _CheckoutViewState extends State<CheckoutView> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFD8E6E3)),
+        border: Border.all(color: AppColors.borderTeal),
       ),
       child: Column(
         children: [
@@ -191,7 +191,7 @@ class _CheckoutViewState extends State<CheckoutView> {
               const SizedBox(height: 4),
               Text(
                 value,
-                style: const TextStyle(color: Colors.grey, height: 1.4),
+                style: const TextStyle(color: AppColors.grey, height: 1.4),
               ),
             ],
           ),
@@ -212,7 +212,7 @@ class _CheckoutViewState extends State<CheckoutView> {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        border: Border.all(color: const Color(0xFFD8E6E3)),
+        border: Border.all(color: AppColors.borderTeal),
         borderRadius: BorderRadius.circular(30),
       ),
       child: TextButton.icon(
@@ -309,10 +309,10 @@ class _CheckoutViewState extends State<CheckoutView> {
       height: 51,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: isSelected ? AppColors.primary : const Color(0xFFF1F1F1),
+          color: isSelected ? AppColors.primary : AppColors.borderExtraLight,
         ),
       ),
       child: Row(
@@ -329,7 +329,7 @@ class _CheckoutViewState extends State<CheckoutView> {
             title,
             style: const TextStyle(
               fontWeight: FontWeight.w500,
-              color: Colors.grey,
+              color: AppColors.grey,
             ),
           ),
           const Spacer(),
@@ -377,7 +377,7 @@ class _CheckoutViewState extends State<CheckoutView> {
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [Color(0xFF5AB4A6), Color(0xFF0E7A69)],
+          colors: [AppColors.bannerTeal, AppColors.primaryDark],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -389,20 +389,20 @@ class _CheckoutViewState extends State<CheckoutView> {
           const Text(
             'Gabriele Persola',
             style: TextStyle(
-              color: Colors.white,
+              color: AppColors.white,
               fontSize: 20,
               fontWeight: FontWeight.bold,
             ),
           ),
           const Spacer(),
-          const Text(
+          Text(
             'Credit Card:',
-            style: TextStyle(color: Colors.white70, fontSize: 14),
+            style: TextStyle(color: AppColors.white.withValues(alpha: 0.7), fontSize: 14),
           ),
           const Text(
             '3761 **** **** 4956',
             style: TextStyle(
-              color: Colors.white,
+              color: AppColors.white,
               fontSize: 20,
               letterSpacing: 2,
             ),
@@ -411,16 +411,16 @@ class _CheckoutViewState extends State<CheckoutView> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Column(
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     'Expiration:',
-                    style: TextStyle(color: Colors.white70, fontSize: 12),
+                    style: TextStyle(color: AppColors.white.withValues(alpha: 0.7), fontSize: 12),
                   ),
-                  Text(
+                  const Text(
                     '01/27',
-                    style: TextStyle(color: Colors.white, fontSize: 16),
+                    style: TextStyle(color: AppColors.white, fontSize: 16),
                   ),
                 ],
               ),
@@ -464,9 +464,9 @@ class _CheckoutViewState extends State<CheckoutView> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: const Color(0xFFF1F1F1)),
+        border: Border.all(color: AppColors.borderExtraLight),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -494,7 +494,7 @@ class _CheckoutViewState extends State<CheckoutView> {
           const Center(
             child: Text(
               'All prices displayed are inclusive of all applicable Tax.',
-              style: TextStyle(fontSize: 12, color: Colors.grey),
+              style: TextStyle(fontSize: 12, color: AppColors.grey),
             ),
           ),
         ],

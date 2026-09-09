@@ -22,7 +22,7 @@ class _AddAddressViewState extends State<AddAddressView> {
         centerTitle: true,
         title: const Text(
           'Add New Address',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
         ),
       ),
       body: SingleChildScrollView(
@@ -82,7 +82,7 @@ class _AddAddressViewState extends State<AddAddressView> {
         style: const TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w500,
-          color: Color(0xFF1B1B29),
+          color: AppColors.textPrimary,
         ),
       ),
     );
@@ -93,18 +93,18 @@ class _AddAddressViewState extends State<AddAddressView> {
       initialValue: initialValue,
       decoration: InputDecoration(
         hintText: hintText,
-        hintStyle: const TextStyle(color: Color(0xFFBDBDBD)),
+        hintStyle: const TextStyle(color: AppColors.textLight),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 16,
           vertical: 16,
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
+          borderSide: const BorderSide(color: AppColors.borderLight),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
+          borderSide: const BorderSide(color: AppColors.borderLight),
         ),
       ),
     );
@@ -126,7 +126,7 @@ class _AddAddressViewState extends State<AddAddressView> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         decoration: BoxDecoration(
-          border: Border.all(color: const Color(0xFFE0E0E0)),
+          border: Border.all(color: AppColors.borderLight),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Row(
@@ -136,14 +136,14 @@ class _AddAddressViewState extends State<AddAddressView> {
               _selectedCountry?.name ?? hintText,
               style: TextStyle(
                 color: _selectedCountry == null
-                    ? const Color(0xFFBDBDBD)
-                    : const Color(0xFF1B1B29),
+                    ? AppColors.textLight
+                    : AppColors.textPrimary,
                 fontSize: 16,
               ),
             ),
             const Icon(
               Icons.keyboard_arrow_down,
-              color: Color(0xFFBDBDBD),
+              color: AppColors.textLight,
             ),
           ],
         ),

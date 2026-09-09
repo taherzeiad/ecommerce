@@ -16,14 +16,14 @@ class ProfileView extends StatelessWidget {
         title: const Text(
           'Profile',
           style: TextStyle(
-            color: Colors.white,
+            color: AppColors.white,
             fontWeight: FontWeight.bold,
           ),
         ),
         actions: [
           IconButton(
             onPressed: () {},
-            icon: const Icon(Icons.dark_mode_outlined, color: Colors.white),
+            icon: const Icon(Icons.dark_mode_outlined, color: AppColors.white),
           ),
         ],
       ),
@@ -38,7 +38,7 @@ class ProfileView extends StatelessWidget {
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF1B1B29),
+                color: AppColors.textPrimary,
               ),
             ),
             const SizedBox(height: 32),
@@ -76,7 +76,7 @@ class ProfileView extends StatelessWidget {
             ProfileListItem(
               icon: Icons.logout_outlined,
               title: 'Log Out',
-              iconColor: const Color(0xFFE57373),
+              iconColor: AppColors.error,
               onTap: () => _showLogoutDialog(context),
             ),
             const SizedBox(height: 100), // Space for bottom nav
@@ -96,7 +96,7 @@ class ProfileView extends StatelessWidget {
           children: [
             const Icon(
               Icons.power_settings_new,
-              color: Color(0xFFE57373),
+              color: AppColors.error,
               size: 64,
             ),
             const SizedBox(height: 24),
@@ -134,7 +134,7 @@ class ProfileView extends StatelessWidget {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFE57373),
+                      backgroundColor: AppColors.error,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),

@@ -44,7 +44,7 @@ class _ForgotPasswordContent extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 60),
               decoration: const BoxDecoration(
-                color: Colors.white,
+                color: AppColors.white,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(40),
                   topRight: Radius.circular(40),
@@ -60,7 +60,7 @@ class _ForgotPasswordContent extends StatelessWidget {
                         AppStrings.forgotPasswordDesc,
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: Color(0xFF718096),
+                          color: AppColors.authTextBody,
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                           height: 1.5,
@@ -74,7 +74,7 @@ class _ForgotPasswordContent extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w500,
-                      color: Color(0xFF4A5568),
+                      color: AppColors.authTextHeader,
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -82,21 +82,21 @@ class _ForgotPasswordContent extends StatelessWidget {
                     controller: viewModel.emailController,
                     decoration: InputDecoration(
                       hintText: 'Email Address',
-                      hintStyle: const TextStyle(color: Color(0xFFCBD5E0)),
+                      hintStyle: const TextStyle(color: AppColors.authHint),
                       prefixIcon: const Icon(
                         Icons.email_outlined,
-                        color: Color(0xFFCBD5E0),
+                        color: AppColors.authHint,
                       ),
                       filled: true,
-                      fillColor: Colors.white,
+                      fillColor: AppColors.white,
                       contentPadding: const EdgeInsets.symmetric(vertical: 16),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+                        borderSide: const BorderSide(color: AppColors.authBorder),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+                        borderSide: const BorderSide(color: AppColors.authBorder),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -110,7 +110,7 @@ class _ForgotPasswordContent extends StatelessWidget {
                       padding: const EdgeInsets.only(bottom: 16),
                       child: Text(
                         viewModel.errorMessage!,
-                        style: const TextStyle(color: Colors.red),
+                        style: const TextStyle(color: AppColors.error),
                       ),
                     ),
                   SizedBox(
@@ -131,7 +131,7 @@ class _ForgotPasswordContent extends StatelessWidget {
                             },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primary,
-                        foregroundColor: Colors.white,
+                        foregroundColor: AppColors.white,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -142,7 +142,7 @@ class _ForgotPasswordContent extends StatelessWidget {
                               height: 20,
                               width: 20,
                               child: CircularProgressIndicator(
-                                color: Colors.white,
+                                color: AppColors.white,
                                 strokeWidth: 2,
                               ),
                             )

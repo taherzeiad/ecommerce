@@ -35,13 +35,13 @@ class CustomSearchBar extends StatelessWidget {
     return Container(
       height: height,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(height / 2),
-        border: hasBorder ? Border.all(color: Colors.grey.shade200) : null,
+        border: hasBorder ? Border.all(color: AppColors.dividerExtraLight) : null,
         boxShadow: hasShadow
             ? [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: AppColors.black.withValues(alpha: 0.1),
                   blurRadius: 10,
                   offset: const Offset(4, 0),
                 ),
@@ -73,7 +73,7 @@ class CustomSearchBar extends StatelessWidget {
                           const SizedBox(width: 12),
                           Text(
                             hintText,
-                            style: const TextStyle(color: Colors.grey),
+                            style: const TextStyle(color: AppColors.textSecondary),
                           ),
                         ],
                       ),
@@ -85,7 +85,7 @@ class CustomSearchBar extends StatelessWidget {
                     onSubmitted: onSubmitted,
                     decoration: InputDecoration(
                       hintText: hintText,
-                      hintStyle: const TextStyle(color: Colors.grey),
+                      hintStyle: const TextStyle(color: AppColors.textSecondary),
                       prefixIcon: const Padding(
                         padding: EdgeInsets.all(12),
                         child: VectorGraphic(
@@ -101,11 +101,11 @@ class CustomSearchBar extends StatelessWidget {
                   ),
           ),
           if (showFilter) ...[
-            VerticalDivider(
+            const VerticalDivider(
               width: 1,
               indent: 12,
               endIndent: 12,
-              color: Colors.grey.shade200,
+              color: AppColors.dividerExtraLight,
             ),
             InkWell(
               onTap: onFilterTap,

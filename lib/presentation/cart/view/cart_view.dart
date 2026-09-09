@@ -21,11 +21,11 @@ class CartView extends StatelessWidget {
         centerTitle: true,
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back, color: AppColors.white),
         ),
         title: const Text(
           AppStrings.shoppingCart,
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
         ),
         actions: [
           IconButton(
@@ -34,7 +34,7 @@ class CartView extends StatelessWidget {
               loader: AssetBytesLoader('lib/assets/icons/moon.svg'),
               width: 24,
               height: 24,
-              colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
+              colorFilter: ColorFilter.mode(AppColors.white, BlendMode.srcIn),
             ),
           ),
         ],
@@ -54,7 +54,7 @@ class CartView extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            color: Colors.grey,
+                            color: AppColors.grey,
                           ),
                         ),
                         const SizedBox(height: 16),
@@ -104,7 +104,7 @@ class CartView extends StatelessWidget {
                       child: const Text(
                         AppStrings.checkout,
                         style: TextStyle(
-                          color: Colors.white,
+                          color: AppColors.white,
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
                         ),
@@ -122,10 +122,10 @@ class CartView extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
+          const Icon(
             Icons.shopping_cart_outlined,
             size: 100,
-            color: Colors.grey.shade300,
+            color: AppColors.borderLight,
           ),
           const SizedBox(height: 24),
           const Text(
@@ -155,18 +155,18 @@ class CartView extends StatelessWidget {
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.only(right: 20),
         decoration: BoxDecoration(
-          color: Colors.red,
+          color: AppColors.error,
           borderRadius: BorderRadius.circular(12),
         ),
         child: const Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.delete_outline, color: Colors.white, size: 28),
+            Icon(Icons.delete_outline, color: AppColors.white, size: 28),
             SizedBox(height: 4),
             Text(
               'delete',
               style: TextStyle(
-                color: Colors.white,
+                color: AppColors.white,
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
               ),
@@ -180,9 +180,9 @@ class CartView extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColors.white,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: const Color(0xFFF1F1F1)),
+          border: Border.all(color: AppColors.borderExtraLight),
         ),
         child: Row(
           children: [
@@ -197,10 +197,10 @@ class CartView extends StatelessWidget {
                   return Container(
                     width: 90,
                     height: 90,
-                    color: Colors.grey.shade200,
+                    color: AppColors.dividerExtraLight,
                     child: const Icon(
                       Icons.image_not_supported,
-                      color: Colors.grey,
+                      color: AppColors.grey,
                     ),
                   );
                 },
@@ -221,7 +221,7 @@ class CartView extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     item.product.category,
-                    style: TextStyle(color: Colors.grey.shade400, fontSize: 13),
+                    style: TextStyle(color: AppColors.textLight, fontSize: 13),
                   ),
                   const SizedBox(height: 12),
                   Row(
@@ -230,7 +230,7 @@ class CartView extends StatelessWidget {
                       Text(
                         '\$${item.product.price.toStringAsFixed(2)}',
                         style: const TextStyle(
-                          color: Color(0xFF1B1B29),
+                          color: AppColors.textPrimary,
                           fontWeight: FontWeight.bold,
                           fontSize: 17,
                         ),
@@ -238,7 +238,7 @@ class CartView extends StatelessWidget {
                       Container(
                         height: 32,
                         decoration: BoxDecoration(
-                          border: Border.all(color: const Color(0xFFE0E0E0)),
+                          border: Border.all(color: AppColors.borderLight),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Row(
@@ -256,7 +256,7 @@ class CartView extends StatelessWidget {
                                 '${item.quantity}',
                                 style: const TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  color: Color(0xFF1B1B29),
+                                  color: AppColors.textPrimary,
                                 ),
                               ),
                             ),
@@ -284,7 +284,7 @@ class CartView extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 8),
         alignment: Alignment.center,
-        child: Icon(icon, size: 18, color: const Color(0xFF1B1B29)),
+        child: Icon(icon, size: 18, color: AppColors.textPrimary),
       ),
     );
   }
@@ -293,7 +293,7 @@ class CartView extends StatelessWidget {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        border: Border.all(color: const Color(0xFFD8E6E3)),
+        border: Border.all(color: AppColors.borderTeal),
         borderRadius: BorderRadius.circular(12),
       ),
       child: TextButton.icon(
@@ -322,15 +322,15 @@ class CartView extends StatelessWidget {
           child: TextField(
             decoration: InputDecoration(
               hintText: AppStrings.promoCode,
-              hintStyle: const TextStyle(color: Color(0xFFBDBDBD)),
+              hintStyle: const TextStyle(color: AppColors.textLight),
               contentPadding: const EdgeInsets.symmetric(horizontal: 16),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
+                borderSide: const BorderSide(color: AppColors.borderLight),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
+                borderSide: const BorderSide(color: AppColors.borderLight),
               ),
             ),
           ),
@@ -340,7 +340,7 @@ class CartView extends StatelessWidget {
           onPressed: () {},
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.primary,
-            foregroundColor: Colors.white,
+            foregroundColor: AppColors.white,
             minimumSize: const Size(100, 48),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
@@ -383,7 +383,7 @@ class CartView extends StatelessWidget {
                   width: dashWidth,
                   height: dashHeight,
                   child: DecoratedBox(
-                    decoration: BoxDecoration(color: Color(0xFFD8E6E3)),
+                    decoration: BoxDecoration(color: AppColors.borderTeal),
                   ),
                 );
               }),
@@ -416,7 +416,7 @@ class CartView extends StatelessWidget {
             style: TextStyle(
               fontSize: 16,
               fontWeight: isBold ? FontWeight.bold : FontWeight.w500,
-              color: isRed ? const Color(0xFFE57373) : const Color(0xFF616161),
+              color: isRed ? AppColors.error : AppColors.textGrey,
             ),
           ),
           Text(
@@ -424,7 +424,7 @@ class CartView extends StatelessWidget {
             style: TextStyle(
               fontSize: 16,
               fontWeight: isBold ? FontWeight.bold : FontWeight.w500,
-              color: isRed ? const Color(0xFFE57373) : const Color(0xFF1B1B29),
+              color: isRed ? AppColors.error : AppColors.textPrimary,
             ),
           ),
         ],
