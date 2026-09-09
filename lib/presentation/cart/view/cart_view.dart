@@ -122,7 +122,7 @@ class CartView extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
+          const Icon(
             Icons.shopping_cart_outlined,
             size: 100,
             color: AppColors.borderLight,
