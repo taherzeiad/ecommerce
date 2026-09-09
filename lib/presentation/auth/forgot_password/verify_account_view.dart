@@ -202,27 +202,28 @@ class _NumericKeypad extends StatelessWidget {
       color: Theme.of(context).cardColor,
       child: Column(
         children: [
-          _buildRow(['1', '2', '3']),
-          _buildRow(['4', '5', '6']),
-          _buildRow(['7', '8', '9']),
-          _buildBottomRow(),
+          _buildRow(context, ['1', '2', '3']),
+          _buildRow(context, ['4', '5', '6']),
+          _buildRow(context, ['7', '8', '9']),
+          _buildBottomRow(context),
         ],
       ),
     );
   }
 
-  Widget _buildRow(List<String> keys) {
+  Widget _buildRow(BuildContext context, List<String> keys) {
     return Container(
       decoration: const BoxDecoration(
         border: Border(top: BorderSide(color: AppColors.dividerExtraLight)),
       ),
       child: Row(
-        children: keys.map((key) => Expanded(child: _buildKey(key))).toList(),
+        children:
+            keys.map((key) => Expanded(child: _buildKey(context, key))).toList(),
       ),
     );
   }
 
-  Widget _buildBottomRow() {
+  Widget _buildBottomRow(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
         border: Border(top: BorderSide(color: AppColors.dividerExtraLight)),
@@ -245,7 +246,7 @@ class _NumericKeypad extends StatelessWidget {
               ),
             ),
           ),
-          Expanded(child: _buildKey('0')),
+          Expanded(child: _buildKey(context, '0')),
           Expanded(
             child: InkWell(
               onTap: onDelete,
@@ -265,7 +266,7 @@ class _NumericKeypad extends StatelessWidget {
     );
   }
 
-  Widget _buildKey(String key) {
+  Widget _buildKey(BuildContext context, String key) {
     return InkWell(
       onTap: () => onTap(key),
       child: Container(

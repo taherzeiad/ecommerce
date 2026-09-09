@@ -120,17 +120,18 @@ class HomeView extends StatelessWidget {
   }
 
   Widget _buildHeader(BuildContext context) {
+    final theme = Theme.of(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        const Row(
+        Row(
           children: [
-            CircleAvatar(
+            const CircleAvatar(
               radius: 24,
               backgroundColor: AppColors.grey,
               child: Icon(Icons.person, color: AppColors.white),
             ),
-            SizedBox(width: 12),
+            const SizedBox(width: 12),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -160,6 +161,7 @@ class HomeView extends StatelessWidget {
                   Navigator.pushNamed(context, AppRoutes.notifications),
               borderRadius: BorderRadius.circular(30),
               child: _buildHeaderIcon(
+                context,
                 'lib/assets/icons/notification.svg',
                 hasBadge: true,
               ),
@@ -168,7 +170,7 @@ class HomeView extends StatelessWidget {
             InkWell(
               onTap: () => context.read<ThemeViewModel>().toggleTheme(),
               borderRadius: BorderRadius.circular(30),
-              child: _buildHeaderIcon('lib/assets/icons/moon.svg'),
+              child: _buildHeaderIcon(context, 'lib/assets/icons/moon.svg'),
             ),
           ],
         ),
@@ -176,7 +178,8 @@ class HomeView extends StatelessWidget {
     );
   }
 
-  Widget _buildHeaderIcon(String assetPath, {bool hasBadge = false}) {
+  Widget _buildHeaderIcon(BuildContext context, String assetPath,
+      {bool hasBadge = false}) {
     return Stack(
       clipBehavior: Clip.none,
       children: [
