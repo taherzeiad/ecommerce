@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/routes/app_routes.dart';
+import '../../../core/extensions/context_extension.dart';
 
 import 'package:ecommerce/domain/entities/product_entity.dart';
 import 'package:ecommerce/presentation/cart/view_model/cart_view_model.dart';
@@ -23,9 +24,9 @@ class AllProductsView extends StatelessWidget {
         backgroundColor: AppColors.primary,
         elevation: 0,
         centerTitle: true,
-        title: const Text(
-          'Products',
-          style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
+        title: Text(
+          context.tr('categories'), // Using categories as title or could use 'products'
+          style: const TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
         ),
         actions: [
           IconButton(
@@ -45,9 +46,9 @@ class AllProductsView extends StatelessWidget {
               alignment: Alignment.centerRight,
               child: TextButton(
                 onPressed: () {},
-                child: const Text(
-                  'View All',
-                  style: TextStyle(decoration: TextDecoration.underline),
+                child: Text(
+                  context.tr('see_all'),
+                  style: const TextStyle(decoration: TextDecoration.underline),
                 ),
               ),
             ),
@@ -106,7 +107,7 @@ class AllProductsView extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
-                filters[index],
+                context.tr(filters[index].toLowerCase()),
                 style: TextStyle(
                   color: isSelected ? AppColors.white : AppColors.primary,
                   fontWeight: FontWeight.bold,
@@ -206,7 +207,7 @@ class AllProductsView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      product.category,
+                      context.tr(product.category.toLowerCase()),
                       style: TextStyle(
                         color: theme.textTheme.bodySmall?.color,
                         fontSize: 12,
@@ -240,7 +241,7 @@ class AllProductsView extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        child: const Text('View Details'),
+                        child: Text(context.tr('details_card')), // Using 'details_card' for 'View Details'
                       ),
                     ),
                     const SizedBox(width: 8),

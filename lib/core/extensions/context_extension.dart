@@ -5,7 +5,18 @@ import '../localization/translations.dart';
 
 extension LocalizationExtension on BuildContext {
   String tr(String key) {
-    final locale = watch<LocaleViewModel>().locale.languageCode;
-    return AppTranslations.translations[locale]?[key] ?? key;
+    try {
+      final localeViewModel = watch<LocaleViewModel>();
+      final languageCode = localeViewModel.locale.languageCode;
+      
+      final value = AppTranslations.translations[languageCode]?[key];
+      if (value == null) {
+        return AppTranslations.translations['en']?[key] ?? key;
+      }
+      return value;
+    } catch (e) {
+      // Fallback for cases where watch is called outside build
+      return AppTranslations.translations['en']?[key] ?? key;
+    }
   }
 }

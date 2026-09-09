@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/constants/app_colors.dart';
-import '../../../core/constants/app_strings.dart';
+import '../../../core/extensions/context_extension.dart';
 
 class NotificationsView extends StatelessWidget {
   const NotificationsView({super.key});
@@ -16,16 +16,16 @@ class NotificationsView extends StatelessWidget {
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
-          AppStrings.notificationsTitle,
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        title: Text(
+          context.tr('notifications_title'),
+          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
       ),
       body: Column(
         children: [
           const SizedBox(height: 20),
-          _buildFilterChips(),
+          _buildFilterChips(context),
           Expanded(
             child: ListView.separated(
               padding: const EdgeInsets.all(24),
@@ -68,12 +68,12 @@ class NotificationsView extends StatelessWidget {
     );
   }
 
-  Widget _buildFilterChips() {
+  Widget _buildFilterChips(BuildContext context) {
     final filters = [
-      AppStrings.all,
-      AppStrings.unread,
-      AppStrings.orders,
-      AppStrings.system,
+      context.tr('all'),
+      context.tr('unread'),
+      context.tr('orders'),
+      context.tr('system'),
     ];
     return SizedBox(
       height: 40,

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/constants/app_colors.dart';
-import '../../../core/constants/app_strings.dart';
 import '../../../core/routes/app_routes.dart';
+import '../../../core/extensions/context_extension.dart';
 import '../widgets/auth_header.dart';
 import '../widgets/verify_illustration.dart';
 import 'auth_viewmodel.dart';
@@ -34,11 +34,11 @@ class _VerifyAccountContent extends StatelessWidget {
       backgroundColor: AppColors.primary,
       body: Column(
         children: [
-          const AuthHeader(
-            title: AppStrings.verifyAccountTitle,
+          AuthHeader(
+            title: context.tr('verify_account_title'),
             subtitle: '',
             centerTitle: true,
-            bottomWidget: VerifyIllustration(),
+            bottomWidget: const VerifyIllustration(),
           ),
           const SizedBox(height: 40),
           Expanded(
@@ -55,7 +55,7 @@ class _VerifyAccountContent extends StatelessWidget {
                 children: [
                   const SizedBox(height: 60),
                   Text(
-                    AppStrings.verifyAccountDesc,
+                    context.tr('verify_account_desc'),
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.onSurface,
@@ -115,7 +115,7 @@ class _VerifyAccountContent extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Didn’t receive the code ? ',
+                        context.tr('resend_code'),
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.onSurface,
                           fontSize: 14,
@@ -124,9 +124,9 @@ class _VerifyAccountContent extends StatelessWidget {
                       ),
                       GestureDetector(
                         onTap: () {},
-                        child: const Text(
-                          'Resend',
-                          style: TextStyle(
+                        child: Text(
+                          context.tr('resend'),
+                          style: const TextStyle(
                             color: AppColors.authLink,
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
@@ -142,16 +142,16 @@ class _VerifyAccountContent extends StatelessWidget {
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
                         fontSize: 14,
                       ),
-                      children: const [
-                        TextSpan(text: 'The code will expire in '),
-                        TextSpan(
+                      children: [
+                        TextSpan(text: context.tr('code_expire')),
+                        const TextSpan(
                           text: '2:00',
                           style: TextStyle(
                             color: AppColors.error,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        TextSpan(text: ' seconds'),
+                        TextSpan(text: context.tr('seconds')),
                       ],
                     ),
                   ),
@@ -237,7 +237,7 @@ class _NumericKeypad extends StatelessWidget {
                 height: 70,
                 alignment: Alignment.center,
                 child: Text(
-                  'Reset PIN?',
+                  context.tr('reset_pin'),
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.onSurface,
                     fontSize: 16,

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/constants/app_colors.dart';
-import '../../../core/constants/app_strings.dart';
 import '../../../core/routes/app_routes.dart';
+import '../../../core/extensions/context_extension.dart';
 
 class ReviewsView extends StatelessWidget {
   const ReviewsView({super.key});
@@ -17,9 +17,9 @@ class ReviewsView extends StatelessWidget {
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
-          AppStrings.reviewsRating,
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        title: Text(
+          context.tr('reviews_rating'),
+          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
       ),
@@ -28,17 +28,17 @@ class ReviewsView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildRatingSummary(),
+            _buildRatingSummary(context),
             const SizedBox(height: 24),
             ElevatedButton(
               onPressed: () =>
                   Navigator.pushNamed(context, AppRoutes.addReview),
-              child: const Text('Add Reviews & Rating'),
+              child: Text(context.tr('add_rating')),
             ),
             const SizedBox(height: 32),
-            const Text(
-              AppStrings.userReview,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            Text(
+              context.tr('user_review'),
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
             ),
             const SizedBox(height: 16),
             ListView.separated(
@@ -56,7 +56,7 @@ class ReviewsView extends StatelessWidget {
     );
   }
 
-  Widget _buildRatingSummary() {
+  Widget _buildRatingSummary(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -80,11 +80,11 @@ class ReviewsView extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 16),
-          const Expanded(
+          Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
+                const Row(
                   children: [
                     Icon(Icons.star, color: Colors.teal, size: 24),
                     Icon(Icons.star, color: Colors.teal, size: 24),
@@ -101,10 +101,10 @@ class ReviewsView extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 4),
+                const SizedBox(height: 4),
                 Text(
-                  '1,200 reviews',
-                  style: TextStyle(color: Colors.grey, fontSize: 14),
+                  '1,200 ${context.tr('reviews')}', // Should add 'reviews' key
+                  style: const TextStyle(color: Colors.grey, fontSize: 14),
                 ),
               ],
             ),

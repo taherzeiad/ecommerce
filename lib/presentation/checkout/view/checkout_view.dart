@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/routes/app_routes.dart';
+import '../../../core/extensions/context_extension.dart';
 import '../../cart/view_model/cart_view_model.dart';
 
 class CheckoutView extends StatefulWidget {
@@ -29,9 +30,9 @@ class _CheckoutViewState extends State<CheckoutView> {
           icon: const Icon(Icons.arrow_back, color: AppColors.white),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
-          'Check Out',
-          style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
+        title: Text(
+          context.tr('checkout'),
+          style: const TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
         ),
       ),
       body: Column(
@@ -71,19 +72,19 @@ class _CheckoutViewState extends State<CheckoutView> {
         borderRadius: BorderRadius.circular(25),
         child: Row(
           children: [
-            _buildStepTab(context, 'Address', 0),
+            _buildStepTab(context, context.tr('address'), 0),
             VerticalDivider(
               width: 1,
               thickness: 1,
               color: theme.dividerColor,
             ),
-            _buildStepTab(context, 'Payment', 1),
+            _buildStepTab(context, context.tr('payment'), 1),
             VerticalDivider(
               width: 1,
               thickness: 1,
               color: theme.dividerColor,
             ),
-            _buildStepTab(context, 'Confirm', 2),
+            _buildStepTab(context, context.tr('confirm'), 2),
           ],
         ),
       ),
@@ -146,20 +147,20 @@ class _CheckoutViewState extends State<CheckoutView> {
         children: [
           _buildAddressRow(
             Icons.person,
-            'Name',
+            context.tr('full_name'),
             'Ramiz Majed Alashqar',
             showEdit: true,
           ),
           Divider(height: 24, color: theme.dividerColor),
           _buildAddressRow(
             Icons.location_on,
-            'Address',
+            context.tr('address'),
             '742 Maple Street, Apt 5B\nBrooklyn, NY 11221\nUnited States',
           ),
           Divider(height: 24, color: theme.dividerColor),
           _buildAddressRow(
             Icons.phone,
-            'Phone Number',
+            context.tr('phone_number'),
             '+ 1 555 742 8391',
             showCheck: true,
           ),
@@ -224,9 +225,9 @@ class _CheckoutViewState extends State<CheckoutView> {
       child: TextButton.icon(
         onPressed: () => Navigator.pushNamed(context, AppRoutes.addAddress),
         icon: const Icon(Icons.add_circle, color: AppColors.primary),
-        label: const Text(
-          'Add New Address',
-          style: TextStyle(color: AppColors.primary, fontSize: 16),
+        label: Text(
+          context.tr('add_new_address'),
+          style: const TextStyle(color: AppColors.primary, fontSize: 16),
         ),
       ),
     );
@@ -238,9 +239,9 @@ class _CheckoutViewState extends State<CheckoutView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Payment Option',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          Text(
+            context.tr('payment_option'),
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16),
           _buildPaymentIcons(),
@@ -248,14 +249,14 @@ class _CheckoutViewState extends State<CheckoutView> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Select your card',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              Text(
+                context.tr('select_your_card'),
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               TextButton(
                 onPressed: () =>
                     Navigator.pushNamed(context, AppRoutes.addCard),
-                child: const Text('Add New Card'),
+                child: Text(context.tr('add_new_card')),
               ),
             ],
           ),
@@ -361,15 +362,15 @@ class _CheckoutViewState extends State<CheckoutView> {
         children: [
           _buildCreditCardPreview(),
           const SizedBox(height: 32),
-          _buildConfirmField('Cardholder Name', 'Gabriele Persola'),
+          _buildConfirmField(context.tr('cardholder_name'), 'Gabriele Persola'),
           const SizedBox(height: 24),
-          _buildConfirmField('Card Number', '3761 5902 7458 4956'),
+          _buildConfirmField(context.tr('card_number'), '3761 5902 7458 4956'),
           const SizedBox(height: 24),
           Row(
             children: [
-              Expanded(child: _buildConfirmField('Expiration Date', '01/27')),
+              Expanded(child: _buildConfirmField(context.tr('expiration_date'), '01/27')),
               const SizedBox(width: 16),
-              Expanded(child: _buildConfirmField('CVV', '123')),
+              Expanded(child: _buildConfirmField(context.tr('cvv'), '123')),
             ],
           ),
         ],
@@ -403,7 +404,7 @@ class _CheckoutViewState extends State<CheckoutView> {
           ),
           const Spacer(),
           Text(
-            'Credit Card:',
+            context.tr('payment_option'),
             style: TextStyle(color: AppColors.white.withValues(alpha: 0.7), fontSize: 14),
           ),
           const Text(
@@ -422,7 +423,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Expiration:',
+                    context.tr('expiration_date'),
                     style: TextStyle(color: AppColors.white.withValues(alpha: 0.7), fontSize: 12),
                   ),
                   const Text(
@@ -495,7 +496,7 @@ class _CheckoutViewState extends State<CheckoutView> {
               const Icon(Icons.assignment_outlined, color: AppColors.primary),
               const SizedBox(width: 8),
               Text(
-                'Your Order $orderNumber',
+                '${context.tr('my_order')} $orderNumber',
                 style: const TextStyle(
                   color: AppColors.primary,
                   fontWeight: FontWeight.bold,
@@ -504,25 +505,25 @@ class _CheckoutViewState extends State<CheckoutView> {
             ],
           ),
           const SizedBox(height: 16),
-          _buildSummaryRow('Total Items', '${cartViewModel.totalItems} Items'),
+          _buildSummaryRow(context.tr('total_items'), '${cartViewModel.totalItems} ${context.tr('items_count')}'),
           _buildSummaryRow(
-            'Subtotal',
+            context.tr('sub_total'),
             '${cartViewModel.subtotal.toStringAsFixed(2)}\$',
           ),
           _buildSummaryRow(
-            'Delivery Fees',
+            context.tr('delivery_fees'),
             '${cartViewModel.deliveryFees.toStringAsFixed(2)}\$',
           ),
           Divider(height: 24, color: theme.dividerColor),
           _buildSummaryRow(
-            'Total Price',
+            context.tr('total'),
             '${cartViewModel.totalPrice.toStringAsFixed(2)}\$',
             isBold: true,
           ),
           const SizedBox(height: 16),
           Center(
             child: Text(
-              'All prices displayed are inclusive of all applicable Tax.',
+              'All prices displayed are inclusive of all applicable Tax.', // Should be translated
               style: TextStyle(
                 fontSize: 12,
                 color: theme.textTheme.bodySmall?.color,
@@ -560,7 +561,7 @@ class _CheckoutViewState extends State<CheckoutView> {
   }
 
   Widget _buildBottomAction(CartViewModel cartViewModel) {
-    String text = 'Go To Payment';
+    String text = context.tr('go_to_payment');
     IconData? icon = Icons.arrow_forward;
     VoidCallback? onTap;
 
@@ -570,13 +571,13 @@ class _CheckoutViewState extends State<CheckoutView> {
         curve: Curves.ease,
       );
     } else if (_currentStep == 1) {
-      text = 'Continue';
+      text = context.tr('continue_label');
       onTap = () => _pageController.nextPage(
         duration: const Duration(milliseconds: 300),
         curve: Curves.ease,
       );
     } else {
-      text = 'Confirm';
+      text = context.tr('confirm');
       icon = null;
       onTap = () {
         cartViewModel.clearCart();

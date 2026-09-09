@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
-import '../../../core/constants/app_strings.dart';
 import '../../../core/routes/app_routes.dart';
+import '../../../core/extensions/context_extension.dart';
 
 class SuccessView extends StatelessWidget {
   const SuccessView({super.key});
@@ -28,18 +28,18 @@ class SuccessView extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 40),
-            const Text(
-              AppStrings.success,
-              style: TextStyle(
+            Text(
+              context.tr('success'),
+              style: const TextStyle(
                 fontSize: 32,
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 16),
-            const Text(
-              AppStrings.accountCreated,
+            Text(
+              context.tr('account_created'),
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 18,
                 color: AppColors.grey,
               ),
@@ -52,7 +52,7 @@ class SuccessView extends StatelessWidget {
                 onPressed: () {
                   Navigator.pushReplacementNamed(context, AppRoutes.login);
                 },
-                child: const Text(AppStrings.continueLabel),
+                child: Text(context.tr('continue_label')),
               ),
             ),
           ],

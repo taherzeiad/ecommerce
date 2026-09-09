@@ -379,9 +379,9 @@ class HomeView extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
           child: Row(
             children: [
-              const Text(
-                AppStrings.seeAll,
-                style: TextStyle(fontSize: 12, color: AppColors.primary),
+              Text(
+                context.tr('see_all'),
+                style: const TextStyle(fontSize: 12, color: AppColors.primary),
               ),
               const SizedBox(width: 6),
               Container(
@@ -443,7 +443,7 @@ class HomeView extends StatelessWidget {
                 ),
                 const SizedBox(height: 5),
                 Text(
-                  categories[index],
+                  context.tr(categories[index].toLowerCase()),
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w500,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:country_picker/country_picker.dart';
 
 import '../../../core/constants/app_colors.dart';
+import '../../../core/extensions/context_extension.dart';
 
 class EditAddressView extends StatefulWidget {
   const EditAddressView({super.key});
@@ -20,9 +21,9 @@ class _EditAddressViewState extends State<EditAddressView> {
         backgroundColor: AppColors.primary,
         elevation: 0,
         centerTitle: true,
-        title: const Text(
-          'Edit Address',
-          style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
+        title: Text(
+          context.tr('edit_address'),
+          style: const TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
         ),
       ),
       body: SingleChildScrollView(
@@ -40,33 +41,33 @@ class _EditAddressViewState extends State<EditAddressView> {
             const SizedBox(height: 16),
             const Center(
               child: Text(
-                'Update your address details.',
+                'Update your address details.', // Could be translated too
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ),
             const SizedBox(height: 32),
-            _buildFieldLabel('Full Name'),
+            _buildFieldLabel(context.tr('full_name')),
             _buildTextField(initialValue: 'RamizA'),
             const SizedBox(height: 16),
-            _buildFieldLabel('Phone Number'),
+            _buildFieldLabel(context.tr('phone_number')),
             _buildTextField(initialValue: '1029846567'),
             const SizedBox(height: 16),
-            _buildFieldLabel('Street Address'),
+            _buildFieldLabel(context.tr('street_address')),
             _buildTextField(initialValue: '5 streetA'),
             const SizedBox(height: 16),
-            _buildFieldLabel('City/Town'),
+            _buildFieldLabel(context.tr('city')),
             _buildTextField(initialValue: 'Los Angelou\'s'),
             const SizedBox(height: 16),
-            _buildFieldLabel('Postal Code'),
-            _buildTextField(hintText: 'ZIP / Postal code'),
+            _buildFieldLabel(context.tr('postal_code')),
+            _buildTextField(hintText: context.tr('postal_code')),
             const SizedBox(height: 16),
-            _buildFieldLabel('Country'),
-            _buildCountryPickerField('Select Country'),
+            _buildFieldLabel(context.tr('select_country')),
+            _buildCountryPickerField(context.tr('select_country')),
             const SizedBox(height: 40),
             ElevatedButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Save'),
+              child: Text(context.tr('save')),
             ),
           ],
         ),

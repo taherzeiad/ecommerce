@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:vector_graphics/vector_graphics.dart';
 
 import '../../../core/constants/app_colors.dart';
-import '../../../core/constants/app_strings.dart';
 import '../../../core/routes/app_routes.dart';
+import '../../../core/extensions/context_extension.dart';
 import '../../../domain/entities/product_entity.dart';
 import '../../cart/view_model/cart_view_model.dart';
 import '../view_model/wishlist_view_model.dart';
@@ -24,9 +24,9 @@ class WishlistView extends StatelessWidget {
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.of(context).maybePop(),
         ),
-        title: const Text(
-          AppStrings.wishlist,
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        title: Text(
+          context.tr('wishlist'),
+          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
         actions: [
@@ -67,9 +67,9 @@ class WishlistView extends StatelessWidget {
               height: 200,
             ),
             const SizedBox(height: 30),
-            const Text(
-              'My Wishlist is Empty',
-              style: TextStyle(
+            Text(
+              context.tr('wishlist_empty'),
+              style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF129883),
@@ -77,7 +77,7 @@ class WishlistView extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              'Tap Heart Button to Start Saving\nYour Favorite Item',
+              context.tr('wishlist_empty_desc'),
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 16,
@@ -103,9 +103,9 @@ class WishlistView extends StatelessWidget {
                   ),
                   elevation: 0,
                 ),
-                child: const Text(
-                  'Explore',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                child: Text(
+                  context.tr('explore'),
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),
             ),
@@ -173,7 +173,7 @@ class WishlistView extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        'Rating',
+                        context.tr('rating'),
                         style: TextStyle(
                           color: Theme.of(context).textTheme.bodySmall?.color,
                           fontSize: 12,
@@ -216,7 +216,7 @@ class WishlistView extends StatelessWidget {
                   onTap: () {
                     cartViewModel.addToCart(product);
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Added to cart')),
+                      SnackBar(content: Text('Added to cart')), // Should translate
                     );
                   },
                   child: Container(

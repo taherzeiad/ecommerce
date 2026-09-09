@@ -6,6 +6,7 @@ import '../../../core/routes/app_routes.dart';
 import '../../theme/view_model/theme_view_model.dart';
 import '../../theme/view_model/locale_view_model.dart';
 import '../../../core/localization/translations.dart';
+import '../../../core/extensions/context_extension.dart';
 
 class SettingsView extends StatefulWidget {
   const SettingsView({super.key});
@@ -18,11 +19,6 @@ class _SettingsViewState extends State<SettingsView> {
   bool _notificationsEnabled = true;
   bool _soundEnabled = true;
   bool _vibrationEnabled = false;
-
-  String _tr(String key) {
-    final locale = context.watch<LocaleViewModel>().locale.languageCode;
-    return AppTranslations.translations[locale]?[key] ?? key;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +36,7 @@ class _SettingsViewState extends State<SettingsView> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          _tr('settings'),
+          context.tr('settings'),
           style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
@@ -49,60 +45,60 @@ class _SettingsViewState extends State<SettingsView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildSectionHeader(theme, _tr('account_setting')),
+            _buildSectionHeader(theme, context.tr('account_setting')),
             const SizedBox(height: 16),
             _buildSettingsItem(
               theme,
               icon: Icons.person_outlined,
-              title: _tr('edit_profile'),
+              title: context.tr('edit_profile'),
               onTap: () => Navigator.pushNamed(context, AppRoutes.editProfile),
             ),
             _buildSettingsItem(
               theme,
               icon: Icons.lock_outlined,
-              title: _tr('change_password'),
+              title: context.tr('change_password'),
               onTap: () => Navigator.pushNamed(context, AppRoutes.changePassword),
             ),
             _buildSettingsItem(
               theme,
               icon: Icons.location_on_outlined,
-              title: _tr('shipping_address'),
+              title: context.tr('shipping_address'),
               onTap: () => Navigator.pushNamed(context, AppRoutes.checkout), // Or specific address view if exists
             ),
             _buildSettingsItem(
               theme,
               icon: Icons.payment_outlined,
-              title: _tr('payment_methods'),
+              title: context.tr('payment_methods'),
               onTap: () {},
             ),
             _buildSettingsItem(
               theme,
               icon: Icons.language,
-              title: _tr('language'),
+              title: context.tr('language'),
               subtitle: context.watch<LocaleViewModel>().locale.languageCode == 'en' ? 'English' : 'العربية',
               onTap: () => _showLanguagePicker(context),
             ),
             _buildSettingsItem(
               theme,
               icon: Icons.monetization_on_outlined,
-              title: _tr('currency'),
+              title: context.tr('currency'),
               subtitle: 'USD (\$)',
               onTap: () => _showCurrencyPicker(context),
             ),
             const SizedBox(height: 32),
-            _buildSectionHeader(theme, _tr('preferences')),
+            _buildSectionHeader(theme, context.tr('preferences')),
             const SizedBox(height: 16),
             _buildSettingsToggle(
               theme,
               icon: Icons.dark_mode_outlined,
-              title: _tr('dark_mode'),
+              title: context.tr('dark_mode'),
               value: themeViewModel.isDarkMode,
               onChanged: (val) => themeViewModel.toggleTheme(),
             ),
             _buildSettingsToggle(
               theme,
               icon: Icons.notifications_none,
-              title: _tr('notification'),
+              title: context.tr('notification'),
               value: _notificationsEnabled,
               onChanged: (val) => setState(() => _notificationsEnabled = val),
             ),
@@ -110,51 +106,51 @@ class _SettingsViewState extends State<SettingsView> {
               _buildSettingsToggle(
                 theme,
                 icon: Icons.volume_up_outlined,
-                title: _tr('notification_sound'),
+                title: context.tr('notification_sound'),
                 value: _soundEnabled,
                 onChanged: (val) => setState(() => _soundEnabled = val),
               ),
               _buildSettingsToggle(
                 theme,
                 icon: Icons.vibration,
-                title: _tr('vibration'),
+                title: context.tr('vibration'),
                 value: _vibrationEnabled,
                 onChanged: (val) => setState(() => _vibrationEnabled = val),
               ),
             ],
             const SizedBox(height: 32),
-            _buildSectionHeader(theme, _tr('support_other')),
+            _buildSectionHeader(theme, context.tr('support_other')),
             const SizedBox(height: 16),
             _buildSettingsItem(
               theme,
               icon: Icons.privacy_tip_outlined,
-              title: _tr('privacy'),
+              title: context.tr('privacy'),
               onTap: () => Navigator.pushNamed(context, AppRoutes.privacy),
             ),
             _buildSettingsItem(
               theme,
               icon: Icons.help_outline,
-              title: _tr('help_center'),
+              title: context.tr('help_center'),
               onTap: () => Navigator.pushNamed(context, AppRoutes.helpCenter),
             ),
             _buildSettingsItem(
               theme,
               icon: Icons.description_outlined,
-              title: _tr('terms_condition'),
+              title: context.tr('terms_condition'),
               onTap: () =>
                   Navigator.pushNamed(context, AppRoutes.termsConditions),
             ),
             _buildSettingsItem(
               theme,
               icon: Icons.info_outlined,
-              title: _tr('about_us'),
+              title: context.tr('about_us'),
               onTap: () => Navigator.pushNamed(context, AppRoutes.aboutUs),
             ),
             const SizedBox(height: 32),
             _buildSettingsItem(
               theme,
               icon: Icons.logout_outlined,
-              title: _tr('logout'),
+              title: context.tr('logout'),
               iconColor: AppColors.error,
               onTap: () => _showLogoutDialog(context),
             ),
@@ -277,7 +273,7 @@ class _SettingsViewState extends State<SettingsView> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                _tr('select_language'),
+                context.tr('select_language'),
                 style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 20),
@@ -367,7 +363,7 @@ class _SettingsViewState extends State<SettingsView> {
             ),
             const SizedBox(height: 24),
             Text(
-              _tr('are_you_sure_logout'),
+              context.tr('are_you_sure_logout'),
               textAlign: TextAlign.center,
               style: theme.textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
@@ -386,7 +382,7 @@ class _SettingsViewState extends State<SettingsView> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    child: Text(_tr('cancel')),
+                    child: Text(context.tr('cancel')),
                   ),
                 ),
                 const SizedBox(width: 16),
@@ -406,7 +402,7 @@ class _SettingsViewState extends State<SettingsView> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    child: Text(_tr('logout')),
+                    child: Text(context.tr('logout')),
                   ),
                 ),
               ],

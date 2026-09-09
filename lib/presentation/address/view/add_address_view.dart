@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:country_picker/country_picker.dart';
 
 import '../../../core/constants/app_colors.dart';
+import '../../../core/extensions/context_extension.dart';
 
 class AddAddressView extends StatefulWidget {
   const AddAddressView({super.key});
@@ -20,9 +21,9 @@ class _AddAddressViewState extends State<AddAddressView> {
         backgroundColor: AppColors.primary,
         elevation: 0,
         centerTitle: true,
-        title: const Text(
-          'Add New Address',
-          style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
+        title: Text(
+          context.tr('add_new_address'),
+          style: const TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
         ),
       ),
       body: SingleChildScrollView(
@@ -40,33 +41,33 @@ class _AddAddressViewState extends State<AddAddressView> {
             const SizedBox(height: 16),
             const Center(
               child: Text(
-                'Enter your address to receive your orders easily.',
+                'Enter your address to receive your orders easily.', // This should also be translated if added to translations
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ),
             const SizedBox(height: 32),
-            _buildFieldLabel('Full Name'),
-            _buildTextField(hintText: 'Enter Your Name'),
+            _buildFieldLabel(context.tr('full_name')),
+            _buildTextField(hintText: context.tr('full_name')),
             const SizedBox(height: 16),
-            _buildFieldLabel('Phone Number'),
-            _buildTextField(hintText: 'Enter Your Phone Number'),
+            _buildFieldLabel(context.tr('phone_number')),
+            _buildTextField(hintText: context.tr('phone_number')),
             const SizedBox(height: 16),
-            _buildFieldLabel('Street Address'),
-            _buildTextField(hintText: 'Enter Your Address'),
+            _buildFieldLabel(context.tr('street_address')),
+            _buildTextField(hintText: context.tr('street_address')),
             const SizedBox(height: 16),
-            _buildFieldLabel('City/Town'),
-            _buildTextField(hintText: 'Enter Your City'),
+            _buildFieldLabel(context.tr('city')),
+            _buildTextField(hintText: context.tr('city')),
             const SizedBox(height: 16),
-            _buildFieldLabel('Postal Code'),
-            _buildTextField(hintText: 'ZIP / Postal code'),
+            _buildFieldLabel(context.tr('postal_code')),
+            _buildTextField(hintText: context.tr('postal_code')),
             const SizedBox(height: 16),
-            _buildFieldLabel('Country'),
-            _buildCountryPickerField('Select Country'),
+            _buildFieldLabel(context.tr('select_country')),
+            _buildCountryPickerField(context.tr('select_country')),
             const SizedBox(height: 40),
             ElevatedButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Add'),
+              child: Text(context.tr('add')),
             ),
           ],
         ),

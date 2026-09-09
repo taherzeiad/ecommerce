@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/constants/app_colors.dart';
-import '../../../core/constants/app_strings.dart';
 import '../../../core/routes/app_routes.dart';
+import '../../../core/extensions/context_extension.dart';
 import '../../../domain/entities/product_entity.dart';
 import '../../cart/view_model/cart_view_model.dart';
 import '../../wishlist/view_model/wishlist_view_model.dart';
@@ -161,12 +161,12 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
           const SizedBox(height: 12),
           Row(
             children: [
-              _buildTag(context, Icons.category, widget.product.category),
+              _buildTag(context, Icons.category, context.tr(widget.product.category.toLowerCase())),
               const SizedBox(width: 12),
               _buildTag(
                 context,
                 Icons.star_border,
-                '(${widget.product.rating}) Review',
+                '(${widget.product.rating}) ${context.tr('rating')}',
               ),
               const SizedBox(width: 12),
               GestureDetector(
@@ -180,9 +180,9 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                     border: Border.all(color: AppColors.primary),
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  child: const Text(
-                    AppStrings.addRating,
-                    style: TextStyle(color: AppColors.primary, fontSize: 12),
+                  child: Text(
+                    context.tr('add_rating'),
+                    style: const TextStyle(color: AppColors.primary, fontSize: 12),
                   ),
                 ),
               ),
@@ -192,7 +192,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
           Row(
             children: [
               Text(
-                AppStrings.qty,
+                context.tr('qty'),
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: theme.textTheme.bodyMedium?.color,
@@ -237,7 +237,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  AppStrings.fromMonth,
+                  context.tr('from_month'),
                   style: TextStyle(
                     color: theme.textTheme.bodySmall?.color,
                     fontSize: 12,
@@ -333,7 +333,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                   backgroundColor: AppColors.primary,
                   minimumSize: const Size(double.infinity, 56),
                 ),
-                child: const Text(AppStrings.buyNow),
+                child: Text(context.tr('buy_now')),
               ),
             ),
             const SizedBox(width: 16),

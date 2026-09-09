@@ -10,6 +10,7 @@ import 'presentation/cart/view_model/cart_view_model.dart';
 import 'presentation/theme/view_model/locale_view_model.dart';
 import 'presentation/theme/view_model/theme_view_model.dart';
 import 'presentation/wishlist/view_model/wishlist_view_model.dart';
+import 'core/extensions/context_extension.dart';
 
 class EcommerceApp extends StatelessWidget {
   const EcommerceApp({super.key});
@@ -26,7 +27,7 @@ class EcommerceApp extends StatelessWidget {
       child: Consumer2<ThemeViewModel, LocaleViewModel>(
         builder: (context, themeViewModel, localeViewModel, _) {
           return MaterialApp(
-            title: AppStrings.appName,
+            onGenerateTitle: (context) => context.tr('app_name'),
             debugShowCheckedModeBanner: false,
             theme: AppTheme.light,
             darkTheme: AppTheme.dark,
