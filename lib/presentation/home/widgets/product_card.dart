@@ -15,6 +15,7 @@ class ProductCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final wishlistViewModel = context.watch<WishlistViewModel>();
     final isFavorite = wishlistViewModel.isInWishlist(product.id);
+    final theme = Theme.of(context);
 
     return GestureDetector(
       onTap: onTap,
@@ -22,11 +23,11 @@ class ProductCard extends StatelessWidget {
         width: 160,
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: AppColors.white,
+          color: theme.cardColor,
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: AppColors.black.withValues(alpha: 0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 10,
               offset: const Offset(0, 5),
             ),
@@ -64,10 +65,10 @@ class ProductCard extends StatelessWidget {
               product.name,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
+              style: TextStyle(
                 fontWeight: FontWeight.w600,
                 fontSize: 12,
-                color: AppColors.textDark,
+                color: theme.colorScheme.onSurface,
               ),
             ),
             const SizedBox(height: 6),
@@ -75,8 +76,8 @@ class ProductCard extends StatelessWidget {
               children: [
                 Text(
                   '\$${product.price.toStringAsFixed(2)}',
-                  style: const TextStyle(
-                    color: AppColors.textDark,
+                  style: TextStyle(
+                    color: theme.colorScheme.onSurface,
                     fontWeight: FontWeight.bold,
                     fontSize: 12,
                   ),
@@ -86,8 +87,8 @@ class ProductCard extends StatelessWidget {
                   const SizedBox(width: 8),
                   Text(
                     '\$${product.oldPrice!.toStringAsFixed(2)}',
-                    style: const TextStyle(
-                      color: AppColors.textLight,
+                    style: TextStyle(
+                      color: theme.textTheme.bodySmall?.color,
                       fontSize: 11,
                       decoration: TextDecoration.lineThrough,
                     ),

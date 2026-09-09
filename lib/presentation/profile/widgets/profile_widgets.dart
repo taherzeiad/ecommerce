@@ -34,8 +34,8 @@ class ProfileAvatar extends StatelessWidget {
             ),
           ),
           child: Container(
-            decoration: const BoxDecoration(
-              color: AppColors.white,
+            decoration: BoxDecoration(
+              color: Theme.of(context).cardColor,
               shape: BoxShape.circle,
             ),
             padding: const EdgeInsets.all(4),
@@ -68,12 +68,13 @@ class ProfileListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       margin: const EdgeInsets.only(bottom: 1),
-      decoration: const BoxDecoration(
-        color: AppColors.white,
+      decoration: BoxDecoration(
+        color: theme.cardColor,
         border: Border(
-          bottom: BorderSide(color: AppColors.borderExtraLight),
+          bottom: BorderSide(color: theme.dividerColor),
         ),
       ),
       child: ListTile(
@@ -85,16 +86,16 @@ class ProfileListItem extends StatelessWidget {
         ),
         title: Text(
           title,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w500,
-            color: AppColors.textPrimary,
+            color: theme.colorScheme.onSurface,
           ),
         ),
-        trailing: const Icon(
+        trailing: Icon(
           Icons.arrow_forward_ios,
           size: 16,
-          color: AppColors.textLight,
+          color: theme.textTheme.bodySmall?.color,
         ),
         contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
       ),

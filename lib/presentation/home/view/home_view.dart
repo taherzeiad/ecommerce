@@ -17,9 +17,10 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<HomeViewModel>();
+    final theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor: AppColors.homeBackground,
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: SafeArea(
         child: viewModel.isLoading
             ? const Center(child: CircularProgressIndicator())
@@ -44,6 +45,7 @@ class HomeView extends StatelessWidget {
                     _buildBanner(),
                     const SizedBox(height: 16),
                     _buildSectionHeader(
+                      context,
                       AppStrings.categories,
                       () => Navigator.pushNamed(
                         context,
@@ -55,6 +57,7 @@ class HomeView extends StatelessWidget {
                     _buildCategoryList(context),
                     const SizedBox(height: 16),
                     _buildSectionHeader(
+                      context,
                       AppStrings.flashDeals,
                       () => Navigator.pushNamed(context, AppRoutes.allProducts),
                     ),
@@ -79,7 +82,11 @@ class HomeView extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    _buildSectionHeader(AppStrings.popularProduct, () {}),
+                    _buildSectionHeader(
+                      context,
+                      AppStrings.popularProduct,
+                      () {},
+                    ),
                     const SizedBox(height: 16),
                     GridView.builder(
                       shrinkWrap: true,
@@ -130,7 +137,7 @@ class HomeView extends StatelessWidget {
                 Text(
                   'Hello',
                   style: TextStyle(
-                    color: AppColors.textSecondary,
+                    color: theme.textTheme.bodyMedium?.color,
                     fontSize: 16,
                   ),
                 ),
@@ -139,7 +146,7 @@ class HomeView extends StatelessWidget {
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
-                    color: AppColors.textDark,
+                    color: theme.colorScheme.onSurface,
                   ),
                 ),
               ],
@@ -196,7 +203,10 @@ class HomeView extends StatelessWidget {
               decoration: BoxDecoration(
                 color: AppColors.primary,
                 shape: BoxShape.circle,
-                border: Border.all(color: AppColors.white, width: 1),
+                border: Border.all(
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  width: 1,
+                ),
               ),
             ),
           ),
@@ -309,16 +319,21 @@ class HomeView extends StatelessWidget {
     );
   }
 
-  Widget _buildSectionHeader(String title, VoidCallback onSeeAll) {
+  Widget _buildSectionHeader(
+    BuildContext context,
+    String title,
+    VoidCallback onSeeAll,
+  ) {
+    final theme = Theme.of(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
           title,
-          style: const TextStyle(
+          style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 16,
-            color: AppColors.textDark,
+            color: theme.colorScheme.onSurface,
           ),
         ),
         InkWell(
@@ -339,10 +354,10 @@ class HomeView extends StatelessWidget {
                   shape: BoxShape.circle,
                 ),
                 alignment: Alignment.center,
-                child: const Icon(
+                child: Icon(
                   Icons.chevron_right,
                   size: 16.67,
-                  color: AppColors.white,
+                  color: theme.colorScheme.surface,
                 ),
               ),
             ],
@@ -353,6 +368,7 @@ class HomeView extends StatelessWidget {
   }
 
   Widget _buildCategoryList(BuildContext context) {
+    final theme = Theme.of(context);
     final categories = ['Phone', 'Fashion', 'Audio', 'Laptop', 'Games'];
     final categoryIcons = [
       'lib/assets/icons/phone.png',
@@ -376,7 +392,7 @@ class HomeView extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: AppColors.white,
+                    color: theme.cardColor,
                     shape: BoxShape.circle,
                     border: Border.all(color: AppColors.primary, width: 2),
                   ),
@@ -384,16 +400,16 @@ class HomeView extends StatelessWidget {
                     categoryIcons[index],
                     width: 25,
                     height: 35,
-                    color: AppColors.textDark,
+                    color: theme.colorScheme.onSurface,
                   ),
                 ),
                 const SizedBox(height: 5),
                 Text(
                   categories[index],
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
-                    color: AppColors.textDark,
+                    color: theme.colorScheme.onSurface,
                   ),
                 ),
               ],

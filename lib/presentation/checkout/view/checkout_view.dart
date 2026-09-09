@@ -58,39 +58,41 @@ class _CheckoutViewState extends State<CheckoutView> {
   }
 
   Widget _buildStepHeader() {
+    final theme = Theme.of(context);
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 24),
       height: 50,
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(25),
-        border: Border.all(color: AppColors.borderExtraLight),
+        border: Border.all(color: theme.dividerColor),
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(25),
         child: Row(
           children: [
-            _buildStepTab('Address', 0),
-            const VerticalDivider(
+            _buildStepTab(context, 'Address', 0),
+            VerticalDivider(
               width: 1,
               thickness: 1,
-              color: AppColors.divider,
+              color: theme.dividerColor,
             ),
-            _buildStepTab('Payment', 1),
-            const VerticalDivider(
+            _buildStepTab(context, 'Payment', 1),
+            VerticalDivider(
               width: 1,
               thickness: 1,
-              color: AppColors.divider,
+              color: theme.dividerColor,
             ),
-            _buildStepTab('Confirm', 2),
+            _buildStepTab(context, 'Confirm', 2),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildStepTab(String label, int index) {
+  Widget _buildStepTab(BuildContext context, String label, int index) {
     final isActive = _currentStep == index;
+    final theme = Theme.of(context);
     return Expanded(
       child: InkWell(
         onTap: () {
@@ -102,11 +104,11 @@ class _CheckoutViewState extends State<CheckoutView> {
         child: Container(
           height: double.infinity,
           alignment: Alignment.center,
-          color: isActive ? AppColors.primary : AppColors.white,
+          color: isActive ? AppColors.primary : theme.cardColor,
           child: Text(
             label,
             style: TextStyle(
-              color: isActive ? AppColors.white : AppColors.textGrey,
+              color: isActive ? AppColors.white : theme.textTheme.bodyMedium?.color,
               fontWeight: FontWeight.w500,
               fontSize: 16,
             ),
@@ -132,10 +134,11 @@ class _CheckoutViewState extends State<CheckoutView> {
   }
 
   Widget _buildAddressCard() {
+    final theme = Theme.of(context);
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: AppColors.borderTeal),
       ),
@@ -147,13 +150,13 @@ class _CheckoutViewState extends State<CheckoutView> {
             'Ramiz Majed Alashqar',
             showEdit: true,
           ),
-          const Divider(height: 24),
+          Divider(height: 24, color: theme.dividerColor),
           _buildAddressRow(
             Icons.location_on,
             'Address',
             '742 Maple Street, Apt 5B\nBrooklyn, NY 11221\nUnited States',
           ),
-          const Divider(height: 24),
+          Divider(height: 24, color: theme.dividerColor),
           _buildAddressRow(
             Icons.phone,
             'Phone Number',
@@ -191,7 +194,10 @@ class _CheckoutViewState extends State<CheckoutView> {
               const SizedBox(height: 4),
               Text(
                 value,
-                style: const TextStyle(color: AppColors.grey, height: 1.4),
+                style: TextStyle(
+                  color: Theme.of(context).textTheme.bodySmall?.color,
+                  height: 1.4,
+                ),
               ),
             ],
           ),
@@ -304,15 +310,16 @@ class _CheckoutViewState extends State<CheckoutView> {
     String logoPath, {
     bool isSelected = false,
   }) {
+    final theme = Theme.of(context);
     return Container(
       width: 361,
       height: 51,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: isSelected ? AppColors.primary : AppColors.borderExtraLight,
+          color: isSelected ? AppColors.primary : theme.dividerColor,
         ),
       ),
       child: Row(
@@ -327,9 +334,9 @@ class _CheckoutViewState extends State<CheckoutView> {
           ),
           Text(
             title,
-            style: const TextStyle(
+            style: TextStyle(
               fontWeight: FontWeight.w500,
-              color: AppColors.grey,
+              color: theme.textTheme.bodySmall?.color,
             ),
           ),
           const Spacer(),
@@ -438,6 +445,7 @@ class _CheckoutViewState extends State<CheckoutView> {
   }
 
   Widget _buildConfirmField(String label, String value) {
+    final theme = Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -449,7 +457,14 @@ class _CheckoutViewState extends State<CheckoutView> {
         TextFormField(
           initialValue: value,
           decoration: InputDecoration(
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(color: theme.dividerColor),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(color: theme.dividerColor),
+            ),
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 16,
               vertical: 16,
@@ -460,13 +475,17 @@ class _CheckoutViewState extends State<CheckoutView> {
     );
   }
 
-  Widget _buildOrderSummary({required CartViewModel cartViewModel, required String orderNumber}) {
+  Widget _buildOrderSummary({
+    required CartViewModel cartViewModel,
+    required String orderNumber,
+  }) {
+    final theme = Theme.of(context);
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: AppColors.borderExtraLight),
+        border: Border.all(color: theme.dividerColor),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -486,15 +505,28 @@ class _CheckoutViewState extends State<CheckoutView> {
           ),
           const SizedBox(height: 16),
           _buildSummaryRow('Total Items', '${cartViewModel.totalItems} Items'),
-          _buildSummaryRow('Subtotal', '${cartViewModel.subtotal.toStringAsFixed(2)}\$'),
-          _buildSummaryRow('Delivery Fees', '${cartViewModel.deliveryFees.toStringAsFixed(2)}\$'),
-          const Divider(height: 24),
-          _buildSummaryRow('Total Price', '${cartViewModel.totalPrice.toStringAsFixed(2)}\$', isBold: true),
+          _buildSummaryRow(
+            'Subtotal',
+            '${cartViewModel.subtotal.toStringAsFixed(2)}\$',
+          ),
+          _buildSummaryRow(
+            'Delivery Fees',
+            '${cartViewModel.deliveryFees.toStringAsFixed(2)}\$',
+          ),
+          Divider(height: 24, color: theme.dividerColor),
+          _buildSummaryRow(
+            'Total Price',
+            '${cartViewModel.totalPrice.toStringAsFixed(2)}\$',
+            isBold: true,
+          ),
           const SizedBox(height: 16),
-          const Center(
+          Center(
             child: Text(
               'All prices displayed are inclusive of all applicable Tax.',
-              style: TextStyle(fontSize: 12, color: AppColors.grey),
+              style: TextStyle(
+                fontSize: 12,
+                color: theme.textTheme.bodySmall?.color,
+              ),
             ),
           ),
         ],

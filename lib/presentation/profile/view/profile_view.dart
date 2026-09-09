@@ -10,6 +10,7 @@ class ProfileView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.primary,
@@ -35,12 +36,12 @@ class ProfileView extends StatelessWidget {
             const SizedBox(height: 32),
             const ProfileAvatar(),
             const SizedBox(height: 16),
-            const Text(
+            Text(
               'Ramiz Man',
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
-                color: AppColors.textPrimary,
+                color: theme.colorScheme.onSurface,
               ),
             ),
             const SizedBox(height: 32),

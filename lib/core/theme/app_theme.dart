@@ -9,10 +9,15 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       scaffoldBackgroundColor: AppColors.scaffoldBackground,
+      cardColor: AppColors.white,
+      dividerColor: AppColors.divider,
       colorScheme: ColorScheme.fromSeed(
         seedColor: AppColors.primary,
         primary: AppColors.primary,
         brightness: Brightness.light,
+        surface: AppColors.white,
+        onSurface: AppColors.textPrimary,
+        secondary: AppColors.primaryLight,
       ),
       fontFamily: 'Roboto',
       textTheme: const TextTheme(
@@ -25,6 +30,10 @@ class AppTheme {
           fontSize: 15,
           height: 1.5,
           color: AppColors.textSecondary,
+        ),
+        titleMedium: TextStyle(
+          color: AppColors.textPrimary,
+          fontWeight: FontWeight.w600,
         ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
@@ -49,11 +58,15 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       scaffoldBackgroundColor: AppColors.darkBackground,
+      cardColor: AppColors.darkCardBackground,
+      dividerColor: AppColors.darkBorder,
       colorScheme: ColorScheme.fromSeed(
         seedColor: AppColors.primary,
         primary: AppColors.primary,
         brightness: Brightness.dark,
         surface: AppColors.darkSurface,
+        onSurface: AppColors.darkTextPrimary,
+        secondary: AppColors.primaryDark,
       ),
       fontFamily: 'Roboto',
       textTheme: const TextTheme(
@@ -67,8 +80,12 @@ class AppTheme {
           height: 1.5,
           color: AppColors.darkTextSecondary,
         ),
+        titleMedium: TextStyle(
+          color: AppColors.darkTextPrimary,
+          fontWeight: FontWeight.w600,
+        ),
       ),
-      cardTheme: const CardTheme(
+      cardTheme: const CardThemeData(
         color: AppColors.darkCardBackground,
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(

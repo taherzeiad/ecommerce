@@ -14,6 +14,7 @@ class CartView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<CartViewModel>();
+    final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -55,7 +56,6 @@ class CartView extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            color: AppColors.grey,
                           ),
                         ),
                         const SizedBox(height: 16),
@@ -67,7 +67,7 @@ class CartView extends StatelessWidget {
                           separatorBuilder: (context, index) =>
                               const SizedBox(height: 16),
                           itemBuilder: (context, index) {
-                            return _buildCartItem(context, viewModel, index);
+                             return _buildCartItem(context, viewModel, index);
                           },
                         ),
                         const SizedBox(height: 15),
@@ -81,9 +81,9 @@ class CartView extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 12),
-                        _buildPromoCodeField(),
+                        _buildPromoCodeField(context),
                         const SizedBox(height: 32),
-                        _buildPriceBreakdown(viewModel),
+                        _buildPriceBreakdown(context, viewModel),
                       ],
                     ),
                   ),
@@ -181,9 +181,9 @@ class CartView extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: AppColors.white,
+          color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.borderExtraLight),
+          border: Border.all(color: Theme.of(context).dividerColor),
         ),
         child: Row(
           children: [
@@ -222,7 +222,10 @@ class CartView extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     item.product.category,
-                    style: TextStyle(color: AppColors.textLight, fontSize: 13),
+                    style: TextStyle(
+                      color: Theme.of(context).textTheme.bodySmall?.color,
+                      fontSize: 13,
+                    ),
                   ),
                   const SizedBox(height: 12),
                   Row(
@@ -230,8 +233,8 @@ class CartView extends StatelessWidget {
                     children: [
                       Text(
                         '\$${item.product.price.toStringAsFixed(2)}',
-                        style: const TextStyle(
-                          color: AppColors.textPrimary,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurface,
                           fontWeight: FontWeight.bold,
                           fontSize: 17,
                         ),
@@ -239,13 +242,15 @@ class CartView extends StatelessWidget {
                       Container(
                         height: 32,
                         decoration: BoxDecoration(
-                          border: Border.all(color: AppColors.borderLight),
+                          border: Border.all(
+                            color: Theme.of(context).dividerColor,
+                          ),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            _buildQtyBtn(Icons.remove, () {
+                            _buildQtyBtn(context, Icons.remove, () {
                               viewModel.decrementQuantity(item.product.id);
                             }),
                             const VerticalDivider(width: 1, thickness: 1),
@@ -255,14 +260,14 @@ class CartView extends StatelessWidget {
                               ),
                               child: Text(
                                 '${item.quantity}',
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  color: AppColors.textPrimary,
+                                  color: Theme.of(context).colorScheme.onSurface,
                                 ),
                               ),
                             ),
                             const VerticalDivider(width: 1, thickness: 1),
-                            _buildQtyBtn(Icons.add, () {
+                            _buildQtyBtn(context, Icons.add, () {
                               viewModel.incrementQuantity(item.product.id);
                             }),
                           ],
@@ -279,13 +284,21 @@ class CartView extends StatelessWidget {
     );
   }
 
-  Widget _buildQtyBtn(IconData icon, VoidCallback onTap) {
+  Widget _buildQtyBtn(
+    BuildContext context,
+    IconData icon,
+    VoidCallback onTap,
+  ) {
     return InkWell(
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 8),
         alignment: Alignment.center,
-        child: Icon(icon, size: 18, color: AppColors.textPrimary),
+        child: Icon(
+          icon,
+          size: 18,
+          color: Theme.of(context).colorScheme.onSurface,
+        ),
       ),
     );
   }
@@ -316,22 +329,23 @@ class CartView extends StatelessWidget {
     );
   }
 
-  Widget _buildPromoCodeField() {
+  Widget _buildPromoCodeField(BuildContext context) {
+    final theme = Theme.of(context);
     return Row(
       children: [
         Expanded(
           child: TextField(
             decoration: InputDecoration(
               hintText: AppStrings.promoCode,
-              hintStyle: const TextStyle(color: AppColors.textLight),
+              hintStyle: TextStyle(color: theme.textTheme.bodySmall?.color),
               contentPadding: const EdgeInsets.symmetric(horizontal: 16),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: const BorderSide(color: AppColors.borderLight),
+                borderSide: BorderSide(color: theme.dividerColor),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: const BorderSide(color: AppColors.borderLight),
+                borderSide: BorderSide(color: theme.dividerColor),
               ),
             ),
           ),
@@ -353,18 +367,21 @@ class CartView extends StatelessWidget {
     );
   }
 
-  Widget _buildPriceBreakdown(CartViewModel viewModel) {
+  Widget _buildPriceBreakdown(BuildContext context, CartViewModel viewModel) {
     return Column(
       children: [
         _buildPriceRow(
+          context,
           AppStrings.subTotal,
           '\$${viewModel.subtotal.toStringAsFixed(2)}',
         ),
         _buildPriceRow(
+          context,
           AppStrings.deliveryFees,
           '\$${viewModel.deliveryFees.toStringAsFixed(2)}',
         ),
         _buildPriceRow(
+          context,
           AppStrings.taxes,
           '\$${viewModel.taxes.toStringAsFixed(2)}',
           isRed: true,
@@ -380,11 +397,11 @@ class CartView extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               direction: Axis.horizontal,
               children: List.generate(dashCount, (_) {
-                return const SizedBox(
+                return SizedBox(
                   width: dashWidth,
                   height: dashHeight,
                   child: DecoratedBox(
-                    decoration: BoxDecoration(color: AppColors.borderTeal),
+                    decoration: BoxDecoration(color: Theme.of(context).dividerColor),
                   ),
                 );
               }),
@@ -393,6 +410,7 @@ class CartView extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         _buildPriceRow(
+          context,
           AppStrings.total,
           '\$${viewModel.totalPrice.toStringAsFixed(2)}',
           isBold: true,
@@ -402,11 +420,13 @@ class CartView extends StatelessWidget {
   }
 
   Widget _buildPriceRow(
+    BuildContext context,
     String label,
     String value, {
     bool isRed = false,
     bool isBold = false,
   }) {
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
@@ -417,7 +437,7 @@ class CartView extends StatelessWidget {
             style: TextStyle(
               fontSize: 16,
               fontWeight: isBold ? FontWeight.bold : FontWeight.w500,
-              color: isRed ? AppColors.error : AppColors.textGrey,
+              color: isRed ? AppColors.error : theme.textTheme.bodyMedium?.color,
             ),
           ),
           Text(
@@ -425,7 +445,7 @@ class CartView extends StatelessWidget {
             style: TextStyle(
               fontSize: 16,
               fontWeight: isBold ? FontWeight.bold : FontWeight.w500,
-              color: isRed ? AppColors.error : AppColors.textPrimary,
+              color: isRed ? AppColors.error : theme.colorScheme.onSurface,
             ),
           ),
         ],

@@ -43,9 +43,9 @@ class _ForgotPasswordContent extends StatelessWidget {
             Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 60),
-              decoration: const BoxDecoration(
-                color: AppColors.white,
-                borderRadius: BorderRadius.only(
+              decoration: BoxDecoration(
+                color: Theme.of(context).cardColor,
+                borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(40),
                   topRight: Radius.circular(40),
                 ),
@@ -53,14 +53,14 @@ class _ForgotPasswordContent extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Center(
+                  Center(
                     child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: Text(
                         AppStrings.forgotPasswordDesc,
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: AppColors.authTextBody,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                           height: 1.5,
@@ -69,12 +69,12 @@ class _ForgotPasswordContent extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 40),
-                  const Text(
+                  Text(
                     AppStrings.email,
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w500,
-                      color: AppColors.authTextHeader,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -88,7 +88,7 @@ class _ForgotPasswordContent extends StatelessWidget {
                         color: AppColors.authHint,
                       ),
                       filled: true,
-                      fillColor: AppColors.white,
+                      fillColor: Theme.of(context).cardColor,
                       contentPadding: const EdgeInsets.symmetric(vertical: 16),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),

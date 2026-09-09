@@ -22,8 +22,9 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: AppColors.scaffoldBackground,
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: Stack(
         children: [
           SingleChildScrollView(
@@ -71,10 +72,12 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   _buildCircleIcon(
+                    context,
                     Icons.arrow_back,
                     () => Navigator.pop(context),
                   ),
                   _buildCircleIcon(
+                    context,
                     isFavorite ? Icons.favorite : Icons.favorite_border,
                     () => wishlistViewModel.toggleWishlist(widget.product),
                     iconColor: isFavorite ? Colors.red : AppColors.primary,
@@ -112,6 +115,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
   }
 
   Widget _buildCircleIcon(
+    BuildContext context,
     IconData icon,
     VoidCallback onTap, {
     Color? iconColor,
@@ -120,8 +124,8 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.all(8),
-        decoration: const BoxDecoration(
-          color: Colors.white,
+        decoration: BoxDecoration(
+          color: Theme.of(context).cardColor,
           shape: BoxShape.circle,
         ),
         child: Icon(icon, color: iconColor ?? Colors.black54),
@@ -130,11 +134,12 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
   }
 
   Widget _buildProductInfo(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       padding: const EdgeInsets.all(24),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.only(
+      decoration: BoxDecoration(
+        color: theme.scaffoldBackgroundColor,
+        borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(30),
           topRight: Radius.circular(30),
         ),
@@ -144,14 +149,22 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
         children: [
           Text(
             widget.product.name,
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 24,
+              color: theme.colorScheme.onSurface,
+            ),
           ),
           const SizedBox(height: 12),
           Row(
             children: [
-              _buildTag(Icons.category, widget.product.category),
+              _buildTag(context, Icons.category, widget.product.category),
               const SizedBox(width: 12),
-              _buildTag(Icons.star_border, '(${widget.product.rating}) Review'),
+              _buildTag(
+                context,
+                Icons.star_border,
+                '(${widget.product.rating}) Review',
+              ),
               const SizedBox(width: 12),
               GestureDetector(
                 onTap: () => Navigator.pushNamed(context, AppRoutes.reviews),
@@ -175,15 +188,15 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
           const SizedBox(height: 24),
           Row(
             children: [
-              const Text(
+              Text(
                 AppStrings.qty,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: Colors.grey,
+                  color: theme.textTheme.bodyMedium?.color,
                 ),
               ),
               const SizedBox(width: 16),
-              _buildQtyBtn(Icons.remove, () {
+              _buildQtyBtn(context, Icons.remove, () {
                 if (_quantity > 1) {
                   setState(() => _quantity--);
                 }
@@ -197,7 +210,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                 ),
               ),
               const SizedBox(width: 16),
-              _buildQtyBtn(Icons.add, () {
+              _buildQtyBtn(context, Icons.add, () {
                 setState(() => _quantity++);
               }),
             ],
@@ -206,7 +219,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Colors.grey.shade100,
+              color: theme.cardColor,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
@@ -222,7 +235,10 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                 const SizedBox(width: 8),
                 Text(
                   AppStrings.fromMonth,
-                  style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
+                  style: TextStyle(
+                    color: theme.textTheme.bodySmall?.color,
+                    fontSize: 12,
+                  ),
                 ),
                 const Spacer(),
                 const Icon(Icons.info_outline, color: AppColors.primary),
@@ -232,7 +248,10 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
           const SizedBox(height: 24),
           Text(
             widget.product.description,
-            style: const TextStyle(color: Colors.grey, height: 1.5),
+            style: TextStyle(
+              color: theme.textTheme.bodyMedium?.color,
+              height: 1.5,
+            ),
           ),
           const SizedBox(height: 100),
         ],
@@ -240,11 +259,11 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
     );
   }
 
-  Widget _buildTag(IconData icon, String label) {
+  Widget _buildTag(BuildContext context, IconData icon, String label) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: Theme.of(context).dividerColor),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
@@ -257,7 +276,11 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
     );
   }
 
-  Widget _buildQtyBtn(IconData icon, VoidCallback onTap) {
+  Widget _buildQtyBtn(
+    BuildContext context,
+    IconData icon,
+    VoidCallback onTap,
+  ) {
     return InkWell(
       onTap: onTap,
       child: Container(
@@ -273,6 +296,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
 
   Widget _buildBottomBar(BuildContext context) {
     final cartViewModel = context.read<CartViewModel>();
+    final theme = Theme.of(context);
 
     return Positioned(
       bottom: 0,
@@ -281,7 +305,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
       child: Container(
         padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: theme.cardColor,
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.05),
@@ -315,7 +339,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
               child: Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade100,
+                  color: theme.dividerColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: const Icon(

@@ -25,21 +25,21 @@ class NoResultsWidget extends StatelessWidget {
             color: AppColors.textSecondary,
           ),
           const SizedBox(height: 24),
-          const Text(
+          Text(
             'No Results Found',
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,
-              color: AppColors.textPrimary,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 12),
           Text(
             'Sorry, there are not results for "$query"',
             textAlign: TextAlign.center,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 16,
-              color: AppColors.textSecondary,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
           ),
           const SizedBox(height: 48),
@@ -75,8 +75,8 @@ class NoInternetWidget extends StatelessWidget {
                 top: 30,
                 child: Container(
                   padding: const EdgeInsets.all(4),
-                  decoration: const BoxDecoration(
-                    color: AppColors.white,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).cardColor,
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
@@ -89,19 +89,22 @@ class NoInternetWidget extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 24),
-          const Text(
+          Text(
             'No Internet Connection',
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,
-              color: AppColors.textPrimary,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 12),
-          const Text(
+          Text(
             'Please check your connection and try again.',
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 16, color: AppColors.textSecondary),
+            style: TextStyle(
+              fontSize: 16,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
           ),
           const SizedBox(height: 48),
           // We'll use a transparent box if it's just the text in design,

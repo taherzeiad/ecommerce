@@ -41,9 +41,9 @@ class _SignupContent extends StatelessWidget {
             ),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
-              decoration: const BoxDecoration(
-                color: AppColors.white,
-                borderRadius: BorderRadius.only(
+              decoration: BoxDecoration(
+                color: Theme.of(context).cardColor,
+                borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(40),
                   topRight: Radius.circular(40),
                 ),
@@ -51,12 +51,12 @@ class _SignupContent extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     AppStrings.fullName,
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w500,
-                      color: AppColors.authTextHeader,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -70,7 +70,7 @@ class _SignupContent extends StatelessWidget {
                         color: AppColors.authHint,
                       ),
                       filled: true,
-                      fillColor: AppColors.white,
+                      fillColor: Theme.of(context).cardColor,
                       contentPadding: const EdgeInsets.symmetric(vertical: 16),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -87,12 +87,12 @@ class _SignupContent extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 24),
-                  const Text(
+                  Text(
                     AppStrings.email,
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w500,
-                      color: AppColors.authTextHeader,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -106,7 +106,7 @@ class _SignupContent extends StatelessWidget {
                         color: AppColors.authHint,
                       ),
                       filled: true,
-                      fillColor: AppColors.white,
+                      fillColor: Theme.of(context).cardColor,
                       contentPadding: const EdgeInsets.symmetric(vertical: 16),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -123,12 +123,12 @@ class _SignupContent extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 24),
-                  const Text(
+                  Text(
                     AppStrings.password,
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w500,
-                      color: AppColors.authTextHeader,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -143,7 +143,7 @@ class _SignupContent extends StatelessWidget {
                         color: AppColors.authHint,
                       ),
                       filled: true,
-                      fillColor: AppColors.white,
+                      fillColor: Theme.of(context).cardColor,
                       contentPadding: const EdgeInsets.symmetric(vertical: 16),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -160,12 +160,12 @@ class _SignupContent extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 24),
-                  const Text(
+                  Text(
                     AppStrings.confirmPassword,
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w500,
-                      color: AppColors.authTextHeader,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -180,7 +180,7 @@ class _SignupContent extends StatelessWidget {
                         color: AppColors.authHint,
                       ),
                       filled: true,
-                      fillColor: AppColors.white,
+                      fillColor: Theme.of(context).cardColor,
                       contentPadding: const EdgeInsets.symmetric(vertical: 16),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -213,10 +213,10 @@ class _SignupContent extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 8),
-                      const Text(
+                      Text(
                         AppStrings.agreeToTerms,
                         style: TextStyle(
-                          color: AppColors.authTextBody,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
                           fontSize: 14,
                         ),
                       ),
@@ -276,9 +276,11 @@ class _SignupContent extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text(
+                      Text(
                         AppStrings.alreadyHaveAccount,
-                        style: TextStyle(color: AppColors.authTextBody),
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
                       ),
                       GestureDetector(
                         onTap: () {
