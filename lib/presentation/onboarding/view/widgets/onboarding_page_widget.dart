@@ -23,6 +23,10 @@ class OnboardingPageWidget extends StatelessWidget {
             aspectRatio: 1,
             child: Container(
               padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Theme.of(context).cardColor,
+                borderRadius: BorderRadius.circular(24),
+              ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12),
                 child: item.imagePath.endsWith('.svg')

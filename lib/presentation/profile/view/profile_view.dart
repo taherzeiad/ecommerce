@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/routes/app_routes.dart';
+import '../../theme/view_model/theme_view_model.dart';
 import '../widgets/profile_widgets.dart';
 
 class ProfileView extends StatelessWidget {
@@ -8,6 +10,7 @@ class ProfileView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.primary,
@@ -22,7 +25,7 @@ class ProfileView extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () => context.read<ThemeViewModel>().toggleTheme(),
             icon: const Icon(Icons.dark_mode_outlined, color: AppColors.white),
           ),
         ],
@@ -33,12 +36,12 @@ class ProfileView extends StatelessWidget {
             const SizedBox(height: 32),
             const ProfileAvatar(),
             const SizedBox(height: 16),
-            const Text(
+            Text(
               'Ramiz Man',
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
-                color: AppColors.textPrimary,
+                color: theme.colorScheme.onSurface,
               ),
             ),
             const SizedBox(height: 32),
@@ -87,9 +90,11 @@ class ProfileView extends StatelessWidget {
   }
 
   void _showLogoutDialog(BuildContext context) {
+    final theme = Theme.of(context);
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
+        backgroundColor: theme.dialogBackgroundColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -100,11 +105,10 @@ class ProfileView extends StatelessWidget {
               size: 64,
             ),
             const SizedBox(height: 24),
-            const Text(
-              'Are You Sure to wont to Log out ?',
+            Text(
+              'Are You Sure you want to Log out?',
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 18,
+              style: theme.textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -115,6 +119,8 @@ class ProfileView extends StatelessWidget {
                   child: OutlinedButton(
                     onPressed: () => Navigator.pop(context),
                     style: OutlinedButton.styleFrom(
+                      foregroundColor: theme.colorScheme.onSurface,
+                      side: BorderSide(color: theme.dividerColor),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),

@@ -5,12 +5,15 @@ import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_strings.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../core/widgets/custom_search_bar.dart';
+import '../../theme/view_model/theme_view_model.dart';
+import 'package:provider/provider.dart';
 
 class CategoriesView extends StatelessWidget {
   const CategoriesView({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       backgroundColor: AppColors.primary,
       appBar: AppBar(
@@ -27,21 +30,25 @@ class CategoriesView extends StatelessWidget {
         centerTitle: true,
         actions: [
           IconButton(
-            icon: const VectorGraphic(
-              loader: AssetBytesLoader('lib/assets/icons/moon.svg'),
+            icon: VectorGraphic(
+              loader: AssetBytesLoader(
+                context.watch<ThemeViewModel>().isDarkMode
+                    ? 'lib/assets/icons/moonenable.svg'
+                    : 'lib/assets/icons/moon.svg',
+              ),
               width: 24,
               height: 24,
-              colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
+              colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
             ),
-            onPressed: () {},
+            onPressed: () => context.read<ThemeViewModel>().toggleTheme(),
           ),
         ],
       ),
       body: Container(
         width: double.infinity,
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
+        decoration: BoxDecoration(
+          color: theme.scaffoldBackgroundColor,
+          borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(30),
             topRight: Radius.circular(30),
           ),
@@ -59,9 +66,13 @@ class CategoriesView extends StatelessWidget {
                     Navigator.pushNamed(context, AppRoutes.filterSort),
               ),
               const SizedBox(height: 24),
-              const Text(
+              Text(
                 AppStrings.featuredCategories,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  color: theme.colorScheme.onSurface,
+                ),
               ),
               const SizedBox(height: 16),
               _buildFeaturedCard(
@@ -167,6 +178,7 @@ class CategoriesView extends StatelessWidget {
     String iconPath,
     bool isNew,
   ) {
+    final theme = Theme.of(context);
     return Container(
       width: 151,
       height: 157,
@@ -210,14 +222,15 @@ class CategoriesView extends StatelessWidget {
                     iconPath,
                     width: 51,
                     height: 71,
-                    color: Colors.black,
+                    color: theme.colorScheme.onSurface,
                   ),
                   const SizedBox(height: 6),
                   Text(
                     title,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
+                      color: theme.colorScheme.onSurface,
                     ),
                   ),
                   const SizedBox(height: 4),

@@ -32,16 +32,17 @@ class CustomSearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       height: height,
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(height / 2),
-        border: hasBorder ? Border.all(color: AppColors.dividerExtraLight) : null,
+        border: hasBorder ? Border.all(color: theme.dividerColor) : null,
         boxShadow: hasShadow
             ? [
                 BoxShadow(
-                  color: AppColors.black.withValues(alpha: 0.1),
+                  color: Colors.black.withValues(alpha: 0.1),
                   blurRadius: 10,
                   offset: const Offset(4, 0),
                 ),
@@ -73,7 +74,9 @@ class CustomSearchBar extends StatelessWidget {
                           const SizedBox(width: 12),
                           Text(
                             hintText,
-                            style: const TextStyle(color: AppColors.textSecondary),
+                            style: TextStyle(
+                              color: theme.textTheme.bodyMedium?.color,
+                            ),
                           ),
                         ],
                       ),
@@ -85,7 +88,9 @@ class CustomSearchBar extends StatelessWidget {
                     onSubmitted: onSubmitted,
                     decoration: InputDecoration(
                       hintText: hintText,
-                      hintStyle: const TextStyle(color: AppColors.textSecondary),
+                      hintStyle: TextStyle(
+                        color: theme.textTheme.bodyMedium?.color,
+                      ),
                       prefixIcon: const Padding(
                         padding: EdgeInsets.all(12),
                         child: VectorGraphic(
@@ -101,11 +106,11 @@ class CustomSearchBar extends StatelessWidget {
                   ),
           ),
           if (showFilter) ...[
-            const VerticalDivider(
+            VerticalDivider(
               width: 1,
               indent: 12,
               endIndent: 12,
-              color: AppColors.dividerExtraLight,
+              color: theme.dividerColor,
             ),
             InkWell(
               onTap: onFilterTap,

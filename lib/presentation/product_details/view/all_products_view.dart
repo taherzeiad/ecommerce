@@ -9,6 +9,8 @@ import 'package:ecommerce/presentation/cart/view_model/cart_view_model.dart';
 import 'package:ecommerce/presentation/categories/view_model/categories_view_model.dart';
 import 'package:ecommerce/presentation/wishlist/view_model/wishlist_view_model.dart';
 
+import 'package:ecommerce/presentation/theme/view_model/theme_view_model.dart';
+
 class AllProductsView extends StatelessWidget {
   const AllProductsView({super.key});
 
@@ -27,7 +29,7 @@ class AllProductsView extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () => context.read<ThemeViewModel>().toggleTheme(),
             icon: const Icon(Icons.dark_mode_outlined, color: AppColors.white),
           ),
         ],
@@ -84,6 +86,7 @@ class AllProductsView extends StatelessWidget {
     CategoriesViewModel viewModel,
   ) {
     final filters = ['Smartphones', 'Audio', 'Gaming', 'Laptop'];
+    final theme = Theme.of(context);
     return SizedBox(
       height: 40,
       child: ListView.separated(
@@ -99,7 +102,7 @@ class AllProductsView extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 20),
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                color: isSelected ? AppColors.primary : AppColors.primaryLight,
+                color: isSelected ? AppColors.primary : theme.colorScheme.primaryContainer,
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
@@ -120,15 +123,16 @@ class AllProductsView extends StatelessWidget {
   Widget _buildProductCard(BuildContext context, ProductEntity product) {
     final wishlistViewModel = context.read<WishlistViewModel>();
     final cartViewModel = context.read<CartViewModel>();
+    final theme = Theme.of(context);
 
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.borderExtraLight),
+        border: Border.all(color: theme.dividerColor),
         boxShadow: [
           BoxShadow(
-            color: AppColors.black.withValues(alpha: 0.02),
+            color: Colors.black.withValues(alpha: 0.02),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -174,7 +178,7 @@ class AllProductsView extends StatelessWidget {
                             product.id,
                           )
                           ? AppColors.error
-                          : AppColors.textLight,
+                          : theme.textTheme.bodySmall?.color,
                       size: 20,
                     ),
                   ),
@@ -189,9 +193,10 @@ class AllProductsView extends StatelessWidget {
               children: [
                 Text(
                   product.name,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 14,
+                    color: theme.colorScheme.onSurface,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -202,13 +207,17 @@ class AllProductsView extends StatelessWidget {
                   children: [
                     Text(
                       product.category,
-                      style: const TextStyle(color: AppColors.grey, fontSize: 12),
+                      style: TextStyle(
+                        color: theme.textTheme.bodySmall?.color,
+                        fontSize: 12,
+                      ),
                     ),
                     Text(
                       '\$${product.price}',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
+                        color: theme.colorScheme.onSurface,
                       ),
                     ),
                   ],
