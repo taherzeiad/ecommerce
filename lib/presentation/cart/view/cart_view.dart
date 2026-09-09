@@ -5,6 +5,7 @@ import 'package:vector_graphics/vector_graphics.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_strings.dart';
 import '../../../core/routes/app_routes.dart';
+import '../../theme/view_model/theme_view_model.dart';
 import '../view_model/cart_view_model.dart';
 
 class CartView extends StatelessWidget {
@@ -29,7 +30,7 @@ class CartView extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () => context.read<ThemeViewModel>().toggleTheme(),
             icon: const VectorGraphic(
               loader: AssetBytesLoader('lib/assets/icons/moon.svg'),
               width: 24,

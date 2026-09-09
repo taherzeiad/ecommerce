@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/routes/app_routes.dart';
+import '../../theme/view_model/theme_view_model.dart';
 import '../widgets/profile_widgets.dart';
 
 class ProfileView extends StatelessWidget {
@@ -22,7 +24,7 @@ class ProfileView extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () => context.read<ThemeViewModel>().toggleTheme(),
             icon: const Icon(Icons.dark_mode_outlined, color: AppColors.white),
           ),
         ],

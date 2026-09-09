@@ -9,6 +9,8 @@ import 'package:ecommerce/presentation/cart/view_model/cart_view_model.dart';
 import 'package:ecommerce/presentation/categories/view_model/categories_view_model.dart';
 import 'package:ecommerce/presentation/wishlist/view_model/wishlist_view_model.dart';
 
+import 'package:ecommerce/presentation/theme/view_model/theme_view_model.dart';
+
 class AllProductsView extends StatelessWidget {
   const AllProductsView({super.key});
 
@@ -27,7 +29,7 @@ class AllProductsView extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () => context.read<ThemeViewModel>().toggleTheme(),
             icon: const Icon(Icons.dark_mode_outlined, color: AppColors.white),
           ),
         ],

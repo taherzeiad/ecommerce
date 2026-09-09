@@ -9,6 +9,8 @@ import '../../../domain/entities/product_entity.dart';
 import '../../cart/view_model/cart_view_model.dart';
 import '../view_model/wishlist_view_model.dart';
 
+import '../../theme/view_model/theme_view_model.dart';
+
 class WishlistView extends StatelessWidget {
   const WishlistView({super.key});
 

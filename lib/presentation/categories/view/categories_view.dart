@@ -5,6 +5,8 @@ import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_strings.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../core/widgets/custom_search_bar.dart';
+import '../../theme/view_model/theme_view_model.dart';
+import 'package:provider/provider.dart';
 
 class CategoriesView extends StatelessWidget {
   const CategoriesView({super.key});
@@ -33,7 +35,7 @@ class CategoriesView extends StatelessWidget {
               height: 24,
               colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
             ),
-            onPressed: () {},
+            onPressed: () => context.read<ThemeViewModel>().toggleTheme(),
           ),
         ],
       ),
