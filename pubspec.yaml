@@ -102,6 +102,9 @@ flutter:
     - path: lib/assets/icons/moon.svg
       transformers:
         - package: vector_graphics_compiler
+    - path: lib/assets/icons/moonenable.svg
+      transformers:
+        - package: vector_graphics_compiler
     - path: lib/assets/icons/search.svg
       transformers:
         - package: vector_graphics_compiler

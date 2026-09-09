@@ -32,11 +32,18 @@ class CartView extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () => context.read<ThemeViewModel>().toggleTheme(),
-            icon: const VectorGraphic(
-              loader: AssetBytesLoader('lib/assets/icons/moon.svg'),
+            icon: VectorGraphic(
+              loader: AssetBytesLoader(
+                context.watch<ThemeViewModel>().isDarkMode
+                    ? 'lib/assets/icons/moonenable.svg'
+                    : 'lib/assets/icons/moon.svg',
+              ),
               width: 24,
               height: 24,
-              colorFilter: ColorFilter.mode(AppColors.white, BlendMode.srcIn),
+              colorFilter: const ColorFilter.mode(
+                AppColors.white,
+                BlendMode.srcIn,
+              ),
             ),
           ),
         ],

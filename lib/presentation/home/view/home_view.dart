@@ -170,7 +170,12 @@ class HomeView extends StatelessWidget {
             InkWell(
               onTap: () => context.read<ThemeViewModel>().toggleTheme(),
               borderRadius: BorderRadius.circular(30),
-              child: _buildHeaderIcon(context, 'lib/assets/icons/moon.svg'),
+              child: _buildHeaderIcon(
+                context,
+                context.watch<ThemeViewModel>().isDarkMode
+                    ? 'lib/assets/icons/moonenable.svg'
+                    : 'lib/assets/icons/moon.svg',
+              ),
             ),
           ],
         ),

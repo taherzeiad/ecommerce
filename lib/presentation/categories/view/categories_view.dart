@@ -30,11 +30,15 @@ class CategoriesView extends StatelessWidget {
         centerTitle: true,
         actions: [
           IconButton(
-            icon: const VectorGraphic(
-              loader: AssetBytesLoader('lib/assets/icons/moon.svg'),
+            icon: VectorGraphic(
+              loader: AssetBytesLoader(
+                context.watch<ThemeViewModel>().isDarkMode
+                    ? 'lib/assets/icons/moonenable.svg'
+                    : 'lib/assets/icons/moon.svg',
+              ),
               width: 24,
               height: 24,
-              colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
+              colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
             ),
             onPressed: () => context.read<ThemeViewModel>().toggleTheme(),
           ),
