@@ -79,38 +79,42 @@ class _AddAddressViewState extends State<AddAddressView> {
       padding: const EdgeInsets.only(bottom: 8.0),
       child: Text(
         label,
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w500,
-          color: AppColors.textPrimary,
+          color: Theme.of(context).textTheme.bodyLarge?.color,
         ),
       ),
     );
   }
 
   Widget _buildTextField({String? initialValue, String? hintText}) {
+    final theme = Theme.of(context);
     return TextFormField(
       initialValue: initialValue,
       decoration: InputDecoration(
         hintText: hintText,
-        hintStyle: const TextStyle(color: AppColors.textLight),
+        hintStyle: TextStyle(color: theme.hintColor),
+        filled: true,
+        fillColor: theme.cardColor,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 16,
           vertical: 16,
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: AppColors.borderLight),
+          borderSide: BorderSide(color: theme.dividerColor),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: AppColors.borderLight),
+          borderSide: BorderSide(color: theme.dividerColor),
         ),
       ),
     );
   }
 
   Widget _buildCountryPickerField(String hintText) {
+    final theme = Theme.of(context);
     return InkWell(
       onTap: () {
         showCountryPicker(
@@ -126,7 +130,8 @@ class _AddAddressViewState extends State<AddAddressView> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         decoration: BoxDecoration(
-          border: Border.all(color: AppColors.borderLight),
+          color: theme.cardColor,
+          border: Border.all(color: theme.dividerColor),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Row(
@@ -136,14 +141,14 @@ class _AddAddressViewState extends State<AddAddressView> {
               _selectedCountry?.name ?? hintText,
               style: TextStyle(
                 color: _selectedCountry == null
-                    ? AppColors.textLight
-                    : AppColors.textPrimary,
+                    ? theme.hintColor
+                    : theme.textTheme.bodyLarge?.color,
                 fontSize: 16,
               ),
             ),
-            const Icon(
+            Icon(
               Icons.keyboard_arrow_down,
-              color: AppColors.textLight,
+              color: theme.hintColor,
             ),
           ],
         ),

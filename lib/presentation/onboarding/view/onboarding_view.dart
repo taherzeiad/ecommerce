@@ -50,7 +50,10 @@ class _OnboardingBody extends StatelessWidget {
                       onPressed: viewModel.isLastPage ? null : viewModel.skip,
                       child: Opacity(
                         opacity: viewModel.isLastPage ? 0 : 1,
-                        child: const Text(AppStrings.skip),
+                        child: Text(
+                          AppStrings.skip,
+                          style: TextStyle(color: Theme.of(context).hintColor),
+                        ),
                       ),
                     ),
                   ),
@@ -68,9 +71,9 @@ class _OnboardingBody extends StatelessWidget {
                 SmoothPageIndicator(
                   controller: viewModel.pageController,
                   count: viewModel.pages.length,
-                  effect: const ExpandingDotsEffect(
-                    activeDotColor: AppColors.indicatorActive,
-                    dotColor: AppColors.indicatorInactive,
+                  effect: ExpandingDotsEffect(
+                    activeDotColor: Theme.of(context).primaryColor,
+                    dotColor: Theme.of(context).dividerColor,
                     dotHeight: 8,
                     dotWidth: 8,
                   ),
