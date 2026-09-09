@@ -53,17 +53,20 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
       child: Stack(
         children: [
           Center(
-            child: widget.product.images.isNotEmpty
-                ? Image.network(
-                    widget.product.images.first,
-                    height: 250,
-                    fit: BoxFit.contain,
-                  )
-                : const Icon(
-                    Icons.laptop_mac,
-                    size: 200,
-                    color: Colors.black54,
-                  ),
+            child: Hero(
+              tag: 'product_image_${widget.product.id}',
+              child: widget.product.images.isNotEmpty
+                  ? Image.network(
+                      widget.product.images.first,
+                      height: 250,
+                      fit: BoxFit.contain,
+                    )
+                  : const Icon(
+                      Icons.laptop_mac,
+                      size: 200,
+                      color: Colors.black54,
+                    ),
+            ),
           ),
           SafeArea(
             child: Padding(

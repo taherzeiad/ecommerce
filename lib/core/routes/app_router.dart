@@ -167,11 +167,32 @@ class AppRouter {
   static Route<dynamic> _fade(Widget page, RouteSettings settings) {
     return PageRouteBuilder(
       settings: settings,
-      pageBuilder: (context, _, __) => page,
-      transitionsBuilder: (context, animation, _, child) {
-        return FadeTransition(opacity: animation, child: child);
+      pageBuilder: (context, animation, secondaryAnimation) => page,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(0.0, 0.05);
+        const end = Offset.zero;
+        final curve = Curves.easeOutQuart;
+
+        var slideTween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+        var scaleTween =
+            Tween<double>(begin: 0.96, end: 1.0).chain(CurveTween(curve: curve));
+        var fadeTween =
+            Tween<double>(begin: 0.0, end: 1.0).chain(CurveTween(curve: curve));
+
+        return FadeTransition(
+          opacity: animation.drive(fadeTween),
+          child: ScaleTransition(
+            scale: animation.drive(scaleTween),
+            child: SlideTransition(
+              position: animation.drive(slideTween),
+              child: child,
+            ),
+          ),
+        );
       },
-      transitionDuration: const Duration(milliseconds: 350),
+      transitionDuration: const Duration(milliseconds: 300),
+      reverseTransitionDuration: const Duration(milliseconds: 250),
     );
   }
 }

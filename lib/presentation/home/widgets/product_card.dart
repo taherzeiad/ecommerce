@@ -38,13 +38,18 @@ class ProductCard extends StatelessWidget {
           children: [
             Stack(
               children: [
-                Container(
-                  height: 80,
-                  width: double.infinity,
-                  alignment: Alignment.center,
-                  child: product.images.isNotEmpty
-                      ? Image.network(product.images.first, fit: BoxFit.contain)
-                      : const Icon(Icons.image, color: AppColors.grey, size: 40),
+                Hero(
+                  tag: 'product_image_${product.id}',
+                  child: Container(
+                    height: 80,
+                    width: double.infinity,
+                    alignment: Alignment.center,
+                    child: product.images.isNotEmpty
+                        ? Image.network(product.images.first,
+                            fit: BoxFit.contain)
+                        : const Icon(Icons.image,
+                            color: AppColors.grey, size: 40),
+                  ),
                 ),
                 Positioned(
                   top: 0,

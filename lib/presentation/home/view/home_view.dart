@@ -70,12 +70,26 @@ class HomeView extends StatelessWidget {
                         separatorBuilder: (_, _) => const SizedBox(width: 16),
                         itemBuilder: (context, index) {
                           final product = viewModel.flashDeals[index];
-                          return ProductCard(
-                            product: product,
-                            onTap: () => Navigator.pushNamed(
-                              context,
-                              AppRoutes.productDetails,
-                              arguments: product,
+                          return TweenAnimationBuilder<double>(
+                            duration: Duration(milliseconds: 300 + (index * 50)),
+                            tween: Tween(begin: 0.0, end: 1.0),
+                            curve: Curves.easeOutCubic,
+                            builder: (context, value, child) {
+                              return Opacity(
+                                opacity: value,
+                                child: Transform.translate(
+                                  offset: Offset(20 * (1 - value), 0),
+                                  child: child,
+                                ),
+                              );
+                            },
+                            child: ProductCard(
+                              product: product,
+                              onTap: () => Navigator.pushNamed(
+                                context,
+                                AppRoutes.productDetails,
+                                arguments: product,
+                              ),
                             ),
                           );
                         },
@@ -101,12 +115,26 @@ class HomeView extends StatelessWidget {
                       itemCount: viewModel.popularProducts.length,
                       itemBuilder: (context, index) {
                         final product = viewModel.popularProducts[index];
-                        return ProductCard(
-                          product: product,
-                          onTap: () => Navigator.pushNamed(
-                            context,
-                            AppRoutes.productDetails,
-                            arguments: product,
+                        return TweenAnimationBuilder<double>(
+                          duration: Duration(milliseconds: 350 + (index * 50)),
+                          tween: Tween(begin: 0.0, end: 1.0),
+                          curve: Curves.easeOutCubic,
+                          builder: (context, value, child) {
+                            return Opacity(
+                              opacity: value,
+                              child: Transform.scale(
+                                scale: 0.9 + (0.1 * value),
+                                child: child,
+                              ),
+                            );
+                          },
+                          child: ProductCard(
+                            product: product,
+                            onTap: () => Navigator.pushNamed(
+                              context,
+                              AppRoutes.productDetails,
+                              arguments: product,
+                            ),
                           ),
                         );
                       },
