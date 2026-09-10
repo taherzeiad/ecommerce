@@ -27,23 +27,24 @@ class EcommerceApp extends StatelessWidget {
       ],
       child: Consumer2<ThemeViewModel, LocaleViewModel>(
         builder: (context, themeViewModel, localeViewModel, _) {
-          return PrivacyGate(
-            child: MaterialApp(
-              onGenerateTitle: (context) => context.tr('app_name', listen: false),
-              debugShowCheckedModeBanner: false,
-              theme: AppTheme.light,
-              darkTheme: AppTheme.dark,
-              themeMode: themeViewModel.themeMode,
-              locale: localeViewModel.locale,
-              supportedLocales: const [Locale('en'), Locale('ar')],
-              localizationsDelegates: const [
-                GlobalMaterialLocalizations.delegate,
-                GlobalWidgetsLocalizations.delegate,
-                GlobalCupertinoLocalizations.delegate,
-              ],
-              initialRoute: AppRoutes.splash,
-              onGenerateRoute: AppRouter.generateRoute,
-            ),
+          return MaterialApp(
+            onGenerateTitle: (context) => context.tr('app_name', listen: false),
+            debugShowCheckedModeBanner: false,
+            theme: AppTheme.light,
+            darkTheme: AppTheme.dark,
+            themeMode: themeViewModel.themeMode,
+            locale: localeViewModel.locale,
+            supportedLocales: const [Locale('en'), Locale('ar')],
+            localizationsDelegates: const [
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            builder: (context, child) {
+              return PrivacyGate(child: child!);
+            },
+            initialRoute: AppRoutes.splash,
+            onGenerateRoute: AppRouter.generateRoute,
           );
         },
       ),
