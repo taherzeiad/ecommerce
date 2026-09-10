@@ -131,7 +131,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
           color: Theme.of(context).cardColor,
           shape: BoxShape.circle,
         ),
-        child: Icon(icon, color: iconColor ?? Colors.black54),
+        child: Icon(icon, color: iconColor ?? AppColors.primary),
       ),
     );
   }

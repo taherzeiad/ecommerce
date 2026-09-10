@@ -4,14 +4,12 @@ import 'package:vector_graphics/vector_graphics.dart';
 
 import '../../../core/constants/app_assets.dart';
 import '../../../core/constants/app_colors.dart';
-import '../../../core/constants/app_strings.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../core/widgets/custom_search_bar.dart';
 import '../view_model/home_view_model.dart';
 import '../widgets/product_card.dart';
 import '../../theme/view_model/theme_view_model.dart';
 import '../../../core/extensions/context_extension.dart';
-import '../../theme/view_model/locale_view_model.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -156,10 +154,14 @@ class HomeView extends StatelessWidget {
       children: [
         Row(
           children: [
-            const CircleAvatar(
-              radius: 24,
-              backgroundColor: AppColors.grey,
-              child: Icon(Icons.person, color: AppColors.white),
+            InkWell(
+              onTap: () => Navigator.pushNamed(context, AppRoutes.profile),
+              borderRadius: BorderRadius.circular(30),
+              child: const CircleAvatar(
+                radius: 24,
+                backgroundColor: AppColors.grey,
+                child: Icon(Icons.person, color: AppColors.white),
+              ),
             ),
             const SizedBox(width: 12),
             Column(

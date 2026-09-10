@@ -21,6 +21,10 @@ class _EditAddressViewState extends State<EditAddressView> {
         backgroundColor: AppColors.primary,
         elevation: 0,
         centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.pop(context),
+        ),
         title: Text(
           context.tr('edit_address'),
           style: const TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
@@ -39,11 +43,11 @@ class _EditAddressViewState extends State<EditAddressView> {
               ),
             ),
             const SizedBox(height: 16),
-            const Center(
+            Center(
               child: Text(
-                'Update your address details.', // Could be translated too
+                context.tr('update_address_msg'),
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ),
             const SizedBox(height: 32),

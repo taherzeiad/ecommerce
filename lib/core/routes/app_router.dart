@@ -173,15 +173,15 @@ class AppRouter {
         const end = Offset.zero;
         final curve = Curves.easeOutQuart;
 
-        var slideTween = Tween(
+        final slideTween = Tween(
           begin: begin,
           end: end,
         ).chain(CurveTween(curve: curve));
-        var scaleTween = Tween<double>(
+        final scaleTween = Tween<double>(
           begin: 0.96,
           end: 1.0,
         ).chain(CurveTween(curve: curve));
-        var fadeTween = Tween<double>(
+        final fadeTween = Tween<double>(
           begin: 0.0,
           end: 1.0,
         ).chain(CurveTween(curve: curve));

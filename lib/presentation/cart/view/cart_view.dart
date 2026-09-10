@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:vector_graphics/vector_graphics.dart';
 
 import '../../../core/constants/app_colors.dart';
-import '../../../core/constants/app_strings.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../core/extensions/context_extension.dart';
 import '../../theme/view_model/theme_view_model.dart';
@@ -15,7 +14,6 @@ class CartView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<CartViewModel>();
-    final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(

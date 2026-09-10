@@ -27,7 +27,7 @@ class _CheckoutViewState extends State<CheckoutView> {
         elevation: 0,
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.white),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
@@ -523,7 +523,7 @@ class _CheckoutViewState extends State<CheckoutView> {
           const SizedBox(height: 16),
           Center(
             child: Text(
-              'All prices displayed are inclusive of all applicable Tax.', // Should be translated
+              context.tr('inclusive_tax_msg'),
               style: TextStyle(
                 fontSize: 12,
                 color: theme.textTheme.bodySmall?.color,

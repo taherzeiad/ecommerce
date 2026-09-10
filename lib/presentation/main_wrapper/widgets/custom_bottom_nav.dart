@@ -54,13 +54,6 @@ class CustomBottomNav extends StatelessWidget {
             isActive: currentIndex == 3,
             onTap: () => onTap(3),
           ),
-          _NavItem(
-            // Keeping profile icon as it is or using a default if no SVG provided
-            icon: Icons.person_outline,
-            activeIcon: Icons.person,
-            isActive: currentIndex == 4,
-            onTap: () => onTap(4),
-          ),
         ],
       ),
     );
