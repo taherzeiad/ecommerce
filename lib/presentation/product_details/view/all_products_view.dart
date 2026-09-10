@@ -249,7 +249,7 @@ class AllProductsView extends StatelessWidget {
                       onTap: () {
                         cartViewModel.addToCart(product);
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Added to cart')),
+                          SnackBar(content: Text(context.tr('added_to_cart'))),
                         );
                       },
                       child: Container(

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../core/constants/app_colors.dart';
-import '../../../core/routes/app_routes.dart';
-import '../../theme/view_model/theme_view_model.dart';
-import '../../theme/view_model/locale_view_model.dart';
-import '../../../core/localization/translations.dart';
-import '../../../core/extensions/context_extension.dart';
+import 'package:ecommerce/core/constants/app_colors.dart';
+import 'package:ecommerce/core/routes/app_routes.dart';
+import 'package:ecommerce/core/extensions/context_extension.dart';
+import 'package:ecommerce/presentation/theme/view_model/theme_view_model.dart';
+import 'package:ecommerce/presentation/theme/view_model/locale_view_model.dart';
+import 'package:ecommerce/core/localization/translations.dart';
 
 class SettingsView extends StatefulWidget {
   const SettingsView({super.key});
@@ -63,7 +63,7 @@ class _SettingsViewState extends State<SettingsView> {
               theme,
               icon: Icons.location_on_outlined,
               title: context.tr('shipping_address'),
-              onTap: () => Navigator.pushNamed(context, AppRoutes.checkout), // Or specific address view if exists
+              onTap: () => Navigator.pushNamed(context, AppRoutes.checkout),
             ),
             _buildSettingsItem(
               theme,
@@ -129,7 +129,7 @@ class _SettingsViewState extends State<SettingsView> {
             ),
             _buildSettingsItem(
               theme,
-              icon: Icons.help_outline,
+              icon: Icons.help_outlined,
               title: context.tr('help_center'),
               onTap: () => Navigator.pushNamed(context, AppRoutes.helpCenter),
             ),
@@ -320,9 +320,9 @@ class _SettingsViewState extends State<SettingsView> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text(
-                'Select Currency',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              Text(
+                context.tr('select_currency'),
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 20),
               _buildCurrencyItem('USD (\$)', true),

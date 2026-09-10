@@ -326,7 +326,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                     cartViewModel.addToCart(widget.product);
                   }
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Added $_quantity to cart')),
+                    SnackBar(content: Text(context.tr('added_to_cart_count').replaceAll('{count}', _quantity.toString()))),
                   );
                 },
                 style: ElevatedButton.styleFrom(

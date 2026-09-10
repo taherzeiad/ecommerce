@@ -216,7 +216,7 @@ class WishlistView extends StatelessWidget {
                   onTap: () {
                     cartViewModel.addToCart(product);
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Added to cart')), // Should translate
+                      SnackBar(content: Text(context.tr('added_to_cart'))),
                     );
                   },
                   child: Container(

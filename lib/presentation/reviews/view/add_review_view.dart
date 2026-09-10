@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/constants/app_colors.dart';
+import '../../../core/extensions/context_extension.dart';
 
 class AddReviewView extends StatelessWidget {
   const AddReviewView({super.key});
@@ -12,9 +13,9 @@ class AddReviewView extends StatelessWidget {
         backgroundColor: AppColors.primary,
         elevation: 0,
         centerTitle: true,
-        title: const Text(
-          'Reviews & Rating',
-          style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
+        title: Text(
+          context.tr('reviews_rating'),
+          style: const TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
         ),
       ),
       body: SingleChildScrollView(
@@ -40,10 +41,10 @@ class AddReviewView extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 24),
-                const Column(
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       'Apple MacBook\nAir M2',
                       style: TextStyle(
                         fontSize: 18,
@@ -51,17 +52,17 @@ class AddReviewView extends StatelessWidget {
                         color: AppColors.textPrimary,
                       ),
                     ),
-                    SizedBox(height: 8),
-                    Text('Laptop', style: TextStyle(color: AppColors.grey)),
+                    const SizedBox(height: 8),
+                    Text(context.tr('laptop'), style: const TextStyle(color: AppColors.grey)),
                   ],
                 ),
               ],
             ),
             const SizedBox(height: 32),
-            const Center(
+            Center(
               child: Text(
-                'Your overall rating of this product',
-                style: TextStyle(
+                context.tr('overall_rating'),
+                style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                   color: AppColors.grey,
@@ -81,15 +82,15 @@ class AddReviewView extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 48),
-            const Text(
-              'Your Feedback',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            Text(
+              context.tr('your_feedback'),
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
             TextField(
               maxLines: 6,
               decoration: InputDecoration(
-                hintText: 'Share Your thoughts',
+                hintText: context.tr('share_thoughts'),
                 hintStyle: const TextStyle(color: AppColors.textLight),
                 filled: true,
                 fillColor: AppColors.dividerExtraLight.withValues(alpha: 0.5),
@@ -101,14 +102,14 @@ class AddReviewView extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 8),
-            const Text(
-              '3000 Character',
-              style: TextStyle(color: AppColors.grey, fontSize: 12),
+            Text(
+              context.tr('character_count'),
+              style: const TextStyle(color: AppColors.grey, fontSize: 12),
             ),
             const SizedBox(height: 48),
             ElevatedButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Submit'),
+              child: Text(context.tr('submit')),
             ),
           ],
         ),

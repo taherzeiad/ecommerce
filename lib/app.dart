@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
-import 'core/constants/app_strings.dart';
-import 'core/routes/app_router.dart';
-import 'core/routes/app_routes.dart';
-import 'core/theme/app_theme.dart';
-import 'presentation/cart/view_model/cart_view_model.dart';
-import 'presentation/theme/view_model/locale_view_model.dart';
-import 'presentation/theme/view_model/theme_view_model.dart';
-import 'presentation/wishlist/view_model/wishlist_view_model.dart';
-import 'core/extensions/context_extension.dart';
+import 'package:ecommerce/core/constants/app_strings.dart';
+import 'package:ecommerce/core/routes/app_router.dart';
+import 'package:ecommerce/core/routes/app_routes.dart';
+import 'package:ecommerce/core/theme/app_theme.dart';
+import 'package:ecommerce/core/extensions/context_extension.dart';
+import 'package:ecommerce/presentation/cart/view_model/cart_view_model.dart';
+import 'package:ecommerce/presentation/theme/view_model/locale_view_model.dart';
+import 'package:ecommerce/presentation/theme/view_model/theme_view_model.dart';
+import 'package:ecommerce/presentation/wishlist/view_model/wishlist_view_model.dart';
 
 class EcommerceApp extends StatelessWidget {
   const EcommerceApp({super.key});
@@ -27,7 +27,7 @@ class EcommerceApp extends StatelessWidget {
       child: Consumer2<ThemeViewModel, LocaleViewModel>(
         builder: (context, themeViewModel, localeViewModel, _) {
           return MaterialApp(
-            onGenerateTitle: (context) => context.tr('app_name'),
+            onGenerateTitle: (context) => context.tr('app_name', listen: false),
             debugShowCheckedModeBanner: false,
             theme: AppTheme.light,
             darkTheme: AppTheme.dark,
