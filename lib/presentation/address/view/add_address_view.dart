@@ -43,11 +43,11 @@ class _AddAddressViewState extends State<AddAddressView> {
               ),
             ),
             const SizedBox(height: 16),
-            const Center(
+            Center(
               child: Text(
-                'Enter your address to receive your orders easily.', // This should also be translated if added to translations
+                context.tr('enter_address_msg'),
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ),
             const SizedBox(height: 32),

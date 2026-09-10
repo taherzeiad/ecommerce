@@ -6,16 +6,16 @@ import '../../../core/extensions/context_extension.dart';
 enum NotificationType { unread, orders, system }
 
 class NotificationItem {
-  final String title;
-  final String description;
+  final String titleKey;
+  final String descriptionKey;
   final String time;
   final IconData icon;
   final Color color;
   final NotificationType type;
 
   NotificationItem({
-    required this.title,
-    required this.description,
+    required this.titleKey,
+    required this.descriptionKey,
     required this.time,
     required this.icon,
     required this.color,
@@ -35,40 +35,40 @@ class _NotificationsViewState extends State<NotificationsView> {
 
   final List<NotificationItem> _notifications = [
     NotificationItem(
-      title: 'Your Order is On the Way!',
-      description: 'Order #SP2024001 has been shipped and will arrive today between 3:00 - 5:00 PM',
+      titleKey: 'notif_order_way_title',
+      descriptionKey: 'notif_order_way_desc',
       time: '2 minutes ago',
       icon: Icons.local_shipping,
       color: AppColors.primary,
       type: NotificationType.orders,
     ),
     NotificationItem(
-      title: 'Payment Successful',
-      description: 'Your payment for Order #SP2024001 was successful. Thank you for shopping with us!',
+      titleKey: 'notif_payment_success_title',
+      descriptionKey: 'notif_payment_success_desc',
       time: '1 hour ago',
       icon: Icons.payment,
       color: Colors.teal,
       type: NotificationType.unread,
     ),
     NotificationItem(
-      title: 'Order Confirmed!',
-      description: 'We have received your order #SP2024001. We will notify you when it ships.',
+      titleKey: 'notif_order_confirmed_title',
+      descriptionKey: 'notif_order_confirmed_desc',
       time: '2 hours ago',
       icon: Icons.check_circle,
       color: AppColors.primary,
       type: NotificationType.orders,
     ),
     NotificationItem(
-      title: 'Security Alert',
-      description: 'Your account was logged in from a new device. If this wasn\'t you, please reset your password.',
+      titleKey: 'notif_security_alert_title',
+      descriptionKey: 'notif_security_alert_desc',
       time: '5 hours ago',
       icon: Icons.security,
       color: Colors.orange,
       type: NotificationType.system,
     ),
     NotificationItem(
-      title: 'Welcome to E-Commerce',
-      description: 'Welcome to our platform! Start exploring thousands of products and great deals.',
+      titleKey: 'notif_welcome_title',
+      descriptionKey: 'notif_welcome_desc',
       time: '1 day ago',
       icon: Icons.celebration,
       color: AppColors.primary,
@@ -108,14 +108,14 @@ class _NotificationsViewState extends State<NotificationsView> {
           _buildFilterChips(context),
           Expanded(
             child: filteredList.isEmpty
-                ? _buildEmptyState()
+                ? _buildEmptyState(context)
                 : ListView.separated(
                     padding: const EdgeInsets.all(24),
                     itemCount: filteredList.length,
                     separatorBuilder: (_, _) => const SizedBox(height: 16),
                     itemBuilder: (context, index) {
                       final notification = filteredList[index];
-                      return _buildNotificationCard(notification);
+                      return _buildNotificationCard(context, notification);
                     },
                   ),
           ),
@@ -165,7 +165,7 @@ class _NotificationsViewState extends State<NotificationsView> {
     );
   }
 
-  Widget _buildNotificationCard(NotificationItem notification) {
+  Widget _buildNotificationCard(BuildContext context, NotificationItem notification) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -199,7 +199,7 @@ class _NotificationsViewState extends State<NotificationsView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  notification.title,
+                  context.tr(notification.titleKey),
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
@@ -208,7 +208,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  notification.description,
+                  context.tr(notification.descriptionKey),
                   style: TextStyle(
                     color: Theme.of(context).textTheme.bodySmall?.color,
                     fontSize: 12,
@@ -224,7 +224,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      notification.time,
+                      notification.time, // Time typically remains as is or formatted
                       style: TextStyle(
                         color: Theme.of(context).hintColor,
                         fontSize: 12,
@@ -240,7 +240,7 @@ class _NotificationsViewState extends State<NotificationsView> {
     );
   }
 
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState(BuildContext context) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -252,7 +252,7 @@ class _NotificationsViewState extends State<NotificationsView> {
           ),
           const SizedBox(height: 16),
           Text(
-            'No notifications found', // Should be translated
+            context.tr('no_notifications_found'),
             style: TextStyle(
               fontSize: 16,
               color: Theme.of(context).disabledColor,

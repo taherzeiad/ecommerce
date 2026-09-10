@@ -49,6 +49,7 @@ dependencies:
 
   # Persist "onboarding completed" flag across app launches
   shared_preferences: ^2.2.3
+  flutter_secure_storage: ^9.0.0
   flutter_svg: ^2.0.10+1
 
 dev_dependencies:

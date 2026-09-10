@@ -30,16 +30,16 @@ class OrderSuccessView extends StatelessWidget {
               style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
             ),
             const SizedBox(height: 16),
-            const Text(
-              'Your order number is #135792. You\'ll need this number to track your order. You will receive the order confirmation shortly.', // Should be translated
+            Text(
+              context.tr('order_number_msg'),
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 16, color: AppColors.grey, height: 1.4),
+              style: const TextStyle(fontSize: 16, color: AppColors.grey, height: 1.4),
             ),
             const Spacer(),
-            const Text(
-              'Thank you for your order! We’re preparing it for delivery.', // Should be translated
+            Text(
+              context.tr('thank_you_order_msg'),
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 32),
             Row(

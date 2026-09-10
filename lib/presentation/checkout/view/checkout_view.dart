@@ -523,7 +523,7 @@ class _CheckoutViewState extends State<CheckoutView> {
           const SizedBox(height: 16),
           Center(
             child: Text(
-              'All prices displayed are inclusive of all applicable Tax.', // Should be translated
+              context.tr('inclusive_tax_msg'),
               style: TextStyle(
                 fontSize: 12,
                 color: theme.textTheme.bodySmall?.color,

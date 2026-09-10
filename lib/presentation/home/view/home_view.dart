@@ -4,14 +4,12 @@ import 'package:vector_graphics/vector_graphics.dart';
 
 import '../../../core/constants/app_assets.dart';
 import '../../../core/constants/app_colors.dart';
-import '../../../core/constants/app_strings.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../core/widgets/custom_search_bar.dart';
 import '../view_model/home_view_model.dart';
 import '../widgets/product_card.dart';
 import '../../theme/view_model/theme_view_model.dart';
 import '../../../core/extensions/context_extension.dart';
-import '../../theme/view_model/locale_view_model.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
