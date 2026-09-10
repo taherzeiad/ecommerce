@@ -30,7 +30,6 @@ class _MainWrapperState extends State<MainWrapper> {
     const CategoriesView(),
     const SizedBox.shrink(), // Cart is now a separate screen
     const WishlistView(),
-    const ProfileView(),
   ];
 
   @override

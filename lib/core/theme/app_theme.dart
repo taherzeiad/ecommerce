@@ -11,6 +11,9 @@ class AppTheme {
       scaffoldBackgroundColor: AppColors.scaffoldBackground,
       cardColor: AppColors.white,
       dividerColor: AppColors.divider,
+      appBarTheme: const AppBarTheme(
+        iconTheme: IconThemeData(color: AppColors.white),
+      ),
       colorScheme: ColorScheme.fromSeed(
         seedColor: AppColors.primary,
         primary: AppColors.primary,
@@ -60,6 +63,9 @@ class AppTheme {
       scaffoldBackgroundColor: AppColors.darkBackground,
       cardColor: AppColors.darkCardBackground,
       dividerColor: AppColors.darkBorder,
+      appBarTheme: const AppBarTheme(
+        iconTheme: IconThemeData(color: AppColors.white),
+      ),
       colorScheme: ColorScheme.fromSeed(
         seedColor: AppColors.primary,
         primary: AppColors.primary,

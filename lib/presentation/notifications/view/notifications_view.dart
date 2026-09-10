@@ -3,11 +3,91 @@ import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/extensions/context_extension.dart';
 
-class NotificationsView extends StatelessWidget {
+enum NotificationType { unread, orders, system }
+
+class NotificationItem {
+  final String title;
+  final String description;
+  final String time;
+  final IconData icon;
+  final Color color;
+  final NotificationType type;
+
+  NotificationItem({
+    required this.title,
+    required this.description,
+    required this.time,
+    required this.icon,
+    required this.color,
+    required this.type,
+  });
+}
+
+class NotificationsView extends StatefulWidget {
   const NotificationsView({super.key});
 
   @override
+  State<NotificationsView> createState() => _NotificationsViewState();
+}
+
+class _NotificationsViewState extends State<NotificationsView> {
+  int _selectedIndex = 0;
+
+  final List<NotificationItem> _notifications = [
+    NotificationItem(
+      title: 'Your Order is On the Way!',
+      description: 'Order #SP2024001 has been shipped and will arrive today between 3:00 - 5:00 PM',
+      time: '2 minutes ago',
+      icon: Icons.local_shipping,
+      color: AppColors.primary,
+      type: NotificationType.orders,
+    ),
+    NotificationItem(
+      title: 'Payment Successful',
+      description: 'Your payment for Order #SP2024001 was successful. Thank you for shopping with us!',
+      time: '1 hour ago',
+      icon: Icons.payment,
+      color: Colors.teal,
+      type: NotificationType.unread,
+    ),
+    NotificationItem(
+      title: 'Order Confirmed!',
+      description: 'We have received your order #SP2024001. We will notify you when it ships.',
+      time: '2 hours ago',
+      icon: Icons.check_circle,
+      color: AppColors.primary,
+      type: NotificationType.orders,
+    ),
+    NotificationItem(
+      title: 'Security Alert',
+      description: 'Your account was logged in from a new device. If this wasn\'t you, please reset your password.',
+      time: '5 hours ago',
+      icon: Icons.security,
+      color: Colors.orange,
+      type: NotificationType.system,
+    ),
+    NotificationItem(
+      title: 'Welcome to E-Commerce',
+      description: 'Welcome to our platform! Start exploring thousands of products and great deals.',
+      time: '1 day ago',
+      icon: Icons.celebration,
+      color: AppColors.primary,
+      type: NotificationType.system,
+    ),
+  ];
+
+  List<NotificationItem> get _filteredNotifications {
+    if (_selectedIndex == 0) return _notifications; // All
+    if (_selectedIndex == 1) return _notifications.where((n) => n.type == NotificationType.unread).toList();
+    if (_selectedIndex == 2) return _notifications.where((n) => n.type == NotificationType.orders).toList();
+    if (_selectedIndex == 3) return _notifications.where((n) => n.type == NotificationType.system).toList();
+    return _notifications;
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final filteredList = _filteredNotifications;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.primary,
@@ -27,40 +107,17 @@ class NotificationsView extends StatelessWidget {
           const SizedBox(height: 20),
           _buildFilterChips(context),
           Expanded(
-            child: ListView.separated(
-              padding: const EdgeInsets.all(24),
-              itemCount: 5,
-              separatorBuilder: (_, _) => const SizedBox(height: 16),
-              itemBuilder: (context, index) {
-                final titles = [
-                  'Your Order is On the Way!',
-                  'Payment Successful',
-                  'Order Confirmed!',
-                  'Your Order is On the Way!',
-                  'Welcome to E-Commerce',
-                ];
-                final icons = [
-                  Icons.local_shipping,
-                  Icons.payment,
-                  Icons.check_circle,
-                  Icons.local_shipping,
-                  Icons.local_shipping,
-                ];
-                final colors = [
-                  AppColors.primary,
-                  Colors.teal,
-                  AppColors.primary,
-                  AppColors.primary,
-                  AppColors.primary,
-                ];
-
-                return _buildNotificationCard(
-                  titles[index],
-                  icons[index],
-                  colors[index],
-                );
-              },
-            ),
+            child: filteredList.isEmpty
+                ? _buildEmptyState()
+                : ListView.separated(
+                    padding: const EdgeInsets.all(24),
+                    itemCount: filteredList.length,
+                    separatorBuilder: (_, _) => const SizedBox(height: 16),
+                    itemBuilder: (context, index) {
+                      final notification = filteredList[index];
+                      return _buildNotificationCard(notification);
+                    },
+                  ),
           ),
           const SizedBox(height: 80),
         ],
@@ -83,19 +140,23 @@ class NotificationsView extends StatelessWidget {
         itemCount: filters.length,
         separatorBuilder: (_, _) => const SizedBox(width: 12),
         itemBuilder: (context, index) {
-          final isSelected = index == 0;
-          return Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-            decoration: BoxDecoration(
-              color: isSelected ? AppColors.primary : Colors.white,
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: AppColors.primary),
-            ),
-            child: Text(
-              filters[index],
-              style: TextStyle(
-                color: isSelected ? Colors.white : AppColors.primary,
-                fontWeight: FontWeight.bold,
+          final isSelected = _selectedIndex == index;
+          return InkWell(
+            onTap: () => setState(() => _selectedIndex = index),
+            borderRadius: BorderRadius.circular(20),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+              decoration: BoxDecoration(
+                color: isSelected ? AppColors.primary : Theme.of(context).cardColor,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: AppColors.primary),
+              ),
+              child: Text(
+                filters[index],
+                style: TextStyle(
+                  color: isSelected ? Colors.white : AppColors.primary,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           );
@@ -104,18 +165,18 @@ class NotificationsView extends StatelessWidget {
     );
   }
 
-  Widget _buildNotificationCard(String title, IconData icon, Color color) {
+  Widget _buildNotificationCard(NotificationItem notification) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(16),
-        border: const Border(
-          left: BorderSide(color: AppColors.primary, width: 4),
+        border: Border(
+          left: BorderSide(color: notification.color, width: 4),
         ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.black.withValues(alpha: 0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 5),
           ),
@@ -127,10 +188,10 @@ class NotificationsView extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.1),
+              color: notification.color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: Icon(icon, color: color),
+            child: Icon(notification.icon, color: notification.color),
           ),
           const SizedBox(width: 16),
           Expanded(
@@ -138,36 +199,63 @@ class NotificationsView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  title,
-                  style: const TextStyle(
+                  notification.title,
+                  style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Order #SP2024001 has been shipped and will arrive today between 3:00 - 5:00 PM',
-                  style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
+                  notification.description,
+                  style: TextStyle(
+                    color: Theme.of(context).textTheme.bodySmall?.color,
+                    fontSize: 12,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 Row(
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.access_time,
                       size: 14,
-                      color: AppColors.primary,
+                      color: Theme.of(context).hintColor,
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      '2 minutes ago',
+                      notification.time,
                       style: TextStyle(
-                        color: Colors.grey.shade400,
+                        color: Theme.of(context).hintColor,
                         fontSize: 12,
                       ),
                     ),
                   ],
                 ),
               ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.notifications_off_outlined,
+            size: 80,
+            color: Theme.of(context).disabledColor.withValues(alpha: 0.2),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'No notifications found', // Should be translated
+            style: TextStyle(
+              fontSize: 16,
+              color: Theme.of(context).disabledColor,
             ),
           ),
         ],

@@ -21,6 +21,10 @@ class _AddAddressViewState extends State<AddAddressView> {
         backgroundColor: AppColors.primary,
         elevation: 0,
         centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.pop(context),
+        ),
         title: Text(
           context.tr('add_new_address'),
           style: const TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),

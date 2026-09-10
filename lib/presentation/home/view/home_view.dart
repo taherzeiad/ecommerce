@@ -156,10 +156,14 @@ class HomeView extends StatelessWidget {
       children: [
         Row(
           children: [
-            const CircleAvatar(
-              radius: 24,
-              backgroundColor: AppColors.grey,
-              child: Icon(Icons.person, color: AppColors.white),
+            InkWell(
+              onTap: () => Navigator.pushNamed(context, AppRoutes.profile),
+              borderRadius: BorderRadius.circular(30),
+              child: const CircleAvatar(
+                radius: 24,
+                backgroundColor: AppColors.grey,
+                child: Icon(Icons.person, color: AppColors.white),
+              ),
             ),
             const SizedBox(width: 12),
             Column(
