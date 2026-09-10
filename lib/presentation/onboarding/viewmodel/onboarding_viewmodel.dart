@@ -19,21 +19,21 @@ class OnboardingViewModel extends ChangeNotifier {
   final List<OnboardingItemModel> pages = const [
     OnboardingItemModel(
       imagePath: AppAssets.onboarding1,
-      title: AppStrings.onboardingTitle1,
-      description: AppStrings.onboardingDesc1,
-      buttonLabel: AppStrings.next,
+      title: 'onboarding_title_1',
+      description: 'onboarding_desc_1',
+      buttonLabel: 'next',
     ),
     OnboardingItemModel(
       imagePath: AppAssets.onboarding2,
-      title: AppStrings.onboardingTitle2,
-      description: AppStrings.onboardingDesc2,
-      buttonLabel: AppStrings.next,
+      title: 'onboarding_title_2',
+      description: 'onboarding_desc_2',
+      buttonLabel: 'next',
     ),
     OnboardingItemModel(
       imagePath: AppAssets.onboarding3,
-      title: AppStrings.onboardingTitle3,
-      description: AppStrings.onboardingDesc3,
-      buttonLabel: AppStrings.start,
+      title: 'onboarding_title_3',
+      description: 'onboarding_desc_3',
+      buttonLabel: 'start',
     ),
   ];
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/routes/app_routes.dart';
+import '../../../core/extensions/context_extension.dart';
 
 class OrderSuccessView extends StatelessWidget {
   const OrderSuccessView({super.key});
@@ -12,9 +13,9 @@ class OrderSuccessView extends StatelessWidget {
         backgroundColor: AppColors.primary,
         elevation: 0,
         centerTitle: true,
-        title: const Text(
-          'Check Out',
-          style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
+        title: Text(
+          context.tr('checkout'),
+          style: const TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
         ),
       ),
       body: Padding(
@@ -24,19 +25,19 @@ class OrderSuccessView extends StatelessWidget {
             const Spacer(),
             _buildSuccessIcon(),
             const SizedBox(height: 32),
-            const Text(
-              'Payment Successful',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+            Text(
+              context.tr('payment_successful'),
+              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
             ),
             const SizedBox(height: 16),
             const Text(
-              'Your order number is #135792. You\'ll need this number to track your order. You will receive the order confirmation shortly.',
+              'Your order number is #135792. You\'ll need this number to track your order. You will receive the order confirmation shortly.', // Should be translated
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 16, color: AppColors.grey, height: 1.4),
             ),
             const Spacer(),
             const Text(
-              'Thank you for your order! We’re preparing it for delivery.',
+              'Thank you for your order! We’re preparing it for delivery.', // Should be translated
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
             ),
@@ -47,7 +48,7 @@ class OrderSuccessView extends StatelessWidget {
                   child: OutlinedButton.icon(
                     onPressed: () => Navigator.pushNamedAndRemoveUntil(context, AppRoutes.mainWrapper, (route) => false),
                     icon: const Icon(Icons.shopping_bag_outlined),
-                    label: const Text('Shopping'),
+                    label: Text(context.tr('shopping')),
                     style: OutlinedButton.styleFrom(
                       minimumSize: const Size.fromHeight(52),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -59,7 +60,7 @@ class OrderSuccessView extends StatelessWidget {
                   child: ElevatedButton.icon(
                     onPressed: () => Navigator.pushNamed(context, AppRoutes.orderTracking),
                     icon: const Icon(Icons.local_shipping_outlined),
-                    label: const Text('Track Order'),
+                    label: Text(context.tr('track_order')),
                     style: ElevatedButton.styleFrom(
                       minimumSize: const Size.fromHeight(52),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),

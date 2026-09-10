@@ -3,34 +3,34 @@ import 'package:vector_graphics/vector_graphics.dart';
 
 import '../../../core/constants/app_assets.dart';
 import '../../../core/constants/app_colors.dart';
-import '../../../core/constants/app_strings.dart';
+import '../../../core/extensions/context_extension.dart';
 
 class SocialLoginBar extends StatelessWidget {
   const SocialLoginBar({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       children: [
         Row(
           children: [
-            Expanded(child: Divider(color: AppColors.authHint, thickness: 1)),
+            const Expanded(child: Divider(color: AppColors.authHint, thickness: 1)),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Text(
-                AppStrings.orSignInWith,
-                style: TextStyle(
+                context.tr('or_sign_in_with'),
+                style: const TextStyle(
                   color: AppColors.authTextBody,
                   fontSize: 16,
                   fontWeight: FontWeight.w400,
                 ),
               ),
             ),
-            Expanded(child: Divider(color: AppColors.authHint, thickness: 1)),
+            const Expanded(child: Divider(color: AppColors.authHint, thickness: 1)),
           ],
         ),
-        SizedBox(height: 32),
-        Row(
+        const SizedBox(height: 32),
+        const Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             _SocialButton(iconPath: AppAssets.facebook),

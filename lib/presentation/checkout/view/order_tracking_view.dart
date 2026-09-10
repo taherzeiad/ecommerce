@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/extensions/context_extension.dart';
 
 class OrderTrackingView extends StatelessWidget {
   const OrderTrackingView({super.key});
@@ -11,9 +12,9 @@ class OrderTrackingView extends StatelessWidget {
         backgroundColor: AppColors.primary,
         elevation: 0,
         centerTitle: true,
-        title: const Text(
-          'Order Tracking',
-          style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
+        title: Text(
+          context.tr('order_tracking'),
+          style: const TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
         ),
         actions: [
           IconButton(onPressed: () {}, icon: const Icon(Icons.wb_sunny_outlined, color: AppColors.white)),
@@ -69,13 +70,13 @@ class OrderTrackingView extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 24),
-              const Text('Details Card', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              Text(context.tr('details_card'), style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               const SizedBox(height: 16),
-              _buildMainCard(),
+              _buildMainCard(context),
               const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text('Confirm'),
+                child: Text(context.tr('confirm')),
               ),
             ],
           ),
@@ -84,7 +85,7 @@ class OrderTrackingView extends StatelessWidget {
     );
   }
 
-  Widget _buildMainCard() {
+  Widget _buildMainCard(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -102,7 +103,7 @@ class OrderTrackingView extends StatelessWidget {
           ),
           _buildLocationRow(Icons.access_time, 'The Times Square Edition, 475 Lefant plz.'),
           const SizedBox(height: 24),
-          const Text('MORE', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.grey, letterSpacing: 1.2)),
+          Text(context.tr('more'), style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.grey, letterSpacing: 1.2)),
           const SizedBox(height: 16),
           _buildDetailRow('Order ID:', '#BH-2391'),
           const Divider(height: 24),
@@ -110,7 +111,7 @@ class OrderTrackingView extends StatelessWidget {
           const Divider(height: 24),
           _buildDetailRow('Order Total:', '\$24.27'),
           const Divider(height: 24),
-          _buildDetailRow('Delivery Address:', 'Home'),
+          _buildDetailRow('${context.tr('delivery_address')}:', context.tr('home_address')),
         ],
       ),
     );

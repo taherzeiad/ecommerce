@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_strings.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../core/widgets/primary_button.dart';
+import '../../../core/extensions/context_extension.dart';
 import '../viewmodel/onboarding_viewmodel.dart';
 import 'widgets/onboarding_page_widget.dart';
 
@@ -51,7 +51,7 @@ class _OnboardingBody extends StatelessWidget {
                       child: Opacity(
                         opacity: viewModel.isLastPage ? 0 : 1,
                         child: Text(
-                          AppStrings.skip,
+                          context.tr('skip'),
                           style: TextStyle(color: Theme.of(context).hintColor),
                         ),
                       ),
@@ -81,7 +81,7 @@ class _OnboardingBody extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(24),
                   child: PrimaryButton(
-                    label: viewModel.pages[viewModel.currentIndex].buttonLabel,
+                    label: context.tr(viewModel.currentIndex == 2 ? 'start' : 'next'),
                     onPressed: viewModel.nextPage,
                   ),
                 ),

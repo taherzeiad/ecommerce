@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:vector_graphics/vector_graphics.dart';
 
 import '../../../../data/models/onboarding_item_model.dart';
+import '../../../../core/extensions/context_extension.dart';
 
 /// Renders a single onboarding page: illustration card + title + description.
 /// Pure presentational widget — takes data in, draws it, nothing else.
@@ -40,13 +41,13 @@ class OnboardingPageWidget extends StatelessWidget {
           ),
           const SizedBox(height: 40),
           Text(
-            item.title,
+            context.tr(item.title),
             textAlign: TextAlign.center,
             style: textTheme.headlineSmall,
           ),
           const SizedBox(height: 16),
           Text(
-            item.description,
+            context.tr(item.description),
             textAlign: TextAlign.center,
             style: textTheme.bodyMedium,
           ),

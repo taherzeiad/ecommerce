@@ -5,6 +5,7 @@ import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_strings.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../core/widgets/custom_search_bar.dart';
+import '../../../core/extensions/context_extension.dart';
 import '../../theme/view_model/theme_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -23,9 +24,9 @@ class CategoriesView extends StatelessWidget {
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {},
         ),
-        title: const Text(
-          AppStrings.categories,
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        title: Text(
+          context.tr('categories'),
+          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
         actions: [
@@ -59,7 +60,7 @@ class CategoriesView extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               CustomSearchBar(
-                hintText: AppStrings.searchPlaceholder,
+                hintText: context.tr('search'),
                 height: 40,
                 onTap: () => Navigator.pushNamed(context, AppRoutes.search),
                 onFilterTap: () =>
@@ -67,7 +68,7 @@ class CategoriesView extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               Text(
-                AppStrings.featuredCategories,
+                context.tr('featured_categories'),
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
@@ -76,14 +77,14 @@ class CategoriesView extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               _buildFeaturedCard(
-                AppStrings.latestSmartphones,
-                AppStrings.discoverTech,
+                context.tr('latest_smartphones'),
+                context.tr('discover_tech'),
                 'lib/assets/images/phonecolor.png',
               ),
               const SizedBox(height: 16),
               _buildFeaturedCard(
-                AppStrings.gamingLaptops,
-                AppStrings.highPerformance,
+                context.tr('gaming_laptops'),
+                context.tr('high_performance'),
                 'lib/assets/images/lap.png',
               ),
               const SizedBox(height: 24),
@@ -98,7 +99,7 @@ class CategoriesView extends StatelessWidget {
                 ),
                 itemCount: 4,
                 itemBuilder: (context, index) {
-                  final titles = ['Smartphones', 'Audio', 'Gaming', 'Laptop'];
+                  final titles = ['smartphones', 'audio', 'gaming', 'laptop'];
                   final counts = [
                     '+250 Product',
                     '+50 Product',
@@ -127,7 +128,7 @@ class CategoriesView extends StatelessWidget {
                     },
                     child: _buildCategoryGridItem(
                       context,
-                      titles[index],
+                      context.tr(titles[index]),
                       counts[index],
                       icons[index],
                       index == 0,
@@ -212,9 +213,9 @@ class CategoriesView extends StatelessWidget {
                   color: AppColors.primary,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: const Text(
-                  'New',
-                  style: TextStyle(
+                child: Text(
+                  context.tr('new'),
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 12,
                     fontWeight: FontWeight.bold,

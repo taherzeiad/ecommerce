@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/constants/app_colors.dart';
+import '../../../core/extensions/context_extension.dart';
 
 class NoResultsWidget extends StatelessWidget {
   final String query;
@@ -26,7 +27,7 @@ class NoResultsWidget extends StatelessWidget {
           ),
           const SizedBox(height: 24),
           Text(
-            'No Results Found',
+            context.tr('no_results_found'),
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,
@@ -35,7 +36,7 @@ class NoResultsWidget extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            'Sorry, there are not results for "$query"',
+            '${context.tr('no_results_desc')} "$query"',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 16,
@@ -43,7 +44,7 @@ class NoResultsWidget extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 48),
-          ElevatedButton(onPressed: onTryAgain, child: const Text('Try Again')),
+          ElevatedButton(onPressed: onTryAgain, child: Text(context.tr('try_again'))),
         ],
       ),
     );
@@ -90,7 +91,7 @@ class NoInternetWidget extends StatelessWidget {
           ),
           const SizedBox(height: 24),
           Text(
-            'No Internet Connection',
+            context.tr('no_internet_connection'),
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,
@@ -99,7 +100,7 @@ class NoInternetWidget extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            'Please check your connection and try again.',
+            context.tr('check_connection_desc'),
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 16,

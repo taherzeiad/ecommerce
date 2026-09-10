@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/extensions/context_extension.dart';
 import '../widgets/expandable_card.dart';
 
 class AboutUsView extends StatelessWidget {
@@ -12,9 +13,9 @@ class AboutUsView extends StatelessWidget {
         backgroundColor: AppColors.primary,
         elevation: 0,
         centerTitle: true,
-        title: const Text(
-          'About Us',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        title: Text(
+          context.tr('about_us'),
+          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
       body: SingleChildScrollView(
@@ -27,41 +28,41 @@ class AboutUsView extends StatelessWidget {
               child: Icon(Icons.info, size: 80, color: Colors.white),
             ),
             const SizedBox(height: 32),
-            const Text(
-              'We are a mobile application designed to make online shopping easy, secure, and reliable for everyone',
+            Text(
+              context.tr('about_us_intro'),
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
                 height: 1.4,
               ),
             ),
             const SizedBox(height: 32),
-            const ExpandableCard(
-              title: 'About the App',
-              content: Text('Details about the application and its features.'),
-            ),
-            const ExpandableCard(
-              title: 'When We Started',
-              content: Text('Our journey began in 2023 with a vision to revolutionize shopping.'),
-            ),
-            const ExpandableCard(
-              title: 'Who We Are',
-              content: Text('We are a team of passionate developers and retail experts.'),
-            ),
-            const ExpandableCard(
-              title: 'Our Goal',
-              content: Text('To provide the best shopping experience globally.'),
+            ExpandableCard(
+              title: context.tr('about_the_app_title'),
+              content: Text(context.tr('about_the_app_content')),
             ),
             ExpandableCard(
-              title: 'Why Choose Our App?',
+              title: context.tr('when_started_title'),
+              content: Text(context.tr('when_started_content')),
+            ),
+            ExpandableCard(
+              title: context.tr('who_we_are_title'),
+              content: Text(context.tr('who_we_are_content')),
+            ),
+            ExpandableCard(
+              title: context.tr('our_goal_title'),
+              content: Text(context.tr('our_goal_content')),
+            ),
+            ExpandableCard(
+              title: context.tr('why_choose_title'),
               content: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  Text('• Easy and intuitive user experience'),
-                  Text('• Secure payments'),
-                  Text('• Fast and reliable delivery'),
-                  Text('• Professional customer support'),
+                children: [
+                  Text(context.tr('why_choose_1')),
+                  Text(context.tr('why_choose_2')),
+                  Text(context.tr('why_choose_3')),
+                  Text(context.tr('why_choose_4')),
                 ],
               ),
             ),

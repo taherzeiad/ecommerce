@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/constants/app_colors.dart';
-import '../../../core/constants/app_strings.dart';
 import '../../../core/routes/app_routes.dart';
+import '../../../core/extensions/context_extension.dart';
 import '../../../data/repositories/auth_repository.dart';
 import '../widgets/auth_header.dart';
 import '../widgets/social_login_bar.dart';
@@ -16,7 +16,6 @@ class LoginView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => LoginViewModel(AuthRepositoryImpl()),
-      // Ideally provided via DI
       child: const _LoginContent(),
     );
   }
@@ -34,9 +33,9 @@ class _LoginContent extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const AuthHeader(
-              subtitle: AppStrings.loginSubtitle,
-              title: AppStrings.loginTitle,
+            AuthHeader(
+              subtitle: context.tr('login_subtitle'),
+              title: context.tr('login_title'),
             ),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
@@ -51,7 +50,7 @@ class _LoginContent extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    AppStrings.email,
+                    context.tr('email'),
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w500,
@@ -62,7 +61,7 @@ class _LoginContent extends StatelessWidget {
                   TextField(
                     controller: viewModel.emailController,
                     decoration: InputDecoration(
-                      hintText: 'Email Address',
+                      hintText: context.tr('email'),
                       hintStyle: const TextStyle(color: AppColors.authHint),
                       prefixIcon: const Icon(
                         Icons.email_outlined,
@@ -73,11 +72,15 @@ class _LoginContent extends StatelessWidget {
                       contentPadding: const EdgeInsets.symmetric(vertical: 16),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: AppColors.authBorder),
+                        borderSide: const BorderSide(
+                          color: AppColors.authBorder,
+                        ),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: AppColors.authBorder),
+                        borderSide: const BorderSide(
+                          color: AppColors.authBorder,
+                        ),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -87,7 +90,7 @@ class _LoginContent extends StatelessWidget {
                   ),
                   const SizedBox(height: 24),
                   Text(
-                    AppStrings.password,
+                    context.tr('password'),
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w500,
@@ -99,7 +102,7 @@ class _LoginContent extends StatelessWidget {
                     controller: viewModel.passwordController,
                     obscureText: true,
                     decoration: InputDecoration(
-                      hintText: 'Password',
+                      hintText: context.tr('password'),
                       hintStyle: const TextStyle(color: AppColors.authHint),
                       prefixIcon: const Icon(
                         Icons.lock_outline,
@@ -110,11 +113,15 @@ class _LoginContent extends StatelessWidget {
                       contentPadding: const EdgeInsets.symmetric(vertical: 16),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: AppColors.authBorder),
+                        borderSide: const BorderSide(
+                          color: AppColors.authBorder,
+                        ),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: AppColors.authBorder),
+                        borderSide: const BorderSide(
+                          color: AppColors.authBorder,
+                        ),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -143,9 +150,11 @@ class _LoginContent extends StatelessWidget {
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            AppStrings.rememberMe,
+                            context.tr('remember_me'),
                             style: TextStyle(
-                              color: Theme.of(context).colorScheme.onSurfaceVariant,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurfaceVariant,
                               fontSize: 14,
                             ),
                           ),
@@ -158,9 +167,9 @@ class _LoginContent extends StatelessWidget {
                             AppRoutes.forgotPassword,
                           );
                         },
-                        child: const Text(
-                          AppStrings.forgotPassword,
-                          style: TextStyle(
+                        child: Text(
+                          context.tr('forgot_password'),
+                          style: const TextStyle(
                             color: AppColors.primary,
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
@@ -210,9 +219,9 @@ class _LoginContent extends StatelessWidget {
                                 strokeWidth: 2,
                               ),
                             )
-                          : const Text(
-                              AppStrings.login,
-                              style: TextStyle(
+                          : Text(
+                              context.tr('login'),
+                              style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -224,7 +233,7 @@ class _LoginContent extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        AppStrings.noAccount,
+                        context.tr('no_account'),
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
@@ -233,9 +242,9 @@ class _LoginContent extends StatelessWidget {
                         onTap: () {
                           Navigator.pushNamed(context, AppRoutes.signup);
                         },
-                        child: const Text(
-                          AppStrings.createAccount,
-                          style: TextStyle(
+                        child: Text(
+                          context.tr('create_account'),
+                          style: const TextStyle(
                             color: AppColors.primary,
                             fontWeight: FontWeight.bold,
                           ),

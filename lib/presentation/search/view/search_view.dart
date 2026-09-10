@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../core/widgets/custom_search_bar.dart';
+import '../../../core/extensions/context_extension.dart';
 import '../../../domain/entities/product_entity.dart';
 import '../widgets/search_error_widgets.dart';
 import '../view_model/search_view_model.dart';
@@ -34,7 +35,7 @@ class _SearchViewState extends State<SearchView> {
         elevation: 0,
         automaticallyImplyLeading: false,
         title: CustomSearchBar(
-          hintText: 'Search...',
+          hintText: '${context.tr('search')}...',
           height: 44,
           readOnly: false,
           controller: _searchController,
@@ -48,11 +49,11 @@ class _SearchViewState extends State<SearchView> {
           ),
         ],
       ),
-      body: _buildBody(viewModel),
+      body: _buildBody(context, viewModel),
     );
   }
 
-  Widget _buildBody(SearchViewModel viewModel) {
+  Widget _buildBody(BuildContext context, SearchViewModel viewModel) {
     if (viewModel.isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -71,7 +72,7 @@ class _SearchViewState extends State<SearchView> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Results for "${viewModel.query}"',
+              '${context.tr('search')} for "${viewModel.query}"', // Should add more translation logic here
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
@@ -86,9 +87,9 @@ class _SearchViewState extends State<SearchView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Popular Search',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          Text(
+            context.tr('popular_search'), // Should add 'popular_search' key
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16),
           _buildPopularChips(viewModel),
@@ -104,9 +105,9 @@ class _SearchViewState extends State<SearchView> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.borderExtraLight),
+        border: Border.all(color: Theme.of(context).dividerColor),
       ),
       child: Wrap(
         spacing: 8,
@@ -125,10 +126,10 @@ class _SearchViewState extends State<SearchView> {
               ),
               child: Text(
                 text,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w500,
-                  color: AppColors.textPrimary,
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
             ),
@@ -164,9 +165,9 @@ class _SearchViewState extends State<SearchView> {
       ),
       child: Container(
         decoration: BoxDecoration(
-          color: AppColors.white,
+          color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppColors.borderExtraLight),
+          border: Border.all(color: Theme.of(context).dividerColor),
           boxShadow: [
             BoxShadow(
               color: AppColors.black.withValues(alpha: 0.02),

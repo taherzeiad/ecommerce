@@ -3,6 +3,7 @@ import 'package:vector_graphics/vector_graphics.dart';
 
 import '../../../core/constants/app_assets.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/extensions/context_extension.dart';
 
 class ChangePasswordView extends StatelessWidget {
   const ChangePasswordView({super.key});
@@ -14,9 +15,9 @@ class ChangePasswordView extends StatelessWidget {
         backgroundColor: AppColors.primary,
         elevation: 0,
         centerTitle: true,
-        title: const Text(
-          'Change Password',
-          style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
+        title: Text(
+          context.tr('change_password'),
+          style: const TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
         ),
       ),
       body: SingleChildScrollView(
@@ -31,10 +32,10 @@ class ChangePasswordView extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            const Center(
+            Center(
               child: Text(
-                'Change your password',
-                style: TextStyle(
+                context.tr('change_password_desc'),
+                style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
                   color: AppColors.textGrey,
@@ -42,18 +43,18 @@ class ChangePasswordView extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 32),
-            _buildFieldLabel('Current Password'),
-            _buildPasswordField(hintText: 'Enter Your Password'),
+            _buildFieldLabel(context.tr('current_password')),
+            _buildPasswordField(hintText: context.tr('enter_password')),
             const SizedBox(height: 24),
-            _buildFieldLabel('New Password'),
-            _buildPasswordField(hintText: 'Password'),
+            _buildFieldLabel(context.tr('new_password')),
+            _buildPasswordField(hintText: context.tr('password')),
             const SizedBox(height: 24),
-            _buildFieldLabel('Confirm Password'),
-            _buildPasswordField(hintText: 'Confirm Password'),
+            _buildFieldLabel(context.tr('confirm_password')),
+            _buildPasswordField(hintText: context.tr('confirm_password')),
             const SizedBox(height: 40),
             ElevatedButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Save Change'),
+              child: Text(context.tr('save_changes')),
             ),
           ],
         ),

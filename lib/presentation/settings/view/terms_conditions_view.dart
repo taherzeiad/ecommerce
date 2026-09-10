@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/extensions/context_extension.dart';
 import '../widgets/expandable_card.dart';
 
 class TermsConditionsView extends StatelessWidget {
@@ -12,9 +13,9 @@ class TermsConditionsView extends StatelessWidget {
         backgroundColor: AppColors.primary,
         elevation: 0,
         centerTitle: true,
-        title: const Text(
-          'Terms & Condition',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        title: Text(
+          context.tr('terms_condition'),
+          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
       body: SingleChildScrollView(
@@ -30,23 +31,23 @@ class TermsConditionsView extends StatelessWidget {
               child: const Icon(Icons.notes, size: 80, color: Colors.white),
             ),
             const SizedBox(height: 32),
-            const Text(
-              'By using our app and services, you agree to comply with the following Terms and Conditions.',
+            Text(
+              context.tr('help_center_intro'),
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 32),
-            const ExpandableCard(
-              title: 'Acceptance and Agreement',
-              content: Text('By using this application and online store, you agree to comply with these Terms and Conditions...'),
+            ExpandableCard(
+              title: context.tr('terms_acceptance_title'),
+              content: Text(context.tr('terms_acceptance_content')),
             ),
-            const ExpandableCard(title: 'Accounts and Registration', content: Text('Info...')),
-            const ExpandableCard(title: 'Orders and Payments', content: Text('Info...')),
-            const ExpandableCard(title: 'Shipping and Delivery', content: Text('Info...')),
-            const ExpandableCard(title: 'Returns and Exchanges', content: Text('Info...')),
-            const ExpandableCard(title: 'Intellectual Property', content: Text('Info...')),
-            const ExpandableCard(title: 'Limitation of Liability', content: Text('Info...')),
-            const ExpandableCard(title: 'Modifications', content: Text('Info...')),
+            ExpandableCard(title: context.tr('terms_accounts'), content: Text(context.tr('faq_info'))),
+            ExpandableCard(title: context.tr('terms_orders'), content: Text(context.tr('faq_info'))),
+            ExpandableCard(title: context.tr('terms_shipping'), content: Text(context.tr('faq_info'))),
+            ExpandableCard(title: context.tr('terms_returns'), content: Text(context.tr('faq_info'))),
+            ExpandableCard(title: context.tr('terms_ip'), content: Text(context.tr('faq_info'))),
+            ExpandableCard(title: context.tr('terms_liability'), content: Text(context.tr('faq_info'))),
+            ExpandableCard(title: context.tr('terms_modifications'), content: Text(context.tr('faq_info'))),
           ],
         ),
       ),

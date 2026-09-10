@@ -19,7 +19,7 @@ class AppTheme {
         onSurface: AppColors.textPrimary,
         secondary: AppColors.primaryLight,
       ),
-      fontFamily: 'Roboto',
+      // fontFamily: 'Roboto',
       textTheme: const TextTheme(
         headlineSmall: TextStyle(
           fontSize: 22,
@@ -68,7 +68,7 @@ class AppTheme {
         onSurface: AppColors.darkTextPrimary,
         secondary: AppColors.primaryDark,
       ),
-      fontFamily: 'Roboto',
+      // fontFamily: 'Roboto',
       textTheme: const TextTheme(
         headlineSmall: TextStyle(
           fontSize: 22,

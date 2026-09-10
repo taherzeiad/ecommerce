@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/constants/app_colors.dart';
+import '../../../core/extensions/context_extension.dart';
 
 class AddCardView extends StatelessWidget {
   const AddCardView({super.key});
@@ -12,9 +13,9 @@ class AddCardView extends StatelessWidget {
         backgroundColor: AppColors.primary,
         elevation: 0,
         centerTitle: true,
-        title: const Text(
-          'Add New Card',
-          style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
+        title: Text(
+          context.tr('add_new_card'),
+          style: const TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
         ),
       ),
       body: SingleChildScrollView(
@@ -26,19 +27,19 @@ class AddCardView extends StatelessWidget {
               child: Icon(Icons.add_card, size: 120, color: AppColors.primary),
             ),
             const SizedBox(height: 16),
-            const Center(
+            Center(
               child: Text(
-                'Enter your card details to complete your payment securely.',
+                context.tr('enter_card_details'),
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ),
             const SizedBox(height: 32),
-            _buildFieldLabel('Cardholder Name'),
-            _buildTextField(hintText: 'Enter Card Name'),
+            _buildFieldLabel(context.tr('cardholder_name')),
+            _buildTextField(hintText: context.tr('enter_card_name')),
             const SizedBox(height: 24),
-            _buildFieldLabel('Card Number'),
-            _buildTextField(hintText: 'Enter Card number'),
+            _buildFieldLabel(context.tr('card_number')),
+            _buildTextField(hintText: context.tr('enter_card_number')),
             const SizedBox(height: 24),
             Row(
               children: [
@@ -46,7 +47,7 @@ class AddCardView extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildFieldLabel('Expiration Date'),
+                      _buildFieldLabel(context.tr('expiration_date')),
                       _buildTextField(hintText: 'dd/mm/yy'),
                     ],
                   ),
@@ -56,7 +57,7 @@ class AddCardView extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildFieldLabel('CVV'),
+                      _buildFieldLabel(context.tr('cvv')),
                       _buildTextField(hintText: 'cvv'),
                     ],
                   ),
@@ -66,7 +67,7 @@ class AddCardView extends StatelessWidget {
             const SizedBox(height: 40),
             ElevatedButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Add Card'),
+              child: Text(context.tr('add_card')),
             ),
           ],
         ),

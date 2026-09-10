@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/constants/app_colors.dart';
-import '../../../core/constants/app_strings.dart';
 import '../../../core/routes/app_routes.dart';
+import '../../../core/extensions/context_extension.dart';
 import '../../../data/repositories/auth_repository.dart';
 import '../widgets/auth_header.dart';
 import '../widgets/social_login_bar.dart';
@@ -16,7 +16,6 @@ class SignupView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => SignupViewModel(AuthRepositoryImpl()),
-      // Ideally provided via DI
       child: const _SignupContent(),
     );
   }
@@ -34,9 +33,9 @@ class _SignupContent extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const AuthHeader(
-              title: AppStrings.signupTitle,
-              subtitle: AppStrings.signupSubtitle,
+            AuthHeader(
+              title: context.tr('signup_title'),
+              subtitle: context.tr('signup_subtitle'),
               titleOnTop: true,
             ),
             Container(
@@ -52,7 +51,7 @@ class _SignupContent extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    AppStrings.fullName,
+                    context.tr('full_name'),
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w500,
@@ -88,7 +87,7 @@ class _SignupContent extends StatelessWidget {
                   ),
                   const SizedBox(height: 24),
                   Text(
-                    AppStrings.email,
+                    context.tr('email'),
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w500,
@@ -99,7 +98,7 @@ class _SignupContent extends StatelessWidget {
                   TextField(
                     controller: viewModel.emailController,
                     decoration: InputDecoration(
-                      hintText: 'Email Address',
+                      hintText: context.tr('email'),
                       hintStyle: const TextStyle(color: AppColors.authHint),
                       prefixIcon: const Icon(
                         Icons.email_outlined,
@@ -124,7 +123,7 @@ class _SignupContent extends StatelessWidget {
                   ),
                   const SizedBox(height: 24),
                   Text(
-                    AppStrings.password,
+                    context.tr('password'),
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w500,
@@ -136,7 +135,7 @@ class _SignupContent extends StatelessWidget {
                     controller: viewModel.passwordController,
                     obscureText: true,
                     decoration: InputDecoration(
-                      hintText: 'Password',
+                      hintText: context.tr('password'),
                       hintStyle: const TextStyle(color: AppColors.authHint),
                       prefixIcon: const Icon(
                         Icons.lock_outline,
@@ -161,7 +160,7 @@ class _SignupContent extends StatelessWidget {
                   ),
                   const SizedBox(height: 24),
                   Text(
-                    AppStrings.confirmPassword,
+                    context.tr('confirm_password'),
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w500,
@@ -173,7 +172,7 @@ class _SignupContent extends StatelessWidget {
                     controller: viewModel.confirmPasswordController,
                     obscureText: true,
                     decoration: InputDecoration(
-                      hintText: 'Confirm Password',
+                      hintText: context.tr('confirm_password'),
                       hintStyle: const TextStyle(color: AppColors.authHint),
                       prefixIcon: const Icon(
                         Icons.lock_outline,
@@ -214,7 +213,7 @@ class _SignupContent extends StatelessWidget {
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        AppStrings.agreeToTerms,
+                        context.tr('agree_to_terms'),
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.onSurfaceVariant,
                           fontSize: 14,
@@ -263,9 +262,9 @@ class _SignupContent extends StatelessWidget {
                                 strokeWidth: 2,
                               ),
                             )
-                          : const Text(
-                              AppStrings.signupTitle,
-                              style: TextStyle(
+                          : Text(
+                              context.tr('signup_title'),
+                              style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -277,7 +276,7 @@ class _SignupContent extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        AppStrings.alreadyHaveAccount,
+                        context.tr('already_have_account'),
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
@@ -286,9 +285,9 @@ class _SignupContent extends StatelessWidget {
                         onTap: () {
                           Navigator.pushNamed(context, AppRoutes.login);
                         },
-                        child: const Text(
-                          AppStrings.loginLabel,
-                          style: TextStyle(
+                        child: Text(
+                          context.tr('login_label'),
+                          style: const TextStyle(
                             color: AppColors.primary,
                             fontWeight: FontWeight.bold,
                           ),

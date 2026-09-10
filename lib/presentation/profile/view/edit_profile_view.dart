@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/routes/app_routes.dart';
+import '../../../core/extensions/context_extension.dart';
 import '../widgets/profile_widgets.dart';
 
 class EditProfileView extends StatelessWidget {
@@ -14,16 +15,16 @@ class EditProfileView extends StatelessWidget {
         backgroundColor: AppColors.primary,
         elevation: 0,
         centerTitle: true,
-        title: const Text(
-          'Edit Profile',
-          style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
+        title: Text(
+          context.tr('edit_profile'),
+          style: const TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text(
-              'Save',
-              style: TextStyle(
+            child: Text(
+              context.tr('save'),
+              style: const TextStyle(
                 color: AppColors.white,
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -43,7 +44,7 @@ class EditProfileView extends StatelessWidget {
               child: OutlinedButton.icon(
                 onPressed: () {},
                 icon: const Icon(Icons.camera_alt_outlined, size: 20),
-                label: const Text('Change Photo'),
+                label: Text(context.tr('change_photo')),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: AppColors.primary,
                   side: const BorderSide(color: AppColors.borderTeal),
@@ -59,31 +60,31 @@ class EditProfileView extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 32),
-            _buildFieldLabel('Full Name'),
+            _buildFieldLabel(context.tr('full_name')),
             _buildTextField(initialValue: 'Ramiz Man'),
             const SizedBox(height: 16),
-            _buildFieldLabel('Email Address'),
+            _buildFieldLabel(context.tr('email')),
             _buildTextField(initialValue: 'ramiz123@gmail.com'),
             const SizedBox(height: 16),
-            _buildFieldLabel('Phone Number'),
+            _buildFieldLabel(context.tr('phone_number')),
             _buildTextField(initialValue: '0593476532'),
             const SizedBox(height: 24),
             _buildLinkCard(
               icon: Icons.person_outline,
-              title: 'Change Password',
+              title: context.tr('change_password'),
               onTap: () =>
                   Navigator.pushNamed(context, AppRoutes.changePassword),
             ),
             const SizedBox(height: 16),
             _buildLinkCard(
               icon: Icons.person_outline,
-              title: 'Saved Address',
+              title: context.tr('saved_address'),
               onTap: () {},
             ),
             const SizedBox(height: 32),
             ElevatedButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Save Changes'),
+              child: Text(context.tr('save_changes')),
             ),
           ],
         ),

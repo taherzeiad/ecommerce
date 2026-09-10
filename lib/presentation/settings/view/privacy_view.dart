@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/extensions/context_extension.dart';
 import '../widgets/expandable_card.dart';
 
 class PrivacyView extends StatelessWidget {
@@ -12,9 +13,9 @@ class PrivacyView extends StatelessWidget {
         backgroundColor: AppColors.primary,
         elevation: 0,
         centerTitle: true,
-        title: const Text(
-          'Privacy',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        title: Text(
+          context.tr('privacy'),
+          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
       body: SingleChildScrollView(
@@ -23,29 +24,29 @@ class PrivacyView extends StatelessWidget {
           children: [
             const Icon(Icons.verified_user_outlined, size: 120, color: AppColors.primary),
             const SizedBox(height: 32),
-            const Text(
-              'We respect your privacy and protect your data.',
+            Text(
+              context.tr('privacy_subtitle'),
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 32),
             ExpandableCard(
-              title: 'Introduction',
+              title: context.tr('intro_title'),
               content: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  Text('In our online store, we are committed to protecting your privacy and personal data...'),
-                  SizedBox(height: 8),
-                  Text('Important Note: By using this application, you agree to the collection and use of your information...'),
+                children: [
+                  Text(context.tr('privacy_intro_1')),
+                  const SizedBox(height: 8),
+                  Text(context.tr('privacy_intro_2')),
                 ],
               ),
             ),
-            const ExpandableCard(title: 'The Information We Collect', content: Text('Info...')),
-            const ExpandableCard(title: 'How We Use Your Information', content: Text('Info...')),
-            const ExpandableCard(title: 'Sharing Information', content: Text('Info...')),
-            const ExpandableCard(title: 'Protecting Your Information', content: Text('Info...')),
-            const ExpandableCard(title: 'Your Rights', content: Text('Info...')),
-            const ExpandableCard(title: 'Cookies', content: Text('Info...')),
+            ExpandableCard(title: context.tr('privacy_info_collect'), content: Text(context.tr('faq_info'))),
+            ExpandableCard(title: context.tr('privacy_info_use'), content: Text(context.tr('faq_info'))),
+            ExpandableCard(title: context.tr('privacy_sharing'), content: Text(context.tr('faq_info'))),
+            ExpandableCard(title: context.tr('privacy_protection'), content: Text(context.tr('faq_info'))),
+            ExpandableCard(title: context.tr('privacy_rights'), content: Text(context.tr('faq_info'))),
+            ExpandableCard(title: context.tr('privacy_cookies'), content: Text(context.tr('faq_info'))),
           ],
         ),
       ),

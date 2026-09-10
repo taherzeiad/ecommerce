@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/constants/app_colors.dart';
-import '../../../core/constants/app_strings.dart';
 import '../../../core/routes/app_routes.dart';
+import '../../../core/extensions/context_extension.dart';
 import '../widgets/auth_header.dart';
 import '../widgets/reset_illustration.dart';
 import 'auth_viewmodel.dart';
@@ -35,11 +35,11 @@ class _ResetPasswordContent extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const AuthHeader(
-              title: AppStrings.resetPasswordTitle,
+            AuthHeader(
+              title: context.tr('reset_password_title'),
               subtitle: '',
               centerTitle: true,
-              bottomWidget: ResetIllustration(),
+              bottomWidget: const ResetIllustration(),
             ),
             const SizedBox(height: 40),
             Container(
@@ -57,7 +57,7 @@ class _ResetPasswordContent extends StatelessWidget {
                 children: [
                   Center(
                     child: Text(
-                      AppStrings.resetPasswordDesc,
+                      context.tr('reset_password_desc'),
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -68,7 +68,7 @@ class _ResetPasswordContent extends StatelessWidget {
                   ),
                   const SizedBox(height: 32),
                   Text(
-                    AppStrings.password,
+                    context.tr('password'),
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w500,
@@ -80,7 +80,7 @@ class _ResetPasswordContent extends StatelessWidget {
                     controller: viewModel.passwordController,
                     obscureText: true,
                     decoration: InputDecoration(
-                      hintText: 'Password',
+                      hintText: context.tr('password'),
                       hintStyle: const TextStyle(color: AppColors.authHint),
                       prefixIcon: const Icon(
                         Icons.lock_outline,
@@ -105,7 +105,7 @@ class _ResetPasswordContent extends StatelessWidget {
                   ),
                   const SizedBox(height: 24),
                   Text(
-                    AppStrings.confirmPassword,
+                    context.tr('confirm_password'),
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w500,
@@ -117,7 +117,7 @@ class _ResetPasswordContent extends StatelessWidget {
                     controller: viewModel.confirmPasswordController,
                     obscureText: true,
                     decoration: InputDecoration(
-                      hintText: 'Confirm Password',
+                      hintText: context.tr('confirm_password'),
                       hintStyle: const TextStyle(color: AppColors.authHint),
                       prefixIcon: const Icon(
                         Icons.lock_outline,
@@ -182,9 +182,9 @@ class _ResetPasswordContent extends StatelessWidget {
                                 strokeWidth: 2,
                               ),
                             )
-                          : const Text(
-                              AppStrings.resetPassword,
-                              style: TextStyle(
+                          : Text(
+                              context.tr('reset_password'),
+                              style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                               ),

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/constants/app_colors.dart';
-import '../../../core/constants/app_strings.dart';
 import '../../../core/routes/app_routes.dart';
+import '../../../core/extensions/context_extension.dart';
 import '../../../data/repositories/auth_repository.dart';
 import '../widgets/auth_header.dart';
 import '../widgets/lock_illustration.dart';
@@ -33,11 +33,11 @@ class _ForgotPasswordContent extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const AuthHeader(
-              title: AppStrings.forgotPasswordTitle,
+            AuthHeader(
+              title: context.tr('forgot_password_title'),
               subtitle: '', // Not needed for this screen's header area
               centerTitle: true,
-              bottomWidget: LockIllustration(),
+              bottomWidget: const LockIllustration(),
             ),
             const SizedBox(height: 40),
             Container(
@@ -57,7 +57,7 @@ class _ForgotPasswordContent extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: Text(
-                        AppStrings.forgotPasswordDesc,
+                        context.tr('forgot_password_desc'),
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -70,7 +70,7 @@ class _ForgotPasswordContent extends StatelessWidget {
                   ),
                   const SizedBox(height: 40),
                   Text(
-                    AppStrings.email,
+                    context.tr('email'),
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w500,
@@ -81,7 +81,7 @@ class _ForgotPasswordContent extends StatelessWidget {
                   TextField(
                     controller: viewModel.emailController,
                     decoration: InputDecoration(
-                      hintText: 'Email Address',
+                      hintText: context.tr('email'),
                       hintStyle: const TextStyle(color: AppColors.authHint),
                       prefixIcon: const Icon(
                         Icons.email_outlined,
@@ -146,9 +146,9 @@ class _ForgotPasswordContent extends StatelessWidget {
                                 strokeWidth: 2,
                               ),
                             )
-                          : const Text(
-                              AppStrings.send,
-                              style: TextStyle(
+                          : Text(
+                              context.tr('send'),
+                              style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -159,9 +159,9 @@ class _ForgotPasswordContent extends StatelessWidget {
                   Center(
                     child: TextButton(
                       onPressed: () => Navigator.pop(context),
-                      child: const Text(
-                        AppStrings.backToLogin,
-                        style: TextStyle(
+                      child: Text(
+                        context.tr('back_to_login'),
+                        style: const TextStyle(
                           color: AppColors.primary,
                           fontSize: 16,
                           fontWeight: FontWeight.bold,

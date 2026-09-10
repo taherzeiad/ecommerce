@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/routes/app_routes.dart';
+import '../../../core/extensions/context_extension.dart';
 import '../../theme/view_model/theme_view_model.dart';
 import '../widgets/profile_widgets.dart';
 
@@ -16,9 +17,9 @@ class ProfileView extends StatelessWidget {
         backgroundColor: AppColors.primary,
         elevation: 0,
         centerTitle: true,
-        title: const Text(
-          'Profile',
-          style: TextStyle(
+        title: Text(
+          context.tr('profile'),
+          style: const TextStyle(
             color: AppColors.white,
             fontWeight: FontWeight.bold,
           ),
@@ -47,12 +48,12 @@ class ProfileView extends StatelessWidget {
             const SizedBox(height: 32),
             ProfileListItem(
               icon: Icons.person_outline,
-              title: 'Edit Profile',
+              title: context.tr('edit_profile'),
               onTap: () => Navigator.pushNamed(context, AppRoutes.editProfile),
             ),
             ProfileListItem(
               icon: Icons.favorite_border,
-              title: 'Wishlist',
+              title: context.tr('wishlist'),
               onTap: () => Navigator.pushNamed(context, AppRoutes.mainWrapper), // Or direct if handled
             ),
             ProfileListItem(
@@ -62,23 +63,23 @@ class ProfileView extends StatelessWidget {
             ),
             ProfileListItem(
               icon: Icons.notifications_none,
-              title: 'Notification',
+              title: context.tr('notification'),
               onTap: () => Navigator.pushNamed(context, AppRoutes.notifications),
             ),
             ProfileListItem(
               icon: Icons.payment_outlined,
-              title: 'Payment Methods',
+              title: context.tr('payment_methods'),
               onTap: () {},
             ),
             ProfileListItem(
               icon: Icons.settings_outlined,
-              title: 'Setting',
+              title: context.tr('settings'),
               onTap: () => Navigator.pushNamed(context, AppRoutes.settings),
             ),
             const SizedBox(height: 16),
             ProfileListItem(
               icon: Icons.logout_outlined,
-              title: 'Log Out',
+              title: context.tr('logout'),
               iconColor: AppColors.error,
               onTap: () => _showLogoutDialog(context),
             ),
@@ -106,7 +107,7 @@ class ProfileView extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             Text(
-              'Are You Sure you want to Log out?',
+              context.tr('are_you_sure_logout'),
               textAlign: TextAlign.center,
               style: theme.textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
@@ -125,7 +126,7 @@ class ProfileView extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    child: const Text('Cancel'),
+                    child: Text(context.tr('cancel')),
                   ),
                 ),
                 const SizedBox(width: 16),
@@ -145,7 +146,7 @@ class ProfileView extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    child: const Text('Log out'),
+                    child: Text(context.tr('logout')),
                   ),
                 ),
               ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/extensions/context_extension.dart';
 import '../widgets/expandable_card.dart';
 
 class HelpCenterView extends StatelessWidget {
@@ -12,9 +13,9 @@ class HelpCenterView extends StatelessWidget {
         backgroundColor: AppColors.primary,
         elevation: 0,
         centerTitle: true,
-        title: const Text(
-          'Helps Center',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        title: Text(
+          context.tr('help_center'),
+          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
       body: SingleChildScrollView(
@@ -27,30 +28,30 @@ class HelpCenterView extends StatelessWidget {
               child: Icon(Icons.help, size: 80, color: Colors.white),
             ),
             const SizedBox(height: 32),
-            const Text(
-              'By using our app and services, you agree to comply with the following Terms and Conditions.',
+            Text(
+              context.tr('help_center_intro'),
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 24),
-            const Align(
+            Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                'Frequently Asked Questions',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                context.tr('faq_title'),
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
             ),
             const SizedBox(height: 16),
-            const ExpandableCard(title: 'How can I track my order?', content: Text('Info...')),
-            const ExpandableCard(title: 'What payment methods are available?', content: Text('Info...')),
-            const ExpandableCard(title: 'How long does delivery take?', content: Text('Info...')),
-            const ExpandableCard(title: 'Can I return or exchange a product?', content: Text('Info...')),
-            const ExpandableCard(title: 'How can I contact customer service?', content: Text('Info...')),
-            const ExpandableCard(title: 'Are the products genuine and guaranteed?', content: Text('Info...')),
-            const ExpandableCard(title: 'Ways to Contact Us?', content: Text('Info...')),
+            ExpandableCard(title: context.tr('faq_1'), content: Text(context.tr('faq_info'))),
+            ExpandableCard(title: context.tr('faq_2'), content: Text(context.tr('faq_info'))),
+            ExpandableCard(title: context.tr('faq_3'), content: Text(context.tr('faq_info'))),
+            ExpandableCard(title: context.tr('faq_4'), content: Text(context.tr('faq_info'))),
+            ExpandableCard(title: context.tr('faq_5'), content: Text(context.tr('faq_info'))),
+            ExpandableCard(title: context.tr('faq_6'), content: Text(context.tr('faq_info'))),
+            ExpandableCard(title: context.tr('faq_7'), content: Text(context.tr('faq_info'))),
           ],
         ),
       ),
