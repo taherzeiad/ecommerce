@@ -76,8 +76,9 @@ class _NavItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // اختيار المسار الصحيح بناءً على حالة التحديد
-    final String currentAsset =
-        isActive ? (activeAssetPath ?? assetPath) : assetPath;
+    final String currentAsset = isActive
+        ? (activeAssetPath ?? assetPath)
+        : assetPath;
 
     return InkWell(
       onTap: onTap,
