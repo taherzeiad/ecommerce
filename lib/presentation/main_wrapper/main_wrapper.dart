@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+
 import '../categories/view/categories_view.dart';
 import '../home/view/home_view.dart';
-import '../profile/view/profile_view.dart';
 import '../wishlist/view/wishlist_view.dart';
 import 'widgets/custom_bottom_nav.dart';
 import '../../core/routes/app_routes.dart';
@@ -42,13 +42,16 @@ class _MainWrapperState extends State<MainWrapper> {
           return FadeTransition(
             opacity: animation,
             child: SlideTransition(
-              position: Tween<Offset>(
-                begin: const Offset(0.0, 0.02),
-                end: Offset.zero,
-              ).animate(CurvedAnimation(
-                parent: animation,
-                curve: Curves.easeOutCubic,
-              )),
+              position:
+                  Tween<Offset>(
+                    begin: const Offset(0.0, 0.02),
+                    end: Offset.zero,
+                  ).animate(
+                    CurvedAnimation(
+                      parent: animation,
+                      curve: Curves.easeOutCubic,
+                    ),
+                  ),
               child: child,
             ),
           );

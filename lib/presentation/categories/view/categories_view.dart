@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:vector_graphics/vector_graphics.dart';
 
 import '../../../core/constants/app_colors.dart';
-import '../../../core/constants/app_strings.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../core/widgets/custom_search_bar.dart';
 import '../../../core/extensions/context_extension.dart';
 import '../../theme/view_model/theme_view_model.dart';
+
 import 'package:provider/provider.dart';
 
 class CategoriesView extends StatelessWidget {
@@ -26,7 +26,10 @@ class CategoriesView extends StatelessWidget {
         ),
         title: Text(
           context.tr('categories'),
-          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         centerTitle: true,
         actions: [
@@ -39,7 +42,10 @@ class CategoriesView extends StatelessWidget {
               ),
               width: 24,
               height: 24,
-              colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+              colorFilter: const ColorFilter.mode(
+                Colors.white,
+                BlendMode.srcIn,
+              ),
             ),
             onPressed: () => context.read<ThemeViewModel>().toggleTheme(),
           ),

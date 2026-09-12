@@ -61,18 +61,14 @@ class CustomBottomNav extends StatelessWidget {
 }
 
 class _NavItem extends StatelessWidget {
-  final String? assetPath;
+  final String assetPath;
   final String? activeAssetPath; // مسار الأيقونة الممتلئة (Solid)
-  final IconData? icon;
-  final IconData? activeIcon;
   final bool isActive;
   final VoidCallback onTap;
 
   const _NavItem({
-    this.assetPath,
+    required this.assetPath,
     this.activeAssetPath,
-    this.icon,
-    this.activeIcon,
     required this.isActive,
     required this.onTap,
   });
@@ -80,31 +76,23 @@ class _NavItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // اختيار المسار الصحيح بناءً على حالة التحديد
-    final String? currentAsset = isActive
-        ? (activeAssetPath ?? assetPath)
-        : assetPath;
+    final String currentAsset =
+        isActive ? (activeAssetPath ?? assetPath) : assetPath;
 
     return InkWell(
       onTap: onTap,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (currentAsset != null)
-            VectorGraphic(
-              loader: AssetBytesLoader(currentAsset),
-              width: 28,
-              height: 28,
-              colorFilter: ColorFilter.mode(
-                isActive ? AppColors.primary : Colors.grey.shade400,
-                BlendMode.srcIn,
-              ),
-            )
-          else
-            Icon(
-              isActive ? activeIcon : icon,
-              color: isActive ? AppColors.primary : Colors.grey.shade400,
-              size: 28,
+          VectorGraphic(
+            loader: AssetBytesLoader(currentAsset),
+            width: 28,
+            height: 28,
+            colorFilter: ColorFilter.mode(
+              isActive ? AppColors.primary : Colors.grey.shade400,
+              BlendMode.srcIn,
             ),
+          ),
           if (isActive) ...[
             const SizedBox(height: 4),
             Container(
