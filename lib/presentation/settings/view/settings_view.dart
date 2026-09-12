@@ -252,7 +252,7 @@ class _SettingsViewState extends State<SettingsView> {
         trailing: Switch(
           value: value,
           onChanged: onChanged,
-          activeColor: AppColors.primary,
+          activeThumbColor: AppColors.primary,
         ),
       ),
     );
@@ -350,7 +350,7 @@ class _SettingsViewState extends State<SettingsView> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: theme.dialogBackgroundColor,
+        backgroundColor: theme.colorScheme.surface,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         content: Column(
           mainAxisSize: MainAxisSize.min,
