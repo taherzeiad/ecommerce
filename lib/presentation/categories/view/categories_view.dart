@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:vector_graphics/vector_graphics.dart';
 
 import '../../../core/constants/app_colors.dart';
-import '../../../core/constants/app_strings.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../core/widgets/custom_search_bar.dart';
 import '../../../core/extensions/context_extension.dart';

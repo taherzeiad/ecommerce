@@ -6,7 +6,6 @@ import 'package:ecommerce/core/routes/app_routes.dart';
 import 'package:ecommerce/core/extensions/context_extension.dart';
 import 'package:ecommerce/presentation/theme/view_model/theme_view_model.dart';
 import 'package:ecommerce/presentation/theme/view_model/locale_view_model.dart';
-import 'package:ecommerce/core/localization/translations.dart';
 
 class SettingsView extends StatefulWidget {
   const SettingsView({super.key});
