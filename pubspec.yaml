@@ -47,10 +47,8 @@ dependencies:
   # Country picker for address
   country_picker: ^2.0.28
 
-  # Persist "onboarding completed" flag across app launches
   shared_preferences: ^2.2.3
-  flutter_secure_storage: ^9.0.0
-  flutter_svg: ^2.0.10+1
+  # flutter_svg is unused
 
 dev_dependencies:
   vector_graphics_compiler: ^1.1.11 # الأداة التي تحول الـ SVG إلى تنسيق ثنائي سريع
