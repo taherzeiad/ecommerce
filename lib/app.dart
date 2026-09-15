@@ -1,16 +1,15 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:provider/provider.dart';
-
+import 'package:ecommerce/core/extensions/context_extension.dart';
 import 'package:ecommerce/core/routes/app_router.dart';
 import 'package:ecommerce/core/routes/app_routes.dart';
 import 'package:ecommerce/core/theme/app_theme.dart';
-import 'package:ecommerce/core/extensions/context_extension.dart';
+import 'package:ecommerce/core/widgets/privacy_gate.dart';
 import 'package:ecommerce/presentation/cart/view_model/cart_view_model.dart';
 import 'package:ecommerce/presentation/theme/view_model/locale_view_model.dart';
 import 'package:ecommerce/presentation/theme/view_model/theme_view_model.dart';
 import 'package:ecommerce/presentation/wishlist/view_model/wishlist_view_model.dart';
-import 'package:ecommerce/core/widgets/privacy_gate.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:provider/provider.dart';
 
 class EcommerceApp extends StatelessWidget {
   const EcommerceApp({super.key});
