@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vector_graphics/vector_graphics.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/routes/app_routes.dart';
@@ -97,8 +98,12 @@ class CategoriesView extends StatelessWidget {
               GridView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: ResponsiveValue<int>(context, conditionalValues: [
+                    const Condition.equals(name: MOBILE, value: 2),
+                    const Condition.equals(name: TABLET, value: 3),
+                    const Condition.greaterThan(name: TABLET, value: 4),
+                  ]).value!,
                   childAspectRatio: 0.9,
                   crossAxisSpacing: 16,
                   mainAxisSpacing: 16,
@@ -152,8 +157,8 @@ class CategoriesView extends StatelessWidget {
 
   Widget _buildFeaturedCard(String title, String subtitle, String imagePath) {
     return Container(
-      width: 361,
-      height: 91,
+      width: double.infinity,
+      height: 100,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: AppColors.primary.withValues(alpha: 0.4),
@@ -201,8 +206,7 @@ class CategoriesView extends StatelessWidget {
   ) {
     final theme = Theme.of(context);
     return Container(
-      width: 151,
-      height: 157,
+      width: double.infinity,
       decoration: BoxDecoration(
         color: AppColors.primary.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(12),

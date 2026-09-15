@@ -48,6 +48,7 @@ dependencies:
   country_picker: ^2.0.28
 
   shared_preferences: ^2.2.3
+  responsive_framework: ^1.5.1
   # flutter_svg is unused
 
 dev_dependencies:
