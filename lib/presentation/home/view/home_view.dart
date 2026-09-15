@@ -260,8 +260,8 @@ class HomeView extends StatelessWidget {
       height: 180,
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
+          begin: AlignmentDirectional.centerStart,
+          end: AlignmentDirectional.centerEnd,
           colors: [AppColors.bannerTeal, AppColors.illustrationBackground],
         ),
         borderRadius: BorderRadius.circular(24),
@@ -320,8 +320,8 @@ class HomeView extends StatelessWidget {
               ],
             ),
           ),
-          Positioned(
-            right: 10,
+          PositionedDirectional(
+            end: 10,
             top: 10,
             bottom: 10,
             child: _buildWatchGraphic(),
