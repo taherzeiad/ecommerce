@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/routes/app_routes.dart';
@@ -62,8 +63,16 @@ class AllProductsView extends StatelessWidget {
                       vertical: 8,
                     ),
                     gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
+                        SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: ResponsiveValue<int>(
+                            context,
+                            defaultValue: 2,
+                            conditionalValues: [
+                              const Condition.equals(name: MOBILE, value: 2),
+                              const Condition.equals(name: TABLET, value: 3),
+                              const Condition.largerThan(breakpoint: 800, name: TABLET, value: 4),
+                            ],
+                          ).value!,
                           childAspectRatio: 0.65,
                           crossAxisSpacing: 16,
                           mainAxisSpacing: 16,

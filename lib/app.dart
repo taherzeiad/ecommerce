@@ -45,23 +45,23 @@ class EcommerceApp extends StatelessWidget {
                   builder: (context) {
                     return MaxWidthBox(
                       maxWidth: 1200,
-                      background: Container(
-                        color: Theme.of(context).scaffoldBackgroundColor,
-                      ),
+                      backgroundColor: Theme.of(context)
+                          .scaffoldBackgroundColor,
                       child: ResponsiveScaledBox(
                         width: ResponsiveValue<double>(
                           context,
+                          defaultValue: 375.0,
                           conditionalValues: [
-                            const Condition.equals(name: MOBILE, value: 375),
+                            const Condition.equals(name: MOBILE, value: 375.0),
                             const Condition.between(
                               start: 600,
                               end: 800,
-                              name: TABLET,
-                              value: 600,
+                              value: 600.0,
                             ),
-                            const Condition.greaterThan(
+                            const Condition.largerThan(
+                              breakpoint: 800,
                               name: TABLET,
-                              value: 1000,
+                              value: 1000.0,
                             ),
                           ],
                         ).value,

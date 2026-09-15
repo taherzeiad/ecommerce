@@ -421,6 +421,7 @@ class CartView extends StatelessWidget {
           '\$${viewModel.totalPrice.toStringAsFixed(2)}',
           isBold: true,
         ),
+        const SizedBox(height: 100), // Extra space for bottom button
       ],
     );
   }

@@ -45,9 +45,10 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
   Widget _buildImageSection(BuildContext context) {
     final wishlistViewModel = context.watch<WishlistViewModel>();
     final isFavorite = wishlistViewModel.isInWishlist(widget.product.id);
+    final screenHeight = MediaQuery.of(context).size.height;
 
     return Container(
-      height: MediaQuery.of(context).size.height * 0.45,
+      height: screenHeight > 800 ? 400 : screenHeight * 0.45,
       width: double.infinity,
       decoration: const BoxDecoration(color: AppColors.cardBackground),
       child: Stack(

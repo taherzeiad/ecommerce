@@ -108,11 +108,15 @@ class HomeView extends StatelessWidget {
                       physics: const NeverScrollableScrollPhysics(),
                       gridDelegate:
                           SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: ResponsiveValue<int>(context, conditionalValues: [
-                              const Condition.equals(name: MOBILE, value: 2),
-                              const Condition.equals(name: TABLET, value: 3),
-                              const Condition.greaterThan(name: TABLET, value: 4),
-                            ]).value!,
+                            crossAxisCount: ResponsiveValue<int>(
+                              context,
+                              defaultValue: 2,
+                              conditionalValues: [
+                                const Condition.equals(name: MOBILE, value: 2),
+                                const Condition.equals(name: TABLET, value: 3),
+                                const Condition.largerThan(breakpoint: 800, name: TABLET, value: 4),
+                              ],
+                            ).value!,
                             childAspectRatio: 0.68,
                             crossAxisSpacing: 16,
                             mainAxisSpacing: 16,
