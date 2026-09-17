@@ -25,124 +25,129 @@ class HomeView extends StatelessWidget {
         child: viewModel.isLoading
             ? const Center(child: CircularProgressIndicator())
             : SingleChildScrollView(
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildHeader(context),
-                    const SizedBox(height: 16),
-                    CustomSearchBar(
-                      hintText: context.tr('search'),
-                      height: 40,
-                      hasShadow: true,
-                      hasBorder: false,
-                      onTap: () =>
-                          Navigator.pushNamed(context, AppRoutes.search),
-                      onFilterTap: () =>
-                          Navigator.pushNamed(context, AppRoutes.filterSort),
-                    ),
-                    const SizedBox(height: 16),
-                    _buildBanner(),
-                    const SizedBox(height: 16),
-                    _buildSectionHeader(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildHeader(context),
+              const SizedBox(height: 16),
+              CustomSearchBar(
+                hintText: context.tr('search'),
+                height: 40,
+                hasShadow: true,
+                hasBorder: false,
+                onTap: () =>
+                    Navigator.pushNamed(context, AppRoutes.search),
+                onFilterTap: () =>
+                    Navigator.pushNamed(context, AppRoutes.filterSort),
+              ),
+              const SizedBox(height: 16),
+              _buildBanner(),
+              const SizedBox(height: 16),
+              _buildSectionHeader(
+                context,
+                context.tr('categories'),
+                    () =>
+                    Navigator.pushNamed(
                       context,
-                      context.tr('categories'),
-                      () => Navigator.pushNamed(
-                        context,
-                        AppRoutes.mainWrapper,
-                        arguments: 1,
+                      AppRoutes.mainWrapper,
+                      arguments: 1,
+                    ),
+              ),
+              const SizedBox(height: 16),
+              _buildCategoryList(context),
+              const SizedBox(height: 16),
+              _buildSectionHeader(
+                context,
+                context.tr('flash_deals'),
+                    () => Navigator.pushNamed(context, AppRoutes.allProducts),
+              ),
+              const SizedBox(height: 16),
+              SizedBox(
+                height: 167,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: viewModel.flashDeals.length,
+                  separatorBuilder: (_, _) => const SizedBox(width: 16),
+                  itemBuilder: (context, index) {
+                    final product = viewModel.flashDeals[index];
+                    return TweenAnimationBuilder<double>(
+                      duration: Duration(
+                        milliseconds: 300 + (index * 50),
                       ),
-                    ),
-                    const SizedBox(height: 16),
-                    _buildCategoryList(context),
-                    const SizedBox(height: 16),
-                    _buildSectionHeader(
-                      context,
-                      context.tr('flash_deals'),
-                      () => Navigator.pushNamed(context, AppRoutes.allProducts),
-                    ),
-                    const SizedBox(height: 16),
-                    SizedBox(
-                      height: 167,
-                      child: ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: viewModel.flashDeals.length,
-                        separatorBuilder: (_, _) => const SizedBox(width: 16),
-                        itemBuilder: (context, index) {
-                          final product = viewModel.flashDeals[index];
-                          return TweenAnimationBuilder<double>(
-                            duration: Duration(milliseconds: 300 + (index * 50)),
-                            tween: Tween(begin: 0.0, end: 1.0),
-                            curve: Curves.easeOutCubic,
-                            builder: (context, value, child) {
-                              return Opacity(
-                                opacity: value,
-                                child: Transform.translate(
-                                  offset: Offset(20 * (1 - value), 0),
-                                  child: child,
-                                ),
-                              );
-                            },
-                            child: ProductCard(
-                              product: product,
-                              onTap: () => Navigator.pushNamed(
-                                context,
-                                AppRoutes.productDetails,
-                                arguments: product,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    _buildSectionHeader(
-                      context,
-                      context.tr('popular_product'),
-                      () {},
-                    ),
-                    const SizedBox(height: 16),
-                    GridView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            childAspectRatio: 0.68,
-                            crossAxisSpacing: 16,
-                            mainAxisSpacing: 16,
+                      tween: Tween(begin: 0.0, end: 1.0),
+                      curve: Curves.easeOutCubic,
+                      builder: (context, value, child) {
+                        return Opacity(
+                          opacity: value,
+                          child: Transform.translate(
+                            offset: Offset(20 * (1 - value), 0),
+                            child: child,
                           ),
-                      itemCount: viewModel.popularProducts.length,
-                      itemBuilder: (context, index) {
-                        final product = viewModel.popularProducts[index];
-                        return TweenAnimationBuilder<double>(
-                          duration: Duration(milliseconds: 350 + (index * 50)),
-                          tween: Tween(begin: 0.0, end: 1.0),
-                          curve: Curves.easeOutCubic,
-                          builder: (context, value, child) {
-                            return Opacity(
-                              opacity: value,
-                              child: Transform.scale(
-                                scale: 0.9 + (0.1 * value),
-                                child: child,
-                              ),
-                            );
-                          },
-                          child: ProductCard(
-                            product: product,
-                            onTap: () => Navigator.pushNamed(
+                        );
+                      },
+                      child: ProductCard(
+                        product: product,
+                        onTap: () =>
+                            Navigator.pushNamed(
                               context,
                               AppRoutes.productDetails,
                               arguments: product,
                             ),
-                          ),
-                        );
-                      },
-                    ),
-                    const SizedBox(height: 80), // Space for bottom nav
-                  ],
+                      ),
+                    );
+                  },
                 ),
               ),
+              const SizedBox(height: 16),
+              _buildSectionHeader(
+                context,
+                context.tr('popular_product'),
+                    () {},
+              ),
+              const SizedBox(height: 16),
+              GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate:
+                const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 0.68,
+                  crossAxisSpacing: 16,
+                  mainAxisSpacing: 16,
+                ),
+                itemCount: viewModel.popularProducts.length,
+                itemBuilder: (context, index) {
+                  final product = viewModel.popularProducts[index];
+                  return TweenAnimationBuilder<double>(
+                    duration: Duration(milliseconds: 350 + (index * 50)),
+                    tween: Tween(begin: 0.0, end: 1.0),
+                    curve: Curves.easeOutCubic,
+                    builder: (context, value, child) {
+                      return Opacity(
+                        opacity: value,
+                        child: Transform.scale(
+                          scale: 0.9 + (0.1 * value),
+                          child: child,
+                        ),
+                      );
+                    },
+                    child: ProductCard(
+                      product: product,
+                      onTap: () =>
+                          Navigator.pushNamed(
+                            context,
+                            AppRoutes.productDetails,
+                            arguments: product,
+                          ),
+                    ),
+                  );
+                },
+              ),
+              const SizedBox(height: 80), // Space for bottom nav
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -204,7 +209,9 @@ class HomeView extends StatelessWidget {
               borderRadius: BorderRadius.circular(30),
               child: _buildHeaderIcon(
                 context,
-                context.watch<ThemeViewModel>().isDarkMode
+                context
+                    .watch<ThemeViewModel>()
+                    .isDarkMode
                     ? 'lib/assets/icons/moonenable.svg'
                     : 'lib/assets/icons/moon.svg',
               ),
@@ -215,8 +222,10 @@ class HomeView extends StatelessWidget {
     );
   }
 
-  Widget _buildHeaderIcon(BuildContext context, String assetPath,
-      {bool hasBadge = false}) {
+  Widget _buildHeaderIcon(BuildContext context,
+      String assetPath, {
+        bool hasBadge = false,
+      }) {
     return Stack(
       clipBehavior: Clip.none,
       children: [
@@ -244,7 +253,9 @@ class HomeView extends StatelessWidget {
                 color: AppColors.primary,
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: Theme.of(context).scaffoldBackgroundColor,
+                  color: Theme
+                      .of(context)
+                      .scaffoldBackgroundColor,
                   width: 1,
                 ),
               ),
@@ -344,26 +355,25 @@ class HomeView extends StatelessWidget {
   }
 
   Widget _buildBannerDots() {
-    Widget dot({bool active = false}) => Container(
-      margin: const EdgeInsets.symmetric(horizontal: 4),
-      width: active ? 35 : 10,
-      height: 10,
-      decoration: BoxDecoration(
-        color: active ? AppColors.primaryDark : AppColors.white,
-        borderRadius: BorderRadius.circular(5),
-      ),
-    );
+    Widget dot({bool active = false}) =>
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: 4),
+          width: active ? 35 : 10,
+          height: 10,
+          decoration: BoxDecoration(
+            color: active ? AppColors.primaryDark : AppColors.white,
+            borderRadius: BorderRadius.circular(5),
+          ),
+        );
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [dot(), dot(active: true), dot()],
     );
   }
 
-  Widget _buildSectionHeader(
-    BuildContext context,
-    String title,
-    VoidCallback onSeeAll,
-  ) {
+  Widget _buildSectionHeader(BuildContext context,
+      String title,
+      VoidCallback onSeeAll,) {
     final theme = Theme.of(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -461,8 +471,7 @@ class HomeView extends StatelessWidget {
   }
 
   // Helper widget to display icons from Assets
-  Widget _buildAssetIcon(
-    String path, {
+  Widget _buildAssetIcon(String path, {
     double width = 24,
     double height = 24,
     Color? color,
