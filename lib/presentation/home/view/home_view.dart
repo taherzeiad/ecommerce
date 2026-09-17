@@ -29,7 +29,7 @@ class HomeView extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildHeader(context),
+                    _buildHeader(context, viewModel),
                     const SizedBox(height: 16),
                     CustomSearchBar(
                       hintText: context.tr('search'),
@@ -149,7 +149,7 @@ class HomeView extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader(BuildContext context) {
+  Widget _buildHeader(BuildContext context, HomeViewModel viewModel) {
     final theme = Theme.of(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -191,13 +191,15 @@ class HomeView extends StatelessWidget {
         Row(
           children: [
             InkWell(
-              onTap: () =>
-                  Navigator.pushNamed(context, AppRoutes.notifications),
+              onTap: () {
+                viewModel.markNotificationsAsRead();
+                Navigator.pushNamed(context, AppRoutes.notifications);
+              },
               borderRadius: BorderRadius.circular(30),
               child: _buildHeaderIcon(
                 context,
                 'lib/assets/icons/notification.svg',
-                hasBadge: true,
+                hasBadge: viewModel.hasNewNotifications,
               ),
             ),
             const SizedBox(width: 12),
