@@ -29,7 +29,7 @@ class HomeView extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildHeader(context),
+                    _buildHeader(context, viewModel),
                     const SizedBox(height: 16),
                     CustomSearchBar(
                       hintText: context.tr('search'),
@@ -71,7 +71,9 @@ class HomeView extends StatelessWidget {
                         itemBuilder: (context, index) {
                           final product = viewModel.flashDeals[index];
                           return TweenAnimationBuilder<double>(
-                            duration: Duration(milliseconds: 300 + (index * 50)),
+                            duration: Duration(
+                              milliseconds: 300 + (index * 50),
+                            ),
                             tween: Tween(begin: 0.0, end: 1.0),
                             curve: Curves.easeOutCubic,
                             builder: (context, value, child) {
@@ -147,7 +149,7 @@ class HomeView extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader(BuildContext context) {
+  Widget _buildHeader(BuildContext context, HomeViewModel viewModel) {
     final theme = Theme.of(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -189,13 +191,15 @@ class HomeView extends StatelessWidget {
         Row(
           children: [
             InkWell(
-              onTap: () =>
-                  Navigator.pushNamed(context, AppRoutes.notifications),
+              onTap: () {
+                viewModel.markNotificationsAsRead();
+                Navigator.pushNamed(context, AppRoutes.notifications);
+              },
               borderRadius: BorderRadius.circular(30),
               child: _buildHeaderIcon(
                 context,
                 'lib/assets/icons/notification.svg',
-                hasBadge: true,
+                hasBadge: viewModel.hasNewNotifications,
               ),
             ),
             const SizedBox(width: 12),
@@ -215,8 +219,11 @@ class HomeView extends StatelessWidget {
     );
   }
 
-  Widget _buildHeaderIcon(BuildContext context, String assetPath,
-      {bool hasBadge = false}) {
+  Widget _buildHeaderIcon(
+    BuildContext context,
+    String assetPath, {
+    bool hasBadge = false,
+  }) {
     return Stack(
       clipBehavior: Clip.none,
       children: [
