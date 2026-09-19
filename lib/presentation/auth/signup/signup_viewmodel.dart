@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../data/repositories/auth_repository.dart';
 
 class SignupViewModel extends ChangeNotifier {
@@ -9,15 +10,19 @@ class SignupViewModel extends ChangeNotifier {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
 
   bool _isLoading = false;
+
   bool get isLoading => _isLoading;
 
   bool _agreeToTerms = false;
+
   bool get agreeToTerms => _agreeToTerms;
 
   String? _errorMessage;
+
   String? get errorMessage => _errorMessage;
 
   void toggleTerms(bool? value) {
@@ -31,7 +36,10 @@ class SignupViewModel extends ChangeNotifier {
     final password = passwordController.text.trim();
     final confirmPassword = confirmPasswordController.text.trim();
 
-    if (name.isEmpty || email.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
+    if (name.isEmpty ||
+        email.isEmpty ||
+        password.isEmpty ||
+        confirmPassword.isEmpty) {
       _errorMessage = 'Please fill in all fields';
       notifyListeners();
       return false;
@@ -68,13 +76,18 @@ class SignupViewModel extends ChangeNotifier {
     } catch (e) {
       _isLoading = false;
       final errorStr = e.toString().toLowerCase();
-      if (errorStr.contains('user already exists') || errorStr.contains('already registered')) {
+      if (errorStr.contains('user already exists') ||
+          errorStr.contains('already registered')) {
         _errorMessage = 'error_user_exists';
-      } else if (errorStr.contains('weak password') || errorStr.contains('password should be')) {
+      } else if (errorStr.contains('weak password') ||
+          errorStr.contains('password should be')) {
         _errorMessage = 'error_weak_password';
-      } else if (errorStr.contains('network') || errorStr.contains('failed to fetch') || errorStr.contains('clientexception')) {
+      } else if (errorStr.contains('network') ||
+          errorStr.contains('failed to fetch') ||
+          errorStr.contains('clientexception')) {
         _errorMessage = 'error_network';
-      } else if (errorStr.contains('too many requests') || errorStr.contains('429')) {
+      } else if (errorStr.contains('too many requests') ||
+          errorStr.contains('429')) {
         _errorMessage = 'error_too_many_requests';
       } else {
         _errorMessage = 'error_unexpected';

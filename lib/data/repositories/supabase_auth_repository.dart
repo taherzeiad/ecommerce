@@ -1,4 +1,5 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
+
 import 'auth_repository.dart';
 
 class SupabaseAuthRepository implements AuthRepository {
@@ -21,10 +22,12 @@ class SupabaseAuthRepository implements AuthRepository {
       password: password,
       data: {'name': name},
     );
-    
+
     // In newer Supabase projects (User Enumeration Protection), signing up an existing user
     // returns a successful response but with an empty identities list instead of throwing an error.
-    if (response.user != null && response.user!.identities != null && response.user!.identities!.isEmpty) {
+    if (response.user != null &&
+        response.user!.identities != null &&
+        response.user!.identities!.isEmpty) {
       throw const AuthException('User already exists');
     }
   }
@@ -41,13 +44,19 @@ class SupabaseAuthRepository implements AuthRepository {
     // or can be customized depending on the exact workflow used in your UI.
     // For standard email OTP, we can use:
     // await _supabaseClient.auth.verifyOTP(token: otp, type: OtpType.signup);
-    throw UnimplementedError('OTP verification requires email context or custom integration in Supabase.');
+    throw UnimplementedError(
+      'OTP verification requires email context or custom integration in Supabase.',
+    );
   }
 
   @override
   Future<void> resetPassword(String password) async {
-    await _supabaseClient.auth.updateUser(
-      UserAttributes(password: password),
-    );
+    await _supabaseClient.auth.updateUser(UserAttributes(password: password));
+  }
+
+  @override
+  bool isUserLoggedIn() {
+    final session = _supabaseClient.auth.currentSession;
+    return session != null && !session.isExpired;
   }
 }

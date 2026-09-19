@@ -38,4 +38,9 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<void> resetPassword(String password) async {
     await Future.delayed(const Duration(milliseconds: 1000));
   }
+
+  @override
+  bool isUserLoggedIn() {
+    return false;
+  }
 }
