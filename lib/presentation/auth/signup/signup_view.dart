@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../core/extensions/context_extension.dart';
+import '../../../core/di/service_locator.dart';
 import '../../../data/repositories/auth_repository.dart';
 import '../widgets/auth_header.dart';
 import '../widgets/social_login_bar.dart';
@@ -15,7 +16,7 @@ class SignupView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => SignupViewModel(AuthRepositoryImpl()),
+      create: (_) => SignupViewModel(sl<AuthRepository>()),
       child: const _SignupContent(),
     );
   }
@@ -73,11 +74,15 @@ class _SignupContent extends StatelessWidget {
                       contentPadding: const EdgeInsets.symmetric(vertical: 16),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: AppColors.authBorder),
+                        borderSide: const BorderSide(
+                          color: AppColors.authBorder,
+                        ),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: AppColors.authBorder),
+                        borderSide: const BorderSide(
+                          color: AppColors.authBorder,
+                        ),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -109,11 +114,15 @@ class _SignupContent extends StatelessWidget {
                       contentPadding: const EdgeInsets.symmetric(vertical: 16),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: AppColors.authBorder),
+                        borderSide: const BorderSide(
+                          color: AppColors.authBorder,
+                        ),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: AppColors.authBorder),
+                        borderSide: const BorderSide(
+                          color: AppColors.authBorder,
+                        ),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -146,11 +155,15 @@ class _SignupContent extends StatelessWidget {
                       contentPadding: const EdgeInsets.symmetric(vertical: 16),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: AppColors.authBorder),
+                        borderSide: const BorderSide(
+                          color: AppColors.authBorder,
+                        ),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: AppColors.authBorder),
+                        borderSide: const BorderSide(
+                          color: AppColors.authBorder,
+                        ),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -183,11 +196,15 @@ class _SignupContent extends StatelessWidget {
                       contentPadding: const EdgeInsets.symmetric(vertical: 16),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: AppColors.authBorder),
+                        borderSide: const BorderSide(
+                          color: AppColors.authBorder,
+                        ),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: AppColors.authBorder),
+                        borderSide: const BorderSide(
+                          color: AppColors.authBorder,
+                        ),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -226,7 +243,7 @@ class _SignupContent extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 16),
                       child: Text(
-                        viewModel.errorMessage!,
+                        context.tr(viewModel.errorMessage!),
                         style: const TextStyle(color: AppColors.error),
                       ),
                     ),

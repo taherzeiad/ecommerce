@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../core/extensions/context_extension.dart';
+import '../../../core/di/service_locator.dart';
 import '../../../data/repositories/auth_repository.dart';
 import '../widgets/auth_header.dart';
 import '../widgets/social_login_bar.dart';
@@ -15,7 +16,7 @@ class LoginView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => LoginViewModel(AuthRepositoryImpl()),
+      create: (_) => LoginViewModel(sl<AuthRepository>()),
       child: const _LoginContent(),
     );
   }
@@ -183,7 +184,7 @@ class _LoginContent extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 16),
                       child: Text(
-                        viewModel.errorMessage!,
+                        context.tr(viewModel.errorMessage!),
                         style: const TextStyle(color: AppColors.error),
                       ),
                     ),

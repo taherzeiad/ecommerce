@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../core/extensions/context_extension.dart';
+import '../../../core/di/service_locator.dart';
 import '../../../data/repositories/auth_repository.dart';
 import '../widgets/auth_header.dart';
 import '../widgets/lock_illustration.dart';
@@ -15,7 +16,7 @@ class ForgotPasswordView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => ForgotPasswordViewModel(AuthRepositoryImpl()),
+      create: (_) => ForgotPasswordViewModel(sl<AuthRepository>()),
       child: const _ForgotPasswordContent(),
     );
   }

@@ -51,7 +51,18 @@ class LoginViewModel extends ChangeNotifier {
       return true;
     } catch (e) {
       _isLoading = false;
-      _errorMessage = e.toString();
+      final errorStr = e.toString().toLowerCase();
+      if (errorStr.contains('invalid login credentials') || errorStr.contains('invalid_credentials')) {
+        _errorMessage = 'error_invalid_credentials';
+      } else if (errorStr.contains('email_not_confirmed') || errorStr.contains('not confirmed')) {
+        _errorMessage = 'error_email_not_confirmed';
+      } else if (errorStr.contains('network') || errorStr.contains('failed to fetch') || errorStr.contains('clientexception')) {
+        _errorMessage = 'error_network';
+      } else if (errorStr.contains('too many requests') || errorStr.contains('429')) {
+        _errorMessage = 'error_too_many_requests';
+      } else {
+        _errorMessage = 'error_unexpected';
+      }
       notifyListeners();
       return false;
     }
