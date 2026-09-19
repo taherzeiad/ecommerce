@@ -16,11 +16,17 @@ class SupabaseAuthRepository implements AuthRepository {
 
   @override
   Future<void> signup(String name, String email, String password) async {
-    await _supabaseClient.auth.signUp(
+    final response = await _supabaseClient.auth.signUp(
       email: email,
       password: password,
       data: {'name': name},
     );
+    
+    // In newer Supabase projects (User Enumeration Protection), signing up an existing user
+    // returns a successful response but with an empty identities list instead of throwing an error.
+    if (response.user != null && response.user!.identities != null && response.user!.identities!.isEmpty) {
+      throw const AuthException('User already exists');
+    }
   }
 
   @override
