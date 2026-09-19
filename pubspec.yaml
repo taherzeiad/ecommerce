@@ -47,6 +47,9 @@ dependencies:
   # Country picker for address
   country_picker: ^2.0.28
 
+  # Supabase SDK for authentication
+  supabase_flutter: ^2.6.0
+
   # Persist "onboarding completed" flag across app launches
   shared_preferences: ^2.2.3
   flutter_secure_storage: ^9.0.0

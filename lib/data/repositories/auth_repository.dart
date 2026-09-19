@@ -2,9 +2,13 @@
 /// Follows the same pattern as OnboardingRepository for testability.
 abstract class AuthRepository {
   Future<void> login(String email, String password);
+
   Future<void> signup(String name, String email, String password);
+
   Future<void> sendResetLink(String email);
+
   Future<void> verifyOtp(String otp);
+
   Future<void> resetPassword(String password);
 }
 
