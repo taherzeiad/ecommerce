@@ -10,6 +10,14 @@ abstract class AuthRepository {
   Future<void> verifyOtp(String otp);
 
   Future<void> resetPassword(String password);
+
+  Future<void> logout();
+
+  String? getCurrentUserEmail();
+
+  String? getCurrentUserName();
+
+  bool isUserLoggedIn();
 }
 
 class AuthRepositoryImpl implements AuthRepository {
@@ -37,5 +45,25 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<void> resetPassword(String password) async {
     await Future.delayed(const Duration(milliseconds: 1000));
+  }
+
+  @override
+  bool isUserLoggedIn() {
+    return false;
+  }
+
+  @override
+  Future<void> logout() async {
+    await Future.delayed(const Duration(milliseconds: 500));
+  }
+
+  @override
+  String? getCurrentUserEmail() {
+    return 'demo@example.com';
+  }
+
+  @override
+  String? getCurrentUserName() {
+    return 'Demo User';
   }
 }

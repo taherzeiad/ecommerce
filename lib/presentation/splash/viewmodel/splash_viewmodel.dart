@@ -1,15 +1,19 @@
 import 'package:flutter/foundation.dart';
 import '../../../data/repositories/onboarding_repository.dart';
+import '../../../data/repositories/auth_repository.dart';
+import '../../../core/di/service_locator.dart';
 
 /// Decides where the splash screen should navigate to next.
 /// The View only listens to [destination] — it has zero business logic.
 enum SplashDestination { loading, onboarding, login, home }
 
 class SplashViewModel extends ChangeNotifier {
-  SplashViewModel({OnboardingRepository? repository})
-      : _repository = repository ?? OnboardingRepositoryImpl();
+  SplashViewModel({OnboardingRepository? repository, AuthRepository? authRepository})
+      : _repository = repository ?? OnboardingRepositoryImpl(),
+        _authRepository = authRepository ?? sl<AuthRepository>();
 
   final OnboardingRepository _repository;
+  final AuthRepository _authRepository;
 
   SplashDestination _destination = SplashDestination.loading;
   SplashDestination get destination => _destination;
@@ -23,8 +27,14 @@ class SplashViewModel extends ChangeNotifier {
     ]);
 
     final hasCompleted = results.first as bool;
-    _destination =
-        hasCompleted ? SplashDestination.login : SplashDestination.onboarding;
+    
+    if (!hasCompleted) {
+      _destination = SplashDestination.onboarding;
+    } else {
+      // If onboarding is completed, check if user is already logged in via Supabase active session
+      final isLoggedIn = _authRepository.isUserLoggedIn();
+      _destination = isLoggedIn ? SplashDestination.home : SplashDestination.login;
+    }
     notifyListeners();
   }
 }

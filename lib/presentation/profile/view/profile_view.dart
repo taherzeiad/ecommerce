@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../core/extensions/context_extension.dart';
+import '../../../core/di/service_locator.dart';
+import '../../../data/repositories/auth_repository.dart';
 import '../../theme/view_model/theme_view_model.dart';
 import '../widgets/profile_widgets.dart';
 
@@ -12,6 +14,10 @@ class ProfileView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final authRepository = sl<AuthRepository>();
+    final userName = authRepository.getCurrentUserName() ?? 'User';
+    final userEmail = authRepository.getCurrentUserEmail() ?? '';
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.primary,
@@ -38,13 +44,23 @@ class ProfileView extends StatelessWidget {
             const ProfileAvatar(),
             const SizedBox(height: 16),
             Text(
-              'Ramiz Man',
+              userName,
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
                 color: theme.colorScheme.onSurface,
               ),
             ),
+            if (userEmail.isNotEmpty) ...[
+              const SizedBox(height: 4),
+              Text(
+                userEmail,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ],
             const SizedBox(height: 32),
             ProfileListItem(
               icon: Icons.person_outline,
@@ -132,13 +148,16 @@ class ProfileView extends StatelessWidget {
                 const SizedBox(width: 16),
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       Navigator.pop(context);
-                      Navigator.pushNamedAndRemoveUntil(
-                        context,
-                        AppRoutes.login,
-                        (route) => false,
-                      );
+                      await sl<AuthRepository>().logout();
+                      if (context.mounted) {
+                        Navigator.pushNamedAndRemoveUntil(
+                          context,
+                          AppRoutes.login,
+                          (route) => false,
+                        );
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.error,
