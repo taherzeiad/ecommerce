@@ -67,7 +67,18 @@ class SignupViewModel extends ChangeNotifier {
       return true;
     } catch (e) {
       _isLoading = false;
-      _errorMessage = e.toString();
+      final errorStr = e.toString().toLowerCase();
+      if (errorStr.contains('user already exists') || errorStr.contains('already registered')) {
+        _errorMessage = 'error_user_exists';
+      } else if (errorStr.contains('weak password') || errorStr.contains('password should be')) {
+        _errorMessage = 'error_weak_password';
+      } else if (errorStr.contains('network') || errorStr.contains('failed to fetch') || errorStr.contains('clientexception')) {
+        _errorMessage = 'error_network';
+      } else if (errorStr.contains('too many requests') || errorStr.contains('429')) {
+        _errorMessage = 'error_too_many_requests';
+      } else {
+        _errorMessage = 'error_unexpected';
+      }
       notifyListeners();
       return false;
     }
