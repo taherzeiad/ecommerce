@@ -209,7 +209,7 @@ class HomeView extends StatelessWidget {
               child: _buildHeaderIcon(
                 context,
                 context.watch<ThemeViewModel>().isDarkMode
-                    ? 'lib/assets/icons/moonenable.svg'
+                    ? 'lib/assets/icons/moon-enable.svg'
                     : 'lib/assets/icons/moon.svg',
               ),
             ),

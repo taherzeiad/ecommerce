@@ -37,7 +37,7 @@ class CategoriesView extends StatelessWidget {
             icon: VectorGraphic(
               loader: AssetBytesLoader(
                 context.watch<ThemeViewModel>().isDarkMode
-                    ? 'lib/assets/icons/moonenable.svg'
+                    ? 'lib/assets/icons/moon-enable.svg'
                     : 'lib/assets/icons/moon.svg',
               ),
               width: 24,
