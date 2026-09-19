@@ -7,7 +7,7 @@ class HomeViewModel extends ChangeNotifier {
   final ProductRepository _productRepository;
 
   HomeViewModel({required ProductRepository productRepository})
-    : _productRepository = productRepository;
+      : _productRepository = productRepository;
 
   List<ProductEntity> _popularProducts = [];
 
