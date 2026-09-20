@@ -87,7 +87,9 @@ class SignupViewModel extends ChangeNotifier {
           errorStr.contains('clientexception')) {
         _errorMessage = 'error_network';
       } else if (errorStr.contains('too many requests') ||
-          errorStr.contains('429')) {
+          errorStr.contains('429') ||
+          errorStr.contains('rate limit') ||
+          errorStr.contains('email_send_rate_limit')) {
         _errorMessage = 'error_too_many_requests';
       } else {
         _errorMessage = 'error_unexpected';

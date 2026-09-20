@@ -30,6 +30,15 @@ class SupabaseAuthRepository implements AuthRepository {
         response.user!.identities!.isEmpty) {
       throw const AuthException('User already exists');
     }
+
+    // Insert user info into public.profiles table
+    if (response.user != null) {
+      await _supabaseClient.from('profiles').upsert({
+        'id': response.user!.id,
+        'name': name,
+        'email': email,
+      });
+    }
   }
 
   @override
@@ -72,6 +81,7 @@ class SupabaseAuthRepository implements AuthRepository {
 
   @override
   String? getCurrentUserName() {
-    return _supabaseClient.auth.currentUser?.userMetadata?['name'] as String?;
+    final user = _supabaseClient.auth.currentUser;
+    return user?.userMetadata?['name'] as String? ?? user?.userMetadata?['full_name'] as String?;
   }
 }

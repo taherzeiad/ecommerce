@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../core/extensions/context_extension.dart';
+import '../../../core/di/service_locator.dart';
+import '../../../data/repositories/auth_repository.dart';
 import '../widgets/profile_widgets.dart';
 
 class EditProfileView extends StatelessWidget {
@@ -10,6 +12,10 @@ class EditProfileView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authRepository = sl<AuthRepository>();
+    final liveName = authRepository.getCurrentUserName() ?? '';
+    final liveEmail = authRepository.getCurrentUserEmail() ?? '';
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.primary,
@@ -61,10 +67,10 @@ class EditProfileView extends StatelessWidget {
             ),
             const SizedBox(height: 32),
             _buildFieldLabel(context.tr('full_name')),
-            _buildTextField(initialValue: 'Ramiz Man'),
+            _buildTextField(initialValue: liveName),
             const SizedBox(height: 16),
             _buildFieldLabel(context.tr('email')),
-            _buildTextField(initialValue: 'ramiz123@gmail.com'),
+            _buildTextField(initialValue: liveEmail),
             const SizedBox(height: 16),
             _buildFieldLabel(context.tr('phone_number')),
             _buildTextField(initialValue: '0593476532'),
