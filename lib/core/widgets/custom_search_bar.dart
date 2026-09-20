@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vector_graphics/vector_graphics.dart';
+
 import '../constants/app_colors.dart';
 
 class CustomSearchBar extends StatelessWidget {
@@ -58,16 +59,25 @@ class CustomSearchBar extends StatelessWidget {
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(height / 2),
                       bottomLeft: Radius.circular(height / 2),
-                      topRight: showFilter ? Radius.zero : Radius.circular(height / 2),
-                      bottomRight: showFilter ? Radius.zero : Radius.circular(height / 2),
+                      topRight: showFilter
+                          ? Radius.zero
+                          : Radius.circular(height / 2),
+                      bottomRight: showFilter
+                          ? Radius.zero
+                          : Radius.circular(height / 2),
                     ),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Row(
                         children: [
                           const VectorGraphic(
-                            loader: AssetBytesLoader('lib/assets/icons/search.svg'),
-                            colorFilter: ColorFilter.mode(AppColors.primary, BlendMode.srcIn),
+                            loader: AssetBytesLoader(
+                              'lib/assets/icons/search.svg',
+                            ),
+                            colorFilter: ColorFilter.mode(
+                              AppColors.primary,
+                              BlendMode.srcIn,
+                            ),
                             width: 24,
                             height: 24,
                           ),
@@ -94,8 +104,13 @@ class CustomSearchBar extends StatelessWidget {
                       prefixIcon: const Padding(
                         padding: EdgeInsets.all(12),
                         child: VectorGraphic(
-                          loader: AssetBytesLoader('lib/assets/icons/search.svg'),
-                          colorFilter: ColorFilter.mode(AppColors.primary, BlendMode.srcIn),
+                          loader: AssetBytesLoader(
+                            'lib/assets/icons/search.svg',
+                          ),
+                          colorFilter: ColorFilter.mode(
+                            AppColors.primary,
+                            BlendMode.srcIn,
+                          ),
                           width: 24,
                           height: 24,
                         ),
@@ -122,7 +137,10 @@ class CustomSearchBar extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 child: VectorGraphic(
                   loader: AssetBytesLoader('lib/assets/icons/filter.svg'),
-                  colorFilter: ColorFilter.mode(AppColors.primary, BlendMode.srcIn),
+                  colorFilter: ColorFilter.mode(
+                    AppColors.primary,
+                    BlendMode.srcIn,
+                  ),
                   width: 22,
                   height: 22,
                 ),
