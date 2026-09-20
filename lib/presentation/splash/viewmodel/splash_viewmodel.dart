@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 import '../../../data/repositories/onboarding_repository.dart';
+import '../../../data/repositories/auth_repository.dart';
+import '../../../core/di/service_locator.dart';
 
 /// Decides where the splash screen should navigate to next.
 /// The View only listens to [destination] — it has zero business logic.

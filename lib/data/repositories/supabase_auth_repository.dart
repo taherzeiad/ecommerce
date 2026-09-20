@@ -59,4 +59,19 @@ class SupabaseAuthRepository implements AuthRepository {
     final session = _supabaseClient.auth.currentSession;
     return session != null && !session.isExpired;
   }
+
+  @override
+  Future<void> logout() async {
+    await _supabaseClient.auth.signOut();
+  }
+
+  @override
+  String? getCurrentUserEmail() {
+    return _supabaseClient.auth.currentUser?.email;
+  }
+
+  @override
+  String? getCurrentUserName() {
+    return _supabaseClient.auth.currentUser?.userMetadata?['name'] as String?;
+  }
 }
