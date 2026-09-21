@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../core/extensions/context_extension.dart';
-import '../../../core/di/service_locator.dart';
-import '../../../data/repositories/auth_repository.dart';
 import '../widgets/profile_widgets.dart';
 
 import '../view_model/profile_view_model.dart';

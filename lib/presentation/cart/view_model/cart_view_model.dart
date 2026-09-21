@@ -86,8 +86,7 @@ class CartViewModel extends ChangeNotifier {
   Future<void> placeOrder(dynamic addressId) async {
     if (_orderRepository == null) return;
     try {
-      await _orderRepository!.createOrder(totalPrice, addressId);
-      await clearCart();
+      await _orderRepository.createOrder(totalPrice, addressId);
     } catch (e) {
       // Handle error
     }
