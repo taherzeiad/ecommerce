@@ -7,14 +7,38 @@ import '../../../core/di/service_locator.dart';
 import '../../../data/repositories/auth_repository.dart';
 import '../widgets/profile_widgets.dart';
 
-class EditProfileView extends StatelessWidget {
+import '../view_model/profile_view_model.dart';
+import 'package:provider/provider.dart';
+
+class EditProfileView extends StatefulWidget {
   const EditProfileView({super.key});
 
   @override
+  State<EditProfileView> createState() => _EditProfileViewState();
+}
+
+class _EditProfileViewState extends State<EditProfileView> {
+  late TextEditingController _nameController;
+  late TextEditingController _emailController;
+
+  @override
+  void initState() {
+    super.initState();
+    final profileViewModel = context.read<ProfileViewModel>();
+    _nameController = TextEditingController(text: profileViewModel.userName);
+    _emailController = TextEditingController(text: profileViewModel.userEmail);
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final authRepository = sl<AuthRepository>();
-    final liveName = authRepository.getCurrentUserName() ?? '';
-    final liveEmail = authRepository.getCurrentUserEmail() ?? '';
+    final profileViewModel = context.watch<ProfileViewModel>();
 
     return Scaffold(
       appBar: AppBar(
@@ -26,17 +50,23 @@ class EditProfileView extends StatelessWidget {
           style: const TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(
-              context.tr('save'),
-              style: const TextStyle(
-                color: AppColors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+          if (profileViewModel.isLoading)
+            const Center(child: Padding(padding: EdgeInsets.all(16), child: CircularProgressIndicator(color: Colors.white)))
+          else
+            TextButton(
+              onPressed: () async {
+                await profileViewModel.updateName(_nameController.text);
+                if (context.mounted) Navigator.pop(context);
+              },
+              child: Text(
+                context.tr('save'),
+                style: const TextStyle(
+                  color: AppColors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-          ),
         ],
       ),
       body: SingleChildScrollView(
@@ -67,10 +97,10 @@ class EditProfileView extends StatelessWidget {
             ),
             const SizedBox(height: 32),
             _buildFieldLabel(context.tr('full_name')),
-            _buildTextField(initialValue: liveName),
+            _buildTextField(controller: _nameController),
             const SizedBox(height: 16),
             _buildFieldLabel(context.tr('email')),
-            _buildTextField(initialValue: liveEmail),
+            _buildTextField(controller: _emailController, enabled: false),
             const SizedBox(height: 16),
             _buildFieldLabel(context.tr('phone_number')),
             _buildTextField(initialValue: '0593476532'),
@@ -88,9 +118,19 @@ class EditProfileView extends StatelessWidget {
               onTap: () {},
             ),
             const SizedBox(height: 32),
-            ElevatedButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text(context.tr('save_changes')),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: profileViewModel.isLoading
+                    ? null
+                    : () async {
+                        await profileViewModel.updateName(_nameController.text);
+                        if (context.mounted) Navigator.pop(context);
+                      },
+                child: profileViewModel.isLoading
+                    ? const CircularProgressIndicator(color: Colors.white)
+                    : Text(context.tr('save_changes')),
+              ),
             ),
           ],
         ),
@@ -112,9 +152,11 @@ class EditProfileView extends StatelessWidget {
     );
   }
 
-  Widget _buildTextField({String? initialValue, String? hintText}) {
+  Widget _buildTextField({TextEditingController? controller, String? initialValue, String? hintText, bool enabled = true}) {
     return TextFormField(
-      initialValue: initialValue,
+      controller: controller,
+      initialValue: controller == null ? initialValue : null,
+      enabled: enabled,
       decoration: InputDecoration(
         hintText: hintText,
         hintStyle: const TextStyle(color: AppColors.textLight),
@@ -129,6 +171,10 @@ class EditProfileView extends StatelessWidget {
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
           borderSide: const BorderSide(color: AppColors.borderLight),
+        ),
+        disabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: Colors.grey.shade300),
         ),
       ),
     );

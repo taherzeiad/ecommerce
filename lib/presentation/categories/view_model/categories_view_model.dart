@@ -11,11 +11,30 @@ class CategoriesViewModel extends ChangeNotifier {
   List<ProductEntity> _categoryProducts = [];
   List<ProductEntity> get categoryProducts => _categoryProducts;
 
+  List<String> _categories = [];
+  List<String> get categories => _categories;
+
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-  String _selectedCategory = 'Smartphones';
+  String _selectedCategory = '';
   String get selectedCategory => _selectedCategory;
+
+  Future<void> fetchCategories() async {
+    _isLoading = true;
+    notifyListeners();
+    try {
+      _categories = await _productRepository.getCategories();
+      if (_categories.isNotEmpty && _selectedCategory.isEmpty) {
+        await fetchProductsByCategory(_categories.first);
+      }
+    } catch (e) {
+      // Handle error
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
 
   Future<void> fetchProductsByCategory(String category) async {
     _selectedCategory = category;

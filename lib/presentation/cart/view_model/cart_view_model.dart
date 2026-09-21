@@ -1,55 +1,95 @@
 import 'package:flutter/material.dart';
-import '../../../data/models/cart_item_model.dart';
 import '../../../domain/entities/product_entity.dart';
+import '../../../domain/repositories/cart_repository.dart';
+import '../../../domain/repositories/order_repository.dart';
 
 class CartViewModel extends ChangeNotifier {
-  final List<CartItem> _items = [];
+  final CartRepository _cartRepository;
+  final OrderRepository? _orderRepository;
 
-  List<CartItem> get items => List.unmodifiable(_items);
+  CartViewModel({required CartRepository cartRepository, OrderRepository? orderRepository})
+      : _cartRepository = cartRepository,
+        _orderRepository = orderRepository;
+
+  List<CartItemEntity> _items = [];
+  List<CartItemEntity> get items => List.unmodifiable(_items);
+
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
 
   int get totalItems => _items.fold(0, (sum, item) => sum + item.quantity);
-
   double get subtotal => _items.fold(0, (sum, item) => sum + (item.product.price * item.quantity));
-
   double get deliveryFees => _items.isEmpty ? 0 : 12.0;
-
   double get taxes => subtotal * 0.05;
-
   double get totalPrice => subtotal + deliveryFees + taxes;
 
-  void addToCart(ProductEntity product) {
-    final index = _items.indexWhere((item) => item.product.id == product.id);
-    if (index >= 0) {
-      _items[index].quantity++;
-    } else {
-      _items.add(CartItem(product: product));
-    }
+  Future<void> fetchCartItems() async {
+    _isLoading = true;
     notifyListeners();
-  }
-
-  void removeFromCart(String productId) {
-    _items.removeWhere((item) => item.product.id == productId);
-    notifyListeners();
-  }
-
-  void incrementQuantity(String productId) {
-    final index = _items.indexWhere((item) => item.product.id == productId);
-    if (index >= 0) {
-      _items[index].quantity++;
+    try {
+      _items = await _cartRepository.getCartItems();
+    } catch (e) {
+      // Handle error
+    } finally {
+      _isLoading = false;
       notifyListeners();
     }
   }
 
-  void decrementQuantity(String productId) {
-    final index = _items.indexWhere((item) => item.product.id == productId);
-    if (index >= 0 && _items[index].quantity > 1) {
-      _items[index].quantity--;
-      notifyListeners();
+  Future<void> addToCart(ProductEntity product, {int quantity = 1}) async {
+    try {
+      await _cartRepository.addToCart(product.id, quantity);
+      await fetchCartItems();
+    } catch (e) {
+      // Handle error
     }
   }
 
-  void clearCart() {
-    _items.clear();
-    notifyListeners();
+  Future<void> removeFromCart(dynamic cartItemId) async {
+    try {
+      await _cartRepository.removeFromCart(cartItemId);
+      await fetchCartItems();
+    } catch (e) {
+      // Handle error
+    }
+  }
+
+  Future<void> incrementQuantity(CartItemEntity item) async {
+    try {
+      await _cartRepository.updateQuantity(item.id, item.quantity + 1);
+      await fetchCartItems();
+    } catch (e) {
+      // Handle error
+    }
+  }
+
+  Future<void> decrementQuantity(CartItemEntity item) async {
+    if (item.quantity > 1) {
+      try {
+        await _cartRepository.updateQuantity(item.id, item.quantity - 1);
+        await fetchCartItems();
+      } catch (e) {
+        // Handle error
+      }
+    }
+  }
+
+  Future<void> clearCart() async {
+    try {
+      await _cartRepository.clearCart();
+      await fetchCartItems();
+    } catch (e) {
+      // Handle error
+    }
+  }
+
+  Future<void> placeOrder(dynamic addressId) async {
+    if (_orderRepository == null) return;
+    try {
+      await _orderRepository!.createOrder(totalPrice, addressId);
+      await clearCart();
+    } catch (e) {
+      // Handle error
+    }
   }
 }

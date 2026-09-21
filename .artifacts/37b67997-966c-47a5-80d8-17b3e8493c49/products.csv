@@ -1,0 +1,5 @@
+name,category_name,price,old_price,rating,review_count,description,images,is_flash_deal
+آيفون 15 برو,هواتف ذكية,4500.0,5000.0,4.9,150,أحدث هاتف من آبل مع معالج A17 برو وكاميرا متطورة.,"{""https://m.media-amazon.com/images/I/81SigNoP3rL._AC_SL1500_.jpg""}",true
+ساعة سامسونج جالكسي 6,ساعات ذكية,1200.0,1400.0,4.7,85,ساعة ذكية متطورة لمراقبة الصحة واللياقة البدنية.,"{""https://m.media-amazon.com/images/I/61fva6B6H6L._AC_SL1500_.jpg""}",true
+سماعات سوني WH-1000XM5,إلكترونيات,1400.0,,4.8,210,أفضل سماعات عازلة للضجيج في السوق حالياً.,"{""https://m.media-amazon.com/images/I/61iVusLwA4L._AC_SL1500_.jpg""}",false
+لابتوب إتش بي فيكتوس,أجهزة كمبيوتر,3200.0,3500.0,4.5,45,لابتوب قيمنق قوي مع معالج رايزن وكرت شاشة RTX.,"{""https://m.media-amazon.com/images/I/719fH274C7L._AC_SL1500_.jpg""}",false

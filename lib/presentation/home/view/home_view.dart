@@ -9,7 +9,10 @@ import '../../../core/widgets/custom_search_bar.dart';
 import '../view_model/home_view_model.dart';
 import '../widgets/product_card.dart';
 import '../../theme/view_model/theme_view_model.dart';
+import '../../profile/view_model/profile_view_model.dart';
 import '../../../core/extensions/context_extension.dart';
+import '../../../core/di/service_locator.dart';
+import '../../../data/repositories/auth_repository.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -17,6 +20,7 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<HomeViewModel>();
+    final profileViewModel = context.watch<ProfileViewModel>();
     final theme = Theme.of(context);
 
     return Scaffold(
@@ -151,6 +155,7 @@ class HomeView extends StatelessWidget {
 
   Widget _buildHeader(BuildContext context, HomeViewModel viewModel) {
     final theme = Theme.of(context);
+    final profileViewModel = context.watch<ProfileViewModel>();
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -170,7 +175,7 @@ class HomeView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  context.tr('hello'),
+                  '${context.tr('hello')} ${profileViewModel.userName.split(' ').first}',
                   style: TextStyle(
                     color: theme.textTheme.bodyMedium?.color,
                     fontSize: 16,
@@ -416,7 +421,8 @@ class HomeView extends StatelessWidget {
 
   Widget _buildCategoryList(BuildContext context) {
     final theme = Theme.of(context);
-    final categories = ['Phone', 'Fashion', 'Audio', 'Laptop', 'Games'];
+    final viewModel = context.watch<HomeViewModel>();
+    final categories = viewModel.categories;
     final categoryIcons = [
       'lib/assets/icons/phone.png',
       'lib/assets/icons/clothes.png',
@@ -432,6 +438,7 @@ class HomeView extends StatelessWidget {
         itemCount: categories.length,
         separatorBuilder: (_, _) => const SizedBox(width: 20),
         itemBuilder: (context, index) {
+          final iconPath = categoryIcons[index % categoryIcons.length];
           return InkWell(
             onTap: () => Navigator.pushNamed(context, AppRoutes.allProducts),
             child: Column(

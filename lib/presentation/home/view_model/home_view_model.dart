@@ -14,8 +14,10 @@ class HomeViewModel extends ChangeNotifier {
   List<ProductEntity> get popularProducts => _popularProducts;
 
   List<ProductEntity> _flashDeals = [];
-
   List<ProductEntity> get flashDeals => _flashDeals;
+
+  List<String> _categories = [];
+  List<String> get categories => _categories;
 
   bool _isLoading = false;
 
@@ -45,9 +47,11 @@ class HomeViewModel extends ChangeNotifier {
       final results = await Future.wait([
         _productRepository.getPopularProducts(),
         _productRepository.getFlashDeals(),
+        _productRepository.getCategories(),
       ]);
-      _popularProducts = results[0];
-      _flashDeals = results[1];
+      _popularProducts = results[0] as List<ProductEntity>;
+      _flashDeals = results[1] as List<ProductEntity>;
+      _categories = results[2] as List<String>;
     } catch (e) {
       // Handle error
     } finally {
