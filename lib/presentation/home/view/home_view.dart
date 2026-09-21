@@ -11,6 +11,8 @@ import '../widgets/product_card.dart';
 import '../../theme/view_model/theme_view_model.dart';
 import '../../profile/view_model/profile_view_model.dart';
 import '../../../core/extensions/context_extension.dart';
+import '../../../core/di/service_locator.dart';
+import '../../../data/repositories/auth_repository.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -18,6 +20,7 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<HomeViewModel>();
+    final profileViewModel = context.watch<ProfileViewModel>();
     final theme = Theme.of(context);
 
     return Scaffold(
@@ -435,6 +438,7 @@ class HomeView extends StatelessWidget {
         itemCount: categories.length,
         separatorBuilder: (_, _) => const SizedBox(width: 20),
         itemBuilder: (context, index) {
+          final iconPath = categoryIcons[index % categoryIcons.length];
           return InkWell(
             onTap: () => Navigator.pushNamed(context, AppRoutes.allProducts),
             child: Column(
