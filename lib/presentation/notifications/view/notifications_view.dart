@@ -3,25 +3,9 @@ import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/extensions/context_extension.dart';
 
-enum NotificationType { unread, orders, system }
-
-class NotificationItem {
-  final String titleKey;
-  final String descriptionKey;
-  final String time;
-  final IconData icon;
-  final Color color;
-  final NotificationType type;
-
-  NotificationItem({
-    required this.titleKey,
-    required this.descriptionKey,
-    required this.time,
-    required this.icon,
-    required this.color,
-    required this.type,
-  });
-}
+import '../view_model/notifications_view_model.dart';
+import '../../../domain/entities/notification_entity.dart';
+import 'package:provider/provider.dart';
 
 class NotificationsView extends StatefulWidget {
   const NotificationsView({super.key});
@@ -33,60 +17,26 @@ class NotificationsView extends StatefulWidget {
 class _NotificationsViewState extends State<NotificationsView> {
   int _selectedIndex = 0;
 
-  final List<NotificationItem> _notifications = [
-    NotificationItem(
-      titleKey: 'notif_order_way_title',
-      descriptionKey: 'notif_order_way_desc',
-      time: '2 minutes ago',
-      icon: Icons.local_shipping,
-      color: AppColors.primary,
-      type: NotificationType.orders,
-    ),
-    NotificationItem(
-      titleKey: 'notif_payment_success_title',
-      descriptionKey: 'notif_payment_success_desc',
-      time: '1 hour ago',
-      icon: Icons.payment,
-      color: Colors.teal,
-      type: NotificationType.unread,
-    ),
-    NotificationItem(
-      titleKey: 'notif_order_confirmed_title',
-      descriptionKey: 'notif_order_confirmed_desc',
-      time: '2 hours ago',
-      icon: Icons.check_circle,
-      color: AppColors.primary,
-      type: NotificationType.orders,
-    ),
-    NotificationItem(
-      titleKey: 'notif_security_alert_title',
-      descriptionKey: 'notif_security_alert_desc',
-      time: '5 hours ago',
-      icon: Icons.security,
-      color: Colors.orange,
-      type: NotificationType.system,
-    ),
-    NotificationItem(
-      titleKey: 'notif_welcome_title',
-      descriptionKey: 'notif_welcome_desc',
-      time: '1 day ago',
-      icon: Icons.celebration,
-      color: AppColors.primary,
-      type: NotificationType.system,
-    ),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<NotificationsViewModel>().fetchNotifications();
+    });
+  }
 
-  List<NotificationItem> get _filteredNotifications {
-    if (_selectedIndex == 0) return _notifications; // All
-    if (_selectedIndex == 1) return _notifications.where((n) => n.type == NotificationType.unread).toList();
-    if (_selectedIndex == 2) return _notifications.where((n) => n.type == NotificationType.orders).toList();
-    if (_selectedIndex == 3) return _notifications.where((n) => n.type == NotificationType.system).toList();
-    return _notifications;
+  List<NotificationEntity> _filterNotifications(List<NotificationEntity> notifications) {
+    if (_selectedIndex == 0) return notifications;
+    if (_selectedIndex == 1) return notifications.where((n) => n.type == 'unread').toList();
+    if (_selectedIndex == 2) return notifications.where((n) => n.type == 'orders').toList();
+    if (_selectedIndex == 3) return notifications.where((n) => n.type == 'system').toList();
+    return notifications;
   }
 
   @override
   Widget build(BuildContext context) {
-    final filteredList = _filteredNotifications;
+    final viewModel = context.watch<NotificationsViewModel>();
+    final filteredList = _filterNotifications(viewModel.notifications);
 
     return Scaffold(
       appBar: AppBar(
@@ -102,26 +52,28 @@ class _NotificationsViewState extends State<NotificationsView> {
         ),
         centerTitle: true,
       ),
-      body: Column(
-        children: [
-          const SizedBox(height: 20),
-          _buildFilterChips(context),
-          Expanded(
-            child: filteredList.isEmpty
-                ? _buildEmptyState(context)
-                : ListView.separated(
-                    padding: const EdgeInsets.all(24),
-                    itemCount: filteredList.length,
-                    separatorBuilder: (_, _) => const SizedBox(height: 16),
-                    itemBuilder: (context, index) {
-                      final notification = filteredList[index];
-                      return _buildNotificationCard(context, notification);
-                    },
-                  ),
-          ),
-          const SizedBox(height: 80),
-        ],
-      ),
+      body: viewModel.isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : Column(
+              children: [
+                const SizedBox(height: 20),
+                _buildFilterChips(context),
+                Expanded(
+                  child: filteredList.isEmpty
+                      ? _buildEmptyState(context)
+                      : ListView.separated(
+                          padding: const EdgeInsets.all(24),
+                          itemCount: filteredList.length,
+                          separatorBuilder: (_, _) => const SizedBox(height: 16),
+                          itemBuilder: (context, index) {
+                            final notification = filteredList[index];
+                            return _buildNotificationCard(context, notification);
+                          },
+                        ),
+                ),
+                const SizedBox(height: 80),
+              ],
+            ),
     );
   }
 
@@ -165,14 +117,17 @@ class _NotificationsViewState extends State<NotificationsView> {
     );
   }
 
-  Widget _buildNotificationCard(BuildContext context, NotificationItem notification) {
+  Widget _buildNotificationCard(BuildContext context, NotificationEntity notification) {
+    final color = notification.type == 'orders' ? AppColors.primary : (notification.type == 'unread' ? Colors.teal : Colors.orange);
+    final icon = notification.type == 'orders' ? Icons.local_shipping : (notification.type == 'unread' ? Icons.payment : Icons.security);
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(16),
         border: Border(
-          left: BorderSide(color: notification.color, width: 4),
+          left: BorderSide(color: color, width: 4),
         ),
         boxShadow: [
           BoxShadow(
@@ -188,10 +143,10 @@ class _NotificationsViewState extends State<NotificationsView> {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: notification.color.withValues(alpha: 0.1),
+              color: color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: Icon(notification.icon, color: notification.color),
+            child: Icon(icon, color: color),
           ),
           const SizedBox(width: 16),
           Expanded(
@@ -224,7 +179,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      notification.time, // Time typically remains as is or formatted
+                      '${notification.createdAt.hour}:${notification.createdAt.minute}', // Simplified time
                       style: TextStyle(
                         color: Theme.of(context).hintColor,
                         fontSize: 12,

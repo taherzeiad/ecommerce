@@ -86,7 +86,7 @@ class AllProductsView extends StatelessWidget {
     BuildContext context,
     CategoriesViewModel viewModel,
   ) {
-    final filters = ['Smartphones', 'Audio', 'Gaming', 'Laptop'];
+    final filters = viewModel.categories;
     final theme = Theme.of(context);
     return SizedBox(
       height: 40,
@@ -96,9 +96,10 @@ class AllProductsView extends StatelessWidget {
         itemCount: filters.length,
         separatorBuilder: (_, _) => const SizedBox(width: 12),
         itemBuilder: (context, index) {
-          final isSelected = viewModel.selectedCategory == filters[index];
+          final category = filters[index];
+          final isSelected = viewModel.selectedCategory == category;
           return InkWell(
-            onTap: () => viewModel.fetchProductsByCategory(filters[index]),
+            onTap: () => viewModel.fetchProductsByCategory(category),
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               alignment: Alignment.center,
@@ -107,7 +108,7 @@ class AllProductsView extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
-                context.tr(filters[index].toLowerCase()),
+                context.tr(category.toLowerCase()),
                 style: TextStyle(
                   color: isSelected ? AppColors.white : AppColors.primary,
                   fontWeight: FontWeight.bold,

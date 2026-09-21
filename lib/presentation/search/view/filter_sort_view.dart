@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/extensions/context_extension.dart';
+import '../../categories/view_model/categories_view_model.dart';
 
 class FilterSortView extends StatefulWidget {
   const FilterSortView({super.key});
@@ -147,7 +149,7 @@ class _FilterSortViewState extends State<FilterSortView> {
   }
 
   Widget _buildCategoryOptions() {
-    final categories = ['Phone', 'Audio', 'Fashion', 'Camera'];
+    final categories = context.watch<CategoriesViewModel>().categories;
     return Container(
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,

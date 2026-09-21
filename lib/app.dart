@@ -10,6 +10,10 @@ import 'package:ecommerce/presentation/cart/view_model/cart_view_model.dart';
 import 'package:ecommerce/presentation/theme/view_model/locale_view_model.dart';
 import 'package:ecommerce/presentation/theme/view_model/theme_view_model.dart';
 import 'package:ecommerce/presentation/wishlist/view_model/wishlist_view_model.dart';
+import 'package:ecommerce/presentation/address/view_model/address_view_model.dart';
+import 'package:ecommerce/presentation/notifications/view_model/notifications_view_model.dart';
+import 'package:ecommerce/presentation/profile/view_model/profile_view_model.dart';
+import 'package:ecommerce/core/di/service_locator.dart';
 import 'package:ecommerce/core/widgets/privacy_gate.dart';
 
 class EcommerceApp extends StatelessWidget {
@@ -21,8 +25,11 @@ class EcommerceApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => ThemeViewModel()),
         ChangeNotifierProvider(create: (_) => LocaleViewModel()),
-        ChangeNotifierProvider(create: (_) => CartViewModel()),
-        ChangeNotifierProvider(create: (_) => WishlistViewModel()),
+        ChangeNotifierProvider(create: (_) => CartViewModel(cartRepository: sl(), orderRepository: sl())),
+        ChangeNotifierProvider(create: (_) => WishlistViewModel(wishlistRepository: sl())),
+        ChangeNotifierProvider(create: (_) => AddressViewModel(addressRepository: sl())),
+        ChangeNotifierProvider(create: (_) => NotificationsViewModel(notificationRepository: sl())),
+        ChangeNotifierProvider(create: (_) => ProfileViewModel(authRepository: sl())),
       ],
       child: Consumer2<ThemeViewModel, LocaleViewModel>(
         builder: (context, themeViewModel, localeViewModel, _) {

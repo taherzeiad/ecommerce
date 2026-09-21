@@ -6,6 +6,7 @@ import '../../../core/extensions/context_extension.dart';
 import '../../../core/di/service_locator.dart';
 import '../../../data/repositories/auth_repository.dart';
 import '../../theme/view_model/theme_view_model.dart';
+import '../view_model/profile_view_model.dart';
 import '../widgets/profile_widgets.dart';
 
 class ProfileView extends StatelessWidget {
@@ -14,9 +15,9 @@ class ProfileView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final authRepository = sl<AuthRepository>();
-    final userName = authRepository.getCurrentUserName() ?? 'User';
-    final userEmail = authRepository.getCurrentUserEmail() ?? '';
+    final profileViewModel = context.watch<ProfileViewModel>();
+    final userName = profileViewModel.userName.isNotEmpty ? profileViewModel.userName : 'User';
+    final userEmail = profileViewModel.userEmail;
 
     return Scaffold(
       appBar: AppBar(

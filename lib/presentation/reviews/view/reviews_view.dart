@@ -4,11 +4,17 @@ import '../../../core/constants/app_colors.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../core/extensions/context_extension.dart';
 
+import '../view_model/reviews_view_model.dart';
+import '../../../domain/entities/review_entity.dart';
+import 'package:provider/provider.dart';
+
 class ReviewsView extends StatelessWidget {
   const ReviewsView({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final viewModel = context.watch<ReviewsViewModel>();
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.primary,
@@ -23,46 +29,55 @@ class ReviewsView extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildRatingSummary(context),
-            const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: () =>
-                  Navigator.pushNamed(context, AppRoutes.addReview),
-              child: Text(context.tr('add_rating')),
+      body: viewModel.isLoading 
+          ? const Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildRatingSummary(context, viewModel),
+                  const SizedBox(height: 24),
+                  ElevatedButton(
+                    onPressed: () =>
+                        Navigator.pushNamed(context, AppRoutes.addReview),
+                    child: Text(context.tr('add_rating')),
+                  ),
+                  const SizedBox(height: 32),
+                  Text(
+                    context.tr('user_review'),
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  ),
+                  const SizedBox(height: 16),
+                  viewModel.reviews.isEmpty 
+                    ? const Text('No reviews yet.')
+                    : ListView.separated(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: viewModel.reviews.length,
+                        separatorBuilder: (_, _) => const SizedBox(height: 16),
+                        itemBuilder: (context, index) {
+                          return _buildUserReviewItem(viewModel.reviews[index]);
+                        },
+                      ),
+                ],
+              ),
             ),
-            const SizedBox(height: 32),
-            Text(
-              context.tr('user_review'),
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-            ),
-            const SizedBox(height: 16),
-            ListView.separated(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: 3,
-              separatorBuilder: (_, _) => const SizedBox(height: 16),
-              itemBuilder: (context, index) {
-                return _buildUserReviewItem();
-              },
-            ),
-          ],
-        ),
-      ),
     );
   }
 
-  Widget _buildRatingSummary(BuildContext context) {
+  Widget _buildRatingSummary(BuildContext context, ReviewsViewModel viewModel) {
+    double avgRating = 0;
+    if (viewModel.reviews.isNotEmpty) {
+      avgRating = viewModel.reviews.map((e) => e.rating).reduce((a, b) => a + b) / viewModel.reviews.length;
+    }
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: Theme.of(context).dividerColor),
       ),
       child: Row(
         children: [
@@ -74,9 +89,9 @@ class ReviewsView extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
             ),
             child: const Icon(
-              Icons.laptop_mac,
+              Icons.star,
               size: 50,
-              color: Colors.black54,
+              color: AppColors.primary,
             ),
           ),
           const SizedBox(width: 16),
@@ -84,17 +99,13 @@ class ReviewsView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Row(
+                Row(
                   children: [
-                    Icon(Icons.star, color: Colors.teal, size: 24),
-                    Icon(Icons.star, color: Colors.teal, size: 24),
-                    Icon(Icons.star, color: Colors.teal, size: 24),
-                    Icon(Icons.star, color: Colors.teal, size: 24),
-                    Icon(Icons.star, color: Colors.teal, size: 24),
-                    SizedBox(width: 12),
+                    const Icon(Icons.star, color: AppColors.primary, size: 24),
+                    const SizedBox(width: 12),
                     Text(
-                      '4.8',
-                      style: TextStyle(
+                      avgRating.toStringAsFixed(1),
+                      style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 20,
                       ),
@@ -103,7 +114,7 @@ class ReviewsView extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  '1,200 ${context.tr('reviews')}', // Should add 'reviews' key
+                  '${viewModel.reviews.length} ${context.tr('reviews')}',
                   style: const TextStyle(color: Colors.grey, fontSize: 14),
                 ),
               ],
@@ -114,7 +125,7 @@ class ReviewsView extends StatelessWidget {
     );
   }
 
-  Widget _buildUserReviewItem() {
+  Widget _buildUserReviewItem(ReviewEntity review) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -122,41 +133,41 @@ class ReviewsView extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.grey.shade200),
       ),
-      child: const Column(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              CircleAvatar(
+              const CircleAvatar(
                 radius: 20,
                 backgroundColor: Colors.grey,
                 child: Icon(Icons.person, color: Colors.white),
               ),
-              SizedBox(width: 12),
+              const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Eng.Reham',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      review.userName,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      '36s ago',
-                      style: TextStyle(color: Colors.grey, fontSize: 12),
+                      '${review.createdAt.day}/${review.createdAt.month}/${review.createdAt.year}',
+                      style: const TextStyle(color: Colors.grey, fontSize: 12),
                     ),
                   ],
                 ),
               ),
-              Icon(Icons.star, color: Colors.amber, size: 20),
-              SizedBox(width: 4),
-              Text('4.9', style: TextStyle(fontWeight: FontWeight.bold)),
+              const Icon(Icons.star, color: Colors.amber, size: 20),
+              const SizedBox(width: 4),
+              Text(review.rating.toString(), style: const TextStyle(fontWeight: FontWeight.bold)),
             ],
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Text(
-            'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the standard Lorem Ipsum has been the industry',
-            style: TextStyle(color: Colors.grey, height: 1.5),
+            review.comment,
+            style: const TextStyle(color: Colors.grey, height: 1.5),
           ),
         ],
       ),

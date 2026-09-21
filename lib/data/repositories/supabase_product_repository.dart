@@ -55,4 +55,15 @@ class SupabaseProductRepository implements ProductRepository {
         .map((json) => ProductModel.fromJson(json as Map<String, dynamic>))
         .toList();
   }
+
+  @override
+  Future<List<String>> getCategories() async {
+    final response = await _supabaseClient
+        .from('categories')
+        .select('name');
+    
+    return (response as List<dynamic>)
+        .map((json) => json['name'] as String)
+        .toList();
+  }
 }

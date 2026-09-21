@@ -82,6 +82,23 @@ class SupabaseAuthRepository implements AuthRepository {
   @override
   String? getCurrentUserName() {
     final user = _supabaseClient.auth.currentUser;
-    return user?.userMetadata?['name'] as String? ?? user?.userMetadata?['full_name'] as String?;
+    return user?.userMetadata?['name'] as String? ??
+        user?.userMetadata?['full_name'] as String?;
+  }
+
+  @override
+  Future<void> updateProfileName(String name) async {
+    final user = _supabaseClient.auth.currentUser;
+    if (user == null) return;
+
+    // 1. Update Supabase Auth User Metadata
+    await _supabaseClient.auth.updateUser(UserAttributes(data: {'name': name}));
+
+    // 2. Update profiles table
+    await _supabaseClient.from('profiles').upsert({
+      'id': user.id,
+      'name': name,
+      'email': user.email,
+    });
   }
 }

@@ -6,15 +6,31 @@ import '../../../core/routes/app_routes.dart';
 import '../../../core/widgets/custom_search_bar.dart';
 import '../../../core/extensions/context_extension.dart';
 import '../../theme/view_model/theme_view_model.dart';
+import '../view_model/categories_view_model.dart';
 
 import 'package:provider/provider.dart';
 
-class CategoriesView extends StatelessWidget {
+class CategoriesView extends StatefulWidget {
   const CategoriesView({super.key});
+
+  @override
+  State<CategoriesView> createState() => _CategoriesViewState();
+}
+
+class _CategoriesViewState extends State<CategoriesView> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<CategoriesViewModel>().fetchCategories();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final viewModel = context.watch<CategoriesViewModel>();
+
     return Scaffold(
       backgroundColor: AppColors.primary,
       appBar: AppBar(
@@ -103,21 +119,16 @@ class CategoriesView extends StatelessWidget {
                   crossAxisSpacing: 16,
                   mainAxisSpacing: 16,
                 ),
-                itemCount: 4,
+                itemCount: viewModel.categories.length,
                 itemBuilder: (context, index) {
-                  final titles = ['smartphones', 'audio', 'gaming', 'laptop'];
-                  final counts = [
-                    '+250 Product',
-                    '+50 Product',
-                    '+250 Product',
-                    '+550 Product',
-                  ];
+                  final title = viewModel.categories[index];
                   final icons = [
                     'lib/assets/icons/phone.png',
                     'lib/assets/icons/sound.png',
                     'lib/assets/icons/play.png',
                     'lib/assets/icons/laptop.png',
                   ];
+                  final iconPath = icons[index % icons.length];
 
                   return TweenAnimationBuilder<double>(
                     duration: Duration(milliseconds: 300 + (index * 50)),
@@ -134,9 +145,9 @@ class CategoriesView extends StatelessWidget {
                     },
                     child: _buildCategoryGridItem(
                       context,
-                      context.tr(titles[index]),
-                      counts[index],
-                      icons[index],
+                      title,
+                      '+10 Product',
+                      iconPath,
                       index == 0,
                     ),
                   );

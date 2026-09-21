@@ -6,6 +6,9 @@ import '../../../core/routes/app_routes.dart';
 import '../../../core/extensions/context_extension.dart';
 import '../../cart/view_model/cart_view_model.dart';
 
+import '../../address/view_model/address_view_model.dart';
+import '../../../domain/entities/address_entity.dart';
+
 class CheckoutView extends StatefulWidget {
   const CheckoutView({super.key});
 
@@ -16,10 +19,29 @@ class CheckoutView extends StatefulWidget {
 class _CheckoutViewState extends State<CheckoutView> {
   final PageController _pageController = PageController();
   int _currentStep = 0;
+  AddressEntity? _selectedAddress;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<AddressViewModel>().fetchAddresses();
+      context.read<CartViewModel>().fetchCartItems();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final cartViewModel = context.watch<CartViewModel>();
+    final addressViewModel = context.watch<AddressViewModel>();
+
+    // Set default selected address if not set and addresses available
+    if (_selectedAddress == null && addressViewModel.addresses.isNotEmpty) {
+      _selectedAddress = addressViewModel.addresses.firstWhere(
+        (a) => a.isDefault,
+        orElse: () => addressViewModel.addresses.first,
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -32,7 +54,10 @@ class _CheckoutViewState extends State<CheckoutView> {
         ),
         title: Text(
           context.tr('checkout'),
-          style: const TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
+          style: const TextStyle(
+            color: AppColors.white,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
       body: Column(
@@ -73,17 +98,9 @@ class _CheckoutViewState extends State<CheckoutView> {
         child: Row(
           children: [
             _buildStepTab(context, context.tr('address'), 0),
-            VerticalDivider(
-              width: 1,
-              thickness: 1,
-              color: theme.dividerColor,
-            ),
+            VerticalDivider(width: 1, thickness: 1, color: theme.dividerColor),
             _buildStepTab(context, context.tr('payment'), 1),
-            VerticalDivider(
-              width: 1,
-              thickness: 1,
-              color: theme.dividerColor,
-            ),
+            VerticalDivider(width: 1, thickness: 1, color: theme.dividerColor),
             _buildStepTab(context, context.tr('confirm'), 2),
           ],
         ),
@@ -109,7 +126,9 @@ class _CheckoutViewState extends State<CheckoutView> {
           child: Text(
             label,
             style: TextStyle(
-              color: isActive ? AppColors.white : theme.textTheme.bodyMedium?.color,
+              color: isActive
+                  ? AppColors.white
+                  : theme.textTheme.bodyMedium?.color,
               fontWeight: FontWeight.w500,
               fontSize: 16,
             ),
@@ -120,49 +139,71 @@ class _CheckoutViewState extends State<CheckoutView> {
   }
 
   Widget _buildAddressStep(CartViewModel cartViewModel) {
+    final addressViewModel = context.watch<AddressViewModel>();
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Column(
         children: [
-          _buildAddressCard(),
+          if (addressViewModel.isLoading)
+            const CircularProgressIndicator()
+          else if (addressViewModel.addresses.isEmpty)
+            Text(context.tr('no_address_msg'))
+          else
+            ...addressViewModel.addresses.map(
+              (addr) => Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: InkWell(
+                  onTap: () => setState(() => _selectedAddress = addr),
+                  child: _buildAddressCard(
+                    addr,
+                    isSelected: _selectedAddress?.id == addr.id,
+                  ),
+                ),
+              ),
+            ),
           const SizedBox(height: 24),
           _buildAddAddressBtn(),
           const SizedBox(height: 32),
-          _buildOrderSummary(cartViewModel: cartViewModel, orderNumber: '#135792'),
+          _buildOrderSummary(
+            cartViewModel: cartViewModel,
+            orderNumber: '#135792',
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildAddressCard() {
+  Widget _buildAddressCard(AddressEntity address, {bool isSelected = false}) {
     final theme = Theme.of(context);
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: theme.cardColor,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.borderTeal),
+        border: Border.all(
+          color: isSelected ? AppColors.primary : theme.dividerColor,
+        ),
       ),
       child: Column(
         children: [
           _buildAddressRow(
             Icons.person,
             context.tr('full_name'),
-            'Ramiz Majed Alashqar',
-            showEdit: true,
+            address.fullName,
+            showEdit: isSelected,
           ),
           Divider(height: 24, color: theme.dividerColor),
           _buildAddressRow(
             Icons.location_on,
             context.tr('address'),
-            '742 Maple Street, Apt 5B\nBrooklyn, NY 11221\nUnited States',
+            '${address.streetAddress}\n${address.city}, ${address.postalCode}\n${address.country}',
           ),
           Divider(height: 24, color: theme.dividerColor),
           _buildAddressRow(
             Icons.phone,
             context.tr('phone_number'),
-            '+ 1 555 742 8391',
-            showCheck: true,
+            address.phoneNumber,
+            showCheck: isSelected,
           ),
         ],
       ),
@@ -251,7 +292,10 @@ class _CheckoutViewState extends State<CheckoutView> {
             children: [
               Text(
                 context.tr('select_your_card'),
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               TextButton(
                 onPressed: () =>
@@ -272,7 +316,10 @@ class _CheckoutViewState extends State<CheckoutView> {
             'lib/assets/icons/paypal.png',
           ),
           const SizedBox(height: 16),
-          _buildOrderSummary(cartViewModel: cartViewModel, orderNumber: '#135792'),
+          _buildOrderSummary(
+            cartViewModel: cartViewModel,
+            orderNumber: '#135792',
+          ),
         ],
       ),
     );
@@ -368,7 +415,12 @@ class _CheckoutViewState extends State<CheckoutView> {
           const SizedBox(height: 24),
           Row(
             children: [
-              Expanded(child: _buildConfirmField(context.tr('expiration_date'), '01/27')),
+              Expanded(
+                child: _buildConfirmField(
+                  context.tr('expiration_date'),
+                  '01/27',
+                ),
+              ),
               const SizedBox(width: 16),
               Expanded(child: _buildConfirmField(context.tr('cvv'), '123')),
             ],
@@ -405,7 +457,10 @@ class _CheckoutViewState extends State<CheckoutView> {
           const Spacer(),
           Text(
             context.tr('payment_option'),
-            style: TextStyle(color: AppColors.white.withValues(alpha: 0.7), fontSize: 14),
+            style: TextStyle(
+              color: AppColors.white.withValues(alpha: 0.7),
+              fontSize: 14,
+            ),
           ),
           const Text(
             '3761 **** **** 4956',
@@ -424,7 +479,10 @@ class _CheckoutViewState extends State<CheckoutView> {
                 children: [
                   Text(
                     context.tr('expiration_date'),
-                    style: TextStyle(color: AppColors.white.withValues(alpha: 0.7), fontSize: 12),
+                    style: TextStyle(
+                      color: AppColors.white.withValues(alpha: 0.7),
+                      fontSize: 12,
+                    ),
                   ),
                   const Text(
                     '01/27',
@@ -505,7 +563,10 @@ class _CheckoutViewState extends State<CheckoutView> {
             ],
           ),
           const SizedBox(height: 16),
-          _buildSummaryRow(context.tr('total_items'), '${cartViewModel.totalItems} ${context.tr('items_count')}'),
+          _buildSummaryRow(
+            context.tr('total_items'),
+            '${cartViewModel.totalItems} ${context.tr('items_count')}',
+          ),
           _buildSummaryRow(
             context.tr('sub_total'),
             '${cartViewModel.subtotal.toStringAsFixed(2)}\$',
@@ -579,9 +640,11 @@ class _CheckoutViewState extends State<CheckoutView> {
     } else {
       text = context.tr('confirm');
       icon = null;
-      onTap = () {
-        cartViewModel.clearCart();
-        Navigator.pushNamed(context, AppRoutes.orderSuccess);
+      onTap = () async {
+        await cartViewModel.placeOrder(_selectedAddress?.id);
+        if (context.mounted) {
+          Navigator.pushNamed(context, AppRoutes.orderSuccess);
+        }
       };
     }
 
