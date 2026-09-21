@@ -9,8 +9,21 @@ import '../../../domain/entities/product_entity.dart';
 import '../../cart/view_model/cart_view_model.dart';
 import '../view_model/wishlist_view_model.dart';
 
-class WishlistView extends StatelessWidget {
+class WishlistView extends StatefulWidget {
   const WishlistView({super.key});
+
+  @override
+  State<WishlistView> createState() => _WishlistViewState();
+}
+
+class _WishlistViewState extends State<WishlistView> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<WishlistViewModel>().fetchWishlist();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,16 +54,18 @@ class WishlistView extends StatelessWidget {
           ),
         ],
       ),
-      body: viewModel.items.isEmpty
-          ? _buildEmptyState(context)
-          : ListView.separated(
-              padding: const EdgeInsets.all(24),
-              itemCount: viewModel.items.length,
-              separatorBuilder: (_, _) => const SizedBox(height: 16),
-              itemBuilder: (context, index) {
-                return _buildWishlistItem(context, viewModel.items[index]);
-              },
-            ),
+      body: viewModel.isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : viewModel.items.isEmpty
+              ? _buildEmptyState(context)
+              : ListView.separated(
+                  padding: const EdgeInsets.all(24),
+                  itemCount: viewModel.items.length,
+                  separatorBuilder: (_, _) => const SizedBox(height: 16),
+                  itemBuilder: (context, index) {
+                    return _buildWishlistItem(context, viewModel.items[index]);
+                  },
+                ),
     );
   }
 

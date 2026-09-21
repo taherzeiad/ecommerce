@@ -15,6 +15,7 @@ import 'package:ecommerce/presentation/checkout/view/checkout_view.dart';
 import 'package:ecommerce/presentation/checkout/view/order_success_view.dart';
 import 'package:ecommerce/presentation/checkout/view/order_tracking_view.dart';
 import 'package:ecommerce/presentation/categories/view_model/categories_view_model.dart';
+import 'package:ecommerce/presentation/reviews/view_model/reviews_view_model.dart';
 import 'package:ecommerce/presentation/home/view/home_view.dart';
 import 'package:ecommerce/presentation/home/view_model/home_view_model.dart';
 import 'package:ecommerce/presentation/main_wrapper/main_wrapper.dart';
@@ -111,7 +112,14 @@ class AppRouter {
       case AppRoutes.notifications:
         return _fade(const NotificationsView(), settings);
       case AppRoutes.reviews:
-        return _fade(const ReviewsView(), settings);
+        final productId = settings.arguments as String;
+        return _fade(
+          ChangeNotifierProvider(
+            create: (_) => ReviewsViewModel(reviewRepository: sl())..fetchReviews(productId),
+            child: const ReviewsView(),
+          ),
+          settings,
+        );
       case AppRoutes.addReview:
         return _fade(const AddReviewView(), settings);
       case AppRoutes.profile:

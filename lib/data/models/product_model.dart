@@ -16,16 +16,20 @@ class ProductModel extends ProductEntity {
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
     return ProductModel(
-      id: json['id'] as String,
-      name: json['name'] as String,
-      category: json['category'] as String,
-      price: (json['price'] as num).toDouble(),
-      oldPrice: json['oldPrice'] != null ? (json['oldPrice'] as num).toDouble() : null,
+      id: json['id']?.toString() ?? '',
+      name: json['name'] as String? ?? '',
+      category: (json['category'] ?? json['category_name']) as String? ?? '',
+      price: (json['price'] as num?)?.toDouble() ?? 0.0,
+      oldPrice: json['oldPrice'] != null 
+          ? (json['oldPrice'] as num).toDouble() 
+          : (json['old_price'] != null ? (json['old_price'] as num).toDouble() : null),
       rating: (json['rating'] as num?)?.toDouble() ?? 0.0,
-      reviewCount: json['reviewCount'] as int? ?? 0,
-      description: json['description'] as String,
-      images: (json['images'] as List<dynamic>).map((e) => e as String).toList(),
-      isFlashDeal: json['isFlashDeal'] as bool? ?? false,
+      reviewCount: (json['reviewCount'] ?? json['review_count']) as int? ?? 0,
+      description: json['description'] as String? ?? '',
+      images: json['images'] != null 
+          ? (json['images'] as List<dynamic>).map((e) => e as String).toList() 
+          : [],
+      isFlashDeal: (json['isFlashDeal'] ?? json['is_flash_deal']) as bool? ?? false,
     );
   }
 

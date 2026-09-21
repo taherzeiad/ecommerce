@@ -8,8 +8,21 @@ import '../../../core/extensions/context_extension.dart';
 import '../../theme/view_model/theme_view_model.dart';
 import '../view_model/cart_view_model.dart';
 
-class CartView extends StatelessWidget {
+class CartView extends StatefulWidget {
   const CartView({super.key});
+
+  @override
+  State<CartView> createState() => _CartViewState();
+}
+
+class _CartViewState extends State<CartView> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<CartViewModel>().fetchCartItems();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,80 +60,82 @@ class CartView extends StatelessWidget {
           ),
         ],
       ),
-      body: viewModel.items.isEmpty
-          ? _buildEmptyState(context)
-          : Column(
-              children: [
-                Expanded(
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.all(24),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          context.tr('order_summary'),
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        ListView.separated(
-                          padding: EdgeInsets.zero,
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: viewModel.items.length,
-                          separatorBuilder: (context, index) =>
-                              const SizedBox(height: 16),
-                          itemBuilder: (context, index) {
-                             return _buildCartItem(context, viewModel, index);
-                          },
-                        ),
-                        const SizedBox(height: 15),
-                        _buildAddMoreItems(context),
-                        const SizedBox(height: 32),
-                        Text(
-                          context.tr('discount_coupon'),
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        _buildPromoCodeField(context),
-                        const SizedBox(height: 32),
-                        _buildPriceBreakdown(context, viewModel),
-                      ],
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(24.0),
-                  child: SizedBox(
-                    width: double.infinity,
-                    height: 56,
-                    child: ElevatedButton(
-                      onPressed: () =>
-                          Navigator.pushNamed(context, AppRoutes.checkout),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primary,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(28),
-                        ),
-                      ),
-                      child: Text(
-                        context.tr('checkout'),
-                        style: const TextStyle(
-                          color: AppColors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
+      body: viewModel.isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : viewModel.items.isEmpty
+              ? _buildEmptyState(context)
+              : Column(
+                  children: [
+                    Expanded(
+                      child: SingleChildScrollView(
+                        padding: const EdgeInsets.all(24),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              context.tr('order_summary'),
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            ListView.separated(
+                              padding: EdgeInsets.zero,
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: viewModel.items.length,
+                              separatorBuilder: (context, index) =>
+                                  const SizedBox(height: 16),
+                              itemBuilder: (context, index) {
+                                return _buildCartItem(context, viewModel, index);
+                              },
+                            ),
+                            const SizedBox(height: 15),
+                            _buildAddMoreItems(context),
+                            const SizedBox(height: 32),
+                            Text(
+                              context.tr('discount_coupon'),
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            _buildPromoCodeField(context),
+                            const SizedBox(height: 32),
+                            _buildPriceBreakdown(context, viewModel),
+                          ],
                         ),
                       ),
                     ),
-                  ),
+                    Padding(
+                      padding: const EdgeInsets.all(24.0),
+                      child: SizedBox(
+                        width: double.infinity,
+                        height: 56,
+                        child: ElevatedButton(
+                          onPressed: () =>
+                              Navigator.pushNamed(context, AppRoutes.checkout),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primary,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(28),
+                            ),
+                          ),
+                          child: Text(
+                            context.tr('checkout'),
+                            style: const TextStyle(
+                              color: AppColors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
     );
   }
 
@@ -156,7 +171,7 @@ class CartView extends StatelessWidget {
   ) {
     final item = viewModel.items[index];
     return Dismissible(
-      key: Key(item.product.id),
+      key: Key(item.id.toString()),
       direction: DismissDirection.endToStart,
       background: Container(
         alignment: Alignment.centerRight,
@@ -182,7 +197,7 @@ class CartView extends StatelessWidget {
         ),
       ),
       onDismissed: (direction) {
-        viewModel.removeFromCart(item.product.id);
+        viewModel.removeFromCart(item.id);
       },
       child: Container(
         padding: const EdgeInsets.all(12),
@@ -257,7 +272,7 @@ class CartView extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             _buildQtyBtn(context, Icons.remove, () {
-                              viewModel.decrementQuantity(item.product.id);
+                              viewModel.decrementQuantity(item);
                             }),
                             const VerticalDivider(width: 1, thickness: 1),
                             Padding(
@@ -274,7 +289,7 @@ class CartView extends StatelessWidget {
                             ),
                             const VerticalDivider(width: 1, thickness: 1),
                             _buildQtyBtn(context, Icons.add, () {
-                              viewModel.incrementQuantity(item.product.id);
+                              viewModel.incrementQuantity(item);
                             }),
                           ],
                         ),

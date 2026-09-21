@@ -1,20 +1,29 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '../../domain/entities/product_entity.dart';
+import '../../domain/repositories/wishlist_repository.dart';
+import '../models/product_model.dart';
 
-class SupabaseWishlistRepository {
+class SupabaseWishlistRepository implements WishlistRepository {
   final SupabaseClient _supabaseClient;
 
   SupabaseWishlistRepository(this._supabaseClient);
 
-  Future<List<Map<String, dynamic>>> fetchWishlist() async {
+  @override
+  Future<List<ProductEntity>> getWishlist() async {
     final user = _supabaseClient.auth.currentUser;
     if (user == null) return [];
 
-    return await _supabaseClient
+    final response = await _supabaseClient
         .from('wishlist')
         .select('*, products(*)')
         .eq('user_id', user.id);
+
+    return (response as List<dynamic>).map((item) {
+      return ProductModel.fromJson(item['products'] as Map<String, dynamic>);
+    }).toList();
   }
 
+  @override
   Future<void> toggleWishlist(String productId) async {
     final user = _supabaseClient.auth.currentUser;
     if (user == null) return;
@@ -38,5 +47,20 @@ class SupabaseWishlistRepository {
         'product_id': productId,
       });
     }
+  }
+
+  @override
+  Future<bool> isInWishlist(String productId) async {
+    final user = _supabaseClient.auth.currentUser;
+    if (user == null) return false;
+
+    final response = await _supabaseClient
+        .from('wishlist')
+        .select()
+        .eq('user_id', user.id)
+        .eq('product_id', productId)
+        .maybeSingle();
+    
+    return response != null;
   }
 }

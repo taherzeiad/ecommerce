@@ -170,7 +170,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
               ),
               const SizedBox(width: 12),
               GestureDetector(
-                onTap: () => Navigator.pushNamed(context, AppRoutes.reviews),
+                onTap: () => Navigator.pushNamed(context, AppRoutes.reviews, arguments: widget.product.id),
                 child: Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 12,
@@ -321,13 +321,19 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
           children: [
             Expanded(
               child: ElevatedButton(
-                onPressed: () {
-                  for (int i = 0; i < _quantity; i++) {
-                    cartViewModel.addToCart(widget.product);
+                onPressed: () async {
+                  await cartViewModel.addToCart(widget.product, quantity: _quantity);
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          context
+                              .tr('added_to_cart_count')
+                              .replaceAll('{count}', _quantity.toString()),
+                        ),
+                      ),
+                    );
                   }
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(context.tr('added_to_cart_count').replaceAll('{count}', _quantity.toString()))),
-                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
