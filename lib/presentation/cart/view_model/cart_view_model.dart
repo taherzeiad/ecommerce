@@ -87,7 +87,6 @@ class CartViewModel extends ChangeNotifier {
     if (_orderRepository == null) return;
     try {
       await _orderRepository.createOrder(totalPrice, addressId);
-      await clearCart();
     } catch (e) {
       // Handle error
     }
