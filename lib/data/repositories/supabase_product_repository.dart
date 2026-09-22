@@ -57,13 +57,16 @@ class SupabaseProductRepository implements ProductRepository {
   }
 
   @override
-  Future<List<String>> getCategories() async {
+  Future<Map<String, int>> getCategoryProductCounts() async {
     final response = await _supabaseClient
-        .from('categories')
-        .select('name');
+        .from('products')
+        .select('category_name');
     
-    return (response as List<dynamic>)
-        .map((json) => json['name'] as String)
-        .toList();
+    final Map<String, int> counts = {};
+    for (var item in (response as List<dynamic>)) {
+      final category = item['category_name'] as String;
+      counts[category] = (counts[category] ?? 0) + 1;
+    }
+    return counts;
   }
 }
