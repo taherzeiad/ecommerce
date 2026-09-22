@@ -10,4 +10,6 @@ abstract class ProductRepository {
   Future<List<ProductEntity>> searchProducts(String query);
 
   Future<List<String>> getCategories();
+
+  Future<Map<String, int>> getCategoryProductCounts();
 }

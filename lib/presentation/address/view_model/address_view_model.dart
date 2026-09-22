@@ -5,8 +5,7 @@ import '../../../domain/entities/address_entity.dart';
 class AddressViewModel extends ChangeNotifier {
   final AddressRepository _addressRepository;
 
-  AddressViewModel({required AddressRepository addressRepository})
-      : _addressRepository = addressRepository;
+  AddressViewModel({required this._addressRepository});
 
   List<AddressEntity> _addresses = [];
   List<AddressEntity> get addresses => _addresses;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vector_graphics/vector_graphics.dart';
+import 'package:provider/provider.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/routes/app_routes.dart';
@@ -7,8 +8,6 @@ import '../../../core/widgets/custom_search_bar.dart';
 import '../../../core/extensions/context_extension.dart';
 import '../../theme/view_model/theme_view_model.dart';
 import '../view_model/categories_view_model.dart';
-
-import 'package:provider/provider.dart';
 
 class CategoriesView extends StatefulWidget {
   const CategoriesView({super.key});
@@ -38,7 +37,7 @@ class _CategoriesViewState extends State<CategoriesView> {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () {},
+          onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           context.tr('categories'),
@@ -76,98 +75,108 @@ class _CategoriesViewState extends State<CategoriesView> {
             topRight: Radius.circular(30),
           ),
         ),
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CustomSearchBar(
-                hintText: context.tr('search'),
-                height: 40,
-                onTap: () => Navigator.pushNamed(context, AppRoutes.search),
-                onFilterTap: () =>
-                    Navigator.pushNamed(context, AppRoutes.filterSort),
-              ),
-              const SizedBox(height: 24),
-              Text(
-                context.tr('featured_categories'),
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                  color: theme.colorScheme.onSurface,
-                ),
-              ),
-              const SizedBox(height: 16),
-              _buildFeaturedCard(
-                context.tr('latest_smartphones'),
-                context.tr('discover_tech'),
-                'lib/assets/images/phonecolor.png',
-              ),
-              const SizedBox(height: 16),
-              _buildFeaturedCard(
-                context.tr('gaming_laptops'),
-                context.tr('high_performance'),
-                'lib/assets/images/lap.png',
-              ),
-              const SizedBox(height: 24),
-              GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 0.9,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
-                ),
-                itemCount: viewModel.categories.length,
-                itemBuilder: (context, index) {
-                  final title = viewModel.categories[index];
-                  final icons = [
-                    'lib/assets/icons/phone.png',
-                    'lib/assets/icons/sound.png',
-                    'lib/assets/icons/play.png',
-                    'lib/assets/icons/laptop.png',
-                  ];
-                  final iconPath = icons[index % icons.length];
-
-                  return TweenAnimationBuilder<double>(
-                    duration: Duration(milliseconds: 300 + (index * 50)),
-                    tween: Tween(begin: 0.0, end: 1.0),
-                    curve: Curves.easeOutCubic,
-                    builder: (context, value, child) {
-                      return Opacity(
-                        opacity: value,
-                        child: Transform.translate(
-                          offset: Offset(0, 20 * (1 - value)),
-                          child: child,
-                        ),
-                      );
-                    },
-                    child: _buildCategoryGridItem(
-                      context,
-                      title,
-                      '+10 Product',
-                      iconPath,
-                      index == 0,
+        child: viewModel.isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : SingleChildScrollView(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CustomSearchBar(
+                      hintText: context.tr('search'),
+                      height: 48,
+                      onTap: () => Navigator.pushNamed(context, AppRoutes.search),
+                      onFilterTap: () =>
+                          Navigator.pushNamed(context, AppRoutes.filterSort),
                     ),
-                  );
-                },
+                    const SizedBox(height: 24),
+                    Text(
+                      context.tr('featured_categories'),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        color: theme.colorScheme.onSurface,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    _buildFeaturedCard(
+                      context.tr('latest_smartphones'),
+                      context.tr('discover_tech'),
+                      'lib/assets/images/phonecolor.png',
+                      const Color(0xFF81C784),
+                    ),
+                    const SizedBox(height: 16),
+                    _buildFeaturedCard(
+                      context.tr('gaming_laptops'),
+                      context.tr('high_performance'),
+                      'lib/assets/images/lap.png',
+                      const Color(0xFF4DB6AC),
+                    ),
+                    const SizedBox(height: 24),
+                    GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        childAspectRatio: 0.9,
+                        crossAxisSpacing: 16,
+                        mainAxisSpacing: 16,
+                      ),
+                      itemCount: viewModel.categories.length,
+                      itemBuilder: (context, index) {
+                        final category = viewModel.categories[index];
+                        final count = viewModel.categoryCounts[category] ?? 0;
+                        
+                        // Icon mapping
+                        String iconPath = 'lib/assets/icons/phone.png';
+                        if (category.toLowerCase().contains('phone') || category.contains('هواتف')) {
+                          iconPath = 'lib/assets/icons/phone.png';
+                        } else if (category.toLowerCase().contains('audio') || category.contains('صوت')) {
+                          iconPath = 'lib/assets/icons/sound.png';
+                        } else if (category.toLowerCase().contains('game') || category.contains('ألعاب')) {
+                          iconPath = 'lib/assets/icons/play.png';
+                        } else if (category.toLowerCase().contains('laptop') || category.contains('لابتوب')) {
+                          iconPath = 'lib/assets/icons/laptop.png';
+                        }
+
+                        return TweenAnimationBuilder<double>(
+                          duration: Duration(milliseconds: 300 + (index * 50)),
+                          tween: Tween(begin: 0.0, end: 1.0),
+                          curve: Curves.easeOutCubic,
+                          builder: (context, value, child) {
+                            return Opacity(
+                              opacity: value,
+                              child: Transform.translate(
+                                offset: Offset(0, 20 * (1 - value)),
+                                child: child,
+                              ),
+                            );
+                          },
+                          child: _buildCategoryGridItem(
+                            context,
+                            category,
+                            '+$count Product',
+                            iconPath,
+                            index == 0,
+                          ),
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 80),
+                  ],
+                ),
               ),
-              const SizedBox(height: 80),
-            ],
-          ),
-        ),
       ),
     );
   }
 
-  Widget _buildFeaturedCard(String title, String subtitle, String imagePath) {
+  Widget _buildFeaturedCard(String title, String subtitle, String imagePath, Color bgColor) {
     return Container(
-      width: 361,
-      height: 91,
-      padding: const EdgeInsets.all(20),
+      width: double.infinity,
+      height: 100,
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.primary.withValues(alpha: 0.4),
+        color: bgColor,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -175,29 +184,28 @@ class _CategoriesViewState extends State<CategoriesView> {
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
                   title,
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 16,
+                    fontSize: 18,
                     color: Colors.white,
-                    letterSpacing: 0,
                   ),
                 ),
-                const SizedBox(height: 6),
+                const SizedBox(height: 4),
                 Text(
                   subtitle,
                   style: TextStyle(
-                    fontSize: 14,
-                    letterSpacing: 0,
+                    fontSize: 13,
                     color: Colors.white.withValues(alpha: 0.9),
                   ),
                 ),
               ],
             ),
           ),
-          Image.asset(imagePath, width: 47, height: 59),
+          Image.asset(imagePath, width: 60, height: 60, fit: BoxFit.contain),
         ],
       ),
     );
@@ -210,31 +218,28 @@ class _CategoriesViewState extends State<CategoriesView> {
     String iconPath,
     bool isNew,
   ) {
-    final theme = Theme.of(context);
     return Container(
-      width: 151,
-      height: 157,
       decoration: BoxDecoration(
-        color: AppColors.primary.withValues(alpha: 0.05),
-        borderRadius: BorderRadius.circular(12),
+        color: const Color(0xFFE0F2F1),
+        borderRadius: BorderRadius.circular(16),
       ),
       child: Stack(
         children: [
           if (isNew)
             Positioned(
-              top: 10,
-              right: 10,
+              top: 12,
+              right: 12,
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: AppColors.primary,
-                  borderRadius: BorderRadius.circular(10),
+                  color: const Color(0xFF129883),
+                  borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
                   context.tr('new'),
                   style: const TextStyle(
                     color: Colors.white,
-                    fontSize: 12,
+                    fontSize: 10,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -252,26 +257,27 @@ class _CategoriesViewState extends State<CategoriesView> {
                 children: [
                   Image.asset(
                     iconPath,
-                    width: 51,
-                    height: 71,
-                    color: theme.colorScheme.onSurface,
+                    width: 50,
+                    height: 50,
+                    fit: BoxFit.contain,
+                    color: Colors.black87,
                   ),
-                  const SizedBox(height: 6),
+                  const SizedBox(height: 12),
                   Text(
                     title,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
-                      color: theme.colorScheme.onSurface,
+                      color: Colors.black87,
                     ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     count,
                     style: const TextStyle(
-                      color: AppColors.primary,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
+                      color: Color(0xFF129883),
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ],

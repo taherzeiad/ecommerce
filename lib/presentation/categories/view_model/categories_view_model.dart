@@ -14,6 +14,9 @@ class CategoriesViewModel extends ChangeNotifier {
   List<String> _categories = [];
   List<String> get categories => _categories;
 
+  Map<String, int> _categoryCounts = {};
+  Map<String, int> get categoryCounts => _categoryCounts;
+
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
@@ -24,7 +27,13 @@ class CategoriesViewModel extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     try {
-      _categories = await _productRepository.getCategories();
+      final results = await Future.wait([
+        _productRepository.getCategories(),
+        _productRepository.getCategoryProductCounts(),
+      ]);
+      _categories = results[0] as List<String>;
+      _categoryCounts = results[1] as Map<String, int>;
+
       if (_categories.isNotEmpty && _selectedCategory.isEmpty) {
         await fetchProductsByCategory(_categories.first);
       }

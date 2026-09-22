@@ -66,4 +66,18 @@ class SupabaseProductRepository implements ProductRepository {
         .map((json) => json['name'] as String)
         .toList();
   }
+
+  @override
+  Future<Map<String, int>> getCategoryProductCounts() async {
+    final response = await _supabaseClient
+        .from('products')
+        .select('category_name');
+    
+    final Map<String, int> counts = {};
+    for (var item in (response as List<dynamic>)) {
+      final category = item['category_name'] as String;
+      counts[category] = (counts[category] ?? 0) + 1;
+    }
+    return counts;
+  }
 }
