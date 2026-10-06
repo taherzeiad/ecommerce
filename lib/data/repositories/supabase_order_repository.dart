@@ -77,7 +77,42 @@ class SupabaseOrderRepository implements OrderRepository {
       );
     }
 
-    // 2. Direct client-side order placement fallback
+    // 2. Fetch real shipping address details
+    String? shippingName;
+    String? shippingPhone;
+    String? shippingAddressStr;
+
+    for (final table in ['shipping_addresses', 'addresses', 'user_addresses']) {
+      try {
+        final addrRow = await _supabaseClient
+            .from(table)
+            .select()
+            .eq('id', pAddressId)
+            .maybeSingle();
+
+        if (addrRow != null) {
+          shippingName = (addrRow['full_name'] ?? addrRow['name'])?.toString();
+          shippingPhone =
+              (addrRow['phone_number'] ?? addrRow['phone'])?.toString();
+          final street =
+              (addrRow['street_address'] ??
+                      addrRow['address'] ??
+                      addrRow['street'])
+                  ?.toString() ??
+              '';
+          final city = addrRow['city']?.toString() ?? '';
+          final country = addrRow['country']?.toString() ?? '';
+          shippingAddressStr = [
+            street,
+            city,
+            country,
+          ].where((s) => s.isNotEmpty).join(', ');
+          break;
+        }
+      } catch (_) {}
+    }
+
+    // 3. Direct client-side order placement fallback
     List<dynamic> cartList = [];
     try {
       final cartRows = await _supabaseClient
@@ -89,16 +124,17 @@ class SupabaseOrderRepository implements OrderRepository {
       debugPrint('🔴 [Order Repository] Fetch cart_items failed: $e');
     }
 
-    double total = 0.0;
+    double subtotal = 0.0;
     for (final item in cartList) {
       final product = item['products'] as Map<String, dynamic>?;
       final price = (product?['price'] as num?)?.toDouble() ?? 0.0;
       final quantity = (item['quantity'] as num?)?.toInt() ?? 1;
-      total += price * quantity;
+      subtotal += price * quantity;
     }
 
-    // Add delivery fee (12) and tax (5%)
-    total = total + 12.0 + (total * 0.05);
+    final double deliveryFee = 12.0;
+    final double tax = subtotal * 0.05;
+    final double totalAmount = subtotal + deliveryFee + tax;
 
     final orderPayloads = [
       {
@@ -106,15 +142,22 @@ class SupabaseOrderRepository implements OrderRepository {
         'address_id': pAddressId,
         'payment_method': paymentMethod.name,
         'card_last4': cardLast4,
-        'total_amount': total,
+        'coupon_code': couponCode,
+        'shipping_name': shippingName,
+        'shipping_phone': shippingPhone,
+        'shipping_address': shippingAddressStr,
+        'subtotal': subtotal,
+        'delivery_fee': deliveryFee,
+        'tax': tax,
+        'total_amount': totalAmount,
         'status': 'pending',
       },
       {
         'user_id': user.id,
-        'shipping_address_id': pAddressId,
+        'address_id': pAddressId,
         'payment_method': paymentMethod.name,
-        'card_last_4': cardLast4,
-        'total': total,
+        'card_last4': cardLast4,
+        'total_amount': totalAmount,
         'status': 'pending',
       },
       {
@@ -146,25 +189,30 @@ class SupabaseOrderRepository implements OrderRepository {
     final String generatedId = 'ORD-${DateTime.now().millisecondsSinceEpoch}';
     final dynamic newOrderId = insertedOrder?['id'] ?? generatedId;
 
-    // Insert order items
+    // 4. Insert real order items
     for (final item in cartList) {
       final product = item['products'] as Map<String, dynamic>?;
       final price = (product?['price'] as num?)?.toDouble() ?? 0.0;
       final quantity = (item['quantity'] as num?)?.toInt() ?? 1;
       final productId = item['product_id'];
+      final productName = product?['name'] as String? ?? 'Product';
+      final images = product?['images'] as List<dynamic>?;
+      final imageUrl = images?.firstOrNull?.toString();
 
       final itemPayloads = [
         {
           'order_id': newOrderId,
           'product_id': productId,
+          'product_name': productName,
+          'image_url': imageUrl,
+          'unit_price': price,
           'quantity': quantity,
-          'price': price,
         },
         {
           'order_id': newOrderId,
           'product_id': productId,
           'quantity': quantity,
-          'unit_price': price,
+          'price': price,
         },
       ];
 
@@ -180,7 +228,7 @@ class SupabaseOrderRepository implements OrderRepository {
       }
     }
 
-    // Clear cart
+    // 5. Clear cart
     try {
       await _supabaseClient.from('cart_items').delete().eq('user_id', user.id);
     } catch (e) {
