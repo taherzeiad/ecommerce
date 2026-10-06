@@ -13,6 +13,9 @@ import 'package:ecommerce/presentation/wishlist/view_model/wishlist_view_model.d
 import 'package:ecommerce/presentation/address/view_model/address_view_model.dart';
 import 'package:ecommerce/presentation/notifications/view_model/notifications_view_model.dart';
 import 'package:ecommerce/presentation/profile/view_model/profile_view_model.dart';
+import 'package:ecommerce/presentation/orders/view_model/orders_view_model.dart';
+import 'package:ecommerce/presentation/payment/view_model/payment_cards_view_model.dart';
+import 'package:ecommerce/presentation/settings/view_model/settings_view_model.dart';
 import 'package:ecommerce/core/di/service_locator.dart';
 import 'package:ecommerce/core/widgets/privacy_gate.dart';
 
@@ -25,11 +28,33 @@ class EcommerceApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => ThemeViewModel()),
         ChangeNotifierProvider(create: (_) => LocaleViewModel()),
-        ChangeNotifierProvider(create: (_) => CartViewModel(cartRepository: sl(), orderRepository: sl())),
-        ChangeNotifierProvider(create: (_) => WishlistViewModel(wishlistRepository: sl())),
-        ChangeNotifierProvider(create: (_) => AddressViewModel(addressRepository: sl())),
-        ChangeNotifierProvider(create: (_) => NotificationsViewModel(notificationRepository: sl())),
-        ChangeNotifierProvider(create: (_) => ProfileViewModel(authRepository: sl())),
+        ChangeNotifierProvider(create: (_) => SettingsViewModel()),
+        ChangeNotifierProvider(
+          create: (_) => CartViewModel(
+            cartRepository: sl(),
+            orderRepository: sl(),
+            couponRepository: sl(),
+          ),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => OrdersViewModel(orderRepository: sl()),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => PaymentCardsViewModel(cardRepository: sl()),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => WishlistViewModel(wishlistRepository: sl()),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => AddressViewModel(addressRepository: sl()),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => NotificationsViewModel(notificationRepository: sl()),
+        ),
+        ChangeNotifierProvider(
+          create: (_) =>
+              ProfileViewModel(authRepository: sl(), profileRepository: sl()),
+        ),
       ],
       child: Consumer2<ThemeViewModel, LocaleViewModel>(
         builder: (context, themeViewModel, localeViewModel, _) {

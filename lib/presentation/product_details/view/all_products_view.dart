@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../core/extensions/context_extension.dart';
+import '../../../core/utils/formatters.dart';
+import '../../../core/widgets/error_state_view.dart';
 
 import 'package:ecommerce/domain/entities/product_entity.dart';
 import 'package:ecommerce/presentation/cart/view_model/cart_view_model.dart';
@@ -12,12 +14,48 @@ import 'package:ecommerce/presentation/wishlist/view_model/wishlist_view_model.d
 
 import 'package:ecommerce/presentation/theme/view_model/theme_view_model.dart';
 
+/// Products of one category, the flash deals, or everything, with chips to
+/// switch between them.
 class AllProductsView extends StatelessWidget {
   const AllProductsView({super.key});
 
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<CategoriesViewModel>();
+    final title = switch (viewModel.collection) {
+      ProductCollection.flashDeals => context.tr('flash_deals'),
+      ProductCollection.all => context.tr('all_products'),
+      ProductCollection.category => context.tr(
+        viewModel.selectedCategory.toLowerCase(),
+      ),
+    };
+
+    Widget grid;
+    if (viewModel.isLoadingProducts && viewModel.categoryProducts.isEmpty) {
+      grid = const Center(child: CircularProgressIndicator());
+    } else if (viewModel.errorMessage != null &&
+        viewModel.categoryProducts.isEmpty) {
+      grid = ErrorStateView(
+        messageKey: viewModel.errorMessage!,
+        onRetry: viewModel.retry,
+      );
+    } else if (viewModel.categoryProducts.isEmpty) {
+      grid = Center(child: Text(context.tr('no_products_here')));
+    } else {
+      grid = GridView.builder(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          childAspectRatio: 0.65,
+          crossAxisSpacing: 16,
+          mainAxisSpacing: 16,
+        ),
+        itemCount: viewModel.categoryProducts.length,
+        itemBuilder: (context, index) {
+          return _buildProductCard(context, viewModel.categoryProducts[index]);
+        },
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -25,7 +63,7 @@ class AllProductsView extends StatelessWidget {
         elevation: 0,
         centerTitle: true,
         title: Text(
-          context.tr('categories'), // Using categories as title or could use 'products'
+          title.isEmpty ? context.tr('all_products') : title,
           style: const TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
         ),
         actions: [
@@ -40,43 +78,7 @@ class AllProductsView extends StatelessWidget {
           const SizedBox(height: 16),
           _buildCategoryFilters(context, viewModel),
           const SizedBox(height: 16),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: TextButton(
-                onPressed: () {},
-                child: Text(
-                  context.tr('see_all'),
-                  style: const TextStyle(decoration: TextDecoration.underline),
-                ),
-              ),
-            ),
-          ),
-          Expanded(
-            child: viewModel.isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : GridView.builder(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 8,
-                    ),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          childAspectRatio: 0.65,
-                          crossAxisSpacing: 16,
-                          mainAxisSpacing: 16,
-                        ),
-                    itemCount: viewModel.categoryProducts.length,
-                    itemBuilder: (context, index) {
-                      return _buildProductCard(
-                        context,
-                        viewModel.categoryProducts[index],
-                      );
-                    },
-                  ),
-          ),
+          Expanded(child: grid),
         ],
       ),
     );
@@ -86,20 +88,38 @@ class AllProductsView extends StatelessWidget {
     BuildContext context,
     CategoriesViewModel viewModel,
   ) {
-    final filters = viewModel.categories;
     final theme = Theme.of(context);
+    final chips = <(String, bool, VoidCallback)>[
+      (
+        context.tr('all'),
+        viewModel.collection == ProductCollection.all,
+        viewModel.showAllProducts,
+      ),
+      (
+        context.tr('flash_deals_short'),
+        viewModel.collection == ProductCollection.flashDeals,
+        viewModel.showFlashDeals,
+      ),
+      for (final category in viewModel.categories)
+        (
+          context.tr(category.toLowerCase()),
+          viewModel.collection == ProductCollection.category &&
+              viewModel.selectedCategory == category,
+          () => viewModel.fetchProductsByCategory(category),
+        ),
+    ];
     return SizedBox(
       height: 40,
       child: ListView.separated(
         padding: const EdgeInsets.symmetric(horizontal: 24),
         scrollDirection: Axis.horizontal,
-        itemCount: filters.length,
+        itemCount: chips.length,
         separatorBuilder: (_, _) => const SizedBox(width: 12),
         itemBuilder: (context, index) {
-          final category = filters[index];
-          final isSelected = viewModel.selectedCategory == category;
+          final (label, isSelected, onTap) = chips[index];
           return InkWell(
-            onTap: () => viewModel.fetchProductsByCategory(category),
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(20),
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               alignment: Alignment.center,
@@ -108,7 +128,7 @@ class AllProductsView extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
-                context.tr(category.toLowerCase()),
+                label,
                 style: TextStyle(
                   color: isSelected ? AppColors.white : AppColors.primary,
                   fontWeight: FontWeight.bold,
@@ -207,15 +227,19 @@ class AllProductsView extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      context.tr(product.category.toLowerCase()),
-                      style: TextStyle(
-                        color: theme.textTheme.bodySmall?.color,
-                        fontSize: 12,
+                    Flexible(
+                      child: Text(
+                        context.tr(product.category.toLowerCase()),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: theme.textTheme.bodySmall?.color,
+                          fontSize: 12,
+                        ),
                       ),
                     ),
                     Text(
-                      '\$${product.price}',
+                      formatPrice(product.price),
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
@@ -242,16 +266,19 @@ class AllProductsView extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        child: Text(context.tr('details_card')), // Using 'details_card' for 'View Details'
+                        child: Text(context.tr('view_details')),
                       ),
                     ),
                     const SizedBox(width: 8),
                     InkWell(
-                      onTap: () {
-                        cartViewModel.addToCart(product);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(context.tr('added_to_cart'))),
-                        );
+                      onTap: () async {
+                        final ok = await cartViewModel.addToCart(product);
+                        if (context.mounted) {
+                          showMessage(
+                            context,
+                            ok ? 'added_to_cart' : 'error_add_to_cart',
+                          );
+                        }
                       },
                       child: Container(
                         width: 36,

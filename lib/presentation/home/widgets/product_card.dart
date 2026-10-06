@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/constants/app_colors.dart';
+import '../../../core/utils/formatters.dart';
 import '../../../domain/entities/product_entity.dart';
 import '../../wishlist/view_model/wishlist_view_model.dart';
 
@@ -9,7 +10,16 @@ class ProductCard extends StatelessWidget {
   final ProductEntity product;
   final VoidCallback? onTap;
 
-  const ProductCard({super.key, required this.product, this.onTap});
+  /// Only one card per screen may animate into the details page for a given
+  /// product, so lists that can repeat a product should pass `false`.
+  final bool useHero;
+
+  const ProductCard({
+    super.key,
+    required this.product,
+    this.onTap,
+    this.useHero = true,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -38,17 +48,20 @@ class ProductCard extends StatelessWidget {
           children: [
             Stack(
               children: [
-                Hero(
-                  tag: 'product_image_${product.id}',
-                  child: Container(
-                    height: 80,
-                    width: double.infinity,
-                    alignment: Alignment.center,
-                    child: product.images.isNotEmpty
-                        ? Image.network(product.images.first,
-                            fit: BoxFit.contain)
-                        : const Icon(Icons.image,
-                            color: AppColors.grey, size: 40),
+                HeroMode(
+                  enabled: useHero,
+                  child: Hero(
+                    tag: 'product_image_${product.id}',
+                    child: Container(
+                      height: 80,
+                      width: double.infinity,
+                      alignment: Alignment.center,
+                      child: product.images.isNotEmpty
+                          ? Image.network(product.images.first,
+                              fit: BoxFit.contain)
+                          : const Icon(Icons.image,
+                              color: AppColors.grey, size: 40),
+                    ),
                   ),
                 ),
                 Positioned(
@@ -80,7 +93,7 @@ class ProductCard extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  '\$${product.price.toStringAsFixed(2)}',
+                  formatPrice(product.price),
                   style: TextStyle(
                     color: theme.colorScheme.onSurface,
                     fontWeight: FontWeight.bold,
@@ -91,7 +104,7 @@ class ProductCard extends StatelessWidget {
                     product.oldPrice! > product.price) ...[
                   const SizedBox(width: 8),
                   Text(
-                    '\$${product.oldPrice!.toStringAsFixed(2)}',
+                    formatPrice(product.oldPrice!),
                     style: TextStyle(
                       color: theme.textTheme.bodySmall?.color,
                       fontSize: 11,

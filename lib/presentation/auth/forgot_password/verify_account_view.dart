@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../core/extensions/context_extension.dart';
+import '../../../core/widgets/error_state_view.dart';
 import '../widgets/auth_header.dart';
 import '../widgets/verify_illustration.dart';
 import 'auth_viewmodel.dart';
@@ -53,114 +54,136 @@ class _VerifyAccountContent extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  const SizedBox(height: 60),
-                  Text(
-                    context.tr('verify_account_desc'),
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onSurface,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    viewModel.emailController.text,
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onSurface,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const SizedBox(height: 60),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: List.generate(4, (index) {
-                        String char = "";
-                        if (viewModel.otp.length > index) {
-                          char = viewModel.otp[index];
-                        }
-                        return Container(
-                          width: 65,
-                          height: 70,
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).cardColor,
-                            border: Border.all(
-                              color: char.isEmpty
-                                  ? AppColors.authBorder
-                                  : AppColors.primary,
-                              width: 1.5,
-                            ),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          alignment: Alignment.center,
-                          child: Text(
-                            char.isEmpty ? '—' : char,
+                  // Scrolls on short screens so the keypad always fits.
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 32),
+                          Text(
+                            context.tr('verify_account_desc'),
+                            textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontSize: 28,
-                              fontWeight: FontWeight.bold,
-                              color: char.isEmpty
-                                  ? AppColors.authHint
-                                  : Theme.of(context).colorScheme.onSurface,
+                              color: Theme.of(context).colorScheme.onSurface,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
-                        );
-                      }),
+                          const SizedBox(height: 8),
+                          Text(
+                            viewModel.emailController.text,
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSurface,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const SizedBox(height: 32),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: Row(
+                              textDirection: TextDirection.ltr,
+                              children: List.generate(
+                                  ForgotPasswordViewModel.otpLength, (index) {
+                                String char = "";
+                                if (viewModel.otp.length > index) {
+                                  char = viewModel.otp[index];
+                                }
+                                return Expanded(
+                                  child: Container(
+                                  height: 60,
+                                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context).cardColor,
+                                    border: Border.all(
+                                      color: char.isEmpty
+                                          ? AppColors.authBorder
+                                          : AppColors.primary,
+                                      width: 1.5,
+                                    ),
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    char.isEmpty ? '—' : char,
+                                    style: TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold,
+                                      color: char.isEmpty
+                                          ? AppColors.authHint
+                                          : Theme.of(context).colorScheme.onSurface,
+                                    ),
+                                  ),
+                                  ),
+                                );
+                              }),
+                            ),
+                          ),
+                          if (viewModel.errorMessage != null)
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
+                              child: Text(
+                                context.tr(viewModel.errorMessage!),
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(color: AppColors.error),
+                              ),
+                            ),
+                          const SizedBox(height: 32),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                context.tr('resend_code'),
+                                style: TextStyle(
+                                  color: Theme.of(context).colorScheme.onSurface,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: viewModel.canResend
+                                    ? () async {
+                                        final sent = await viewModel.resendCode();
+                                        if (sent && context.mounted) {
+                                          showMessage(context, 'code_resent');
+                                        }
+                                      }
+                                    : null,
+                                child: Text(
+                                  context.tr('resend'),
+                                  style: TextStyle(
+                                    color: viewModel.canResend
+                                        ? AppColors.authLink
+                                        : AppColors.authHint,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          if (viewModel.resendSecondsLeft > 0)
+                            Text(
+                              context.tr('resend_in').replaceAll(
+                                '{time}',
+                                '0:${viewModel.resendSecondsLeft.toString().padLeft(2, '0')}',
+                              ),
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                fontSize: 14,
+                              ),
+                            ),
+                          const SizedBox(height: 16),
+                        ],
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 80),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        context.tr('resend_code'),
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.onSurface,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () {},
-                        child: Text(
-                          context.tr('resend'),
-                          style: const TextStyle(
-                            color: AppColors.authLink,
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  RichText(
-                    text: TextSpan(
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        fontSize: 14,
-                      ),
-                      children: [
-                        TextSpan(text: context.tr('code_expire')),
-                        const TextSpan(
-                          text: '2:00',
-                          style: TextStyle(
-                            color: AppColors.error,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        TextSpan(text: context.tr('seconds')),
-                      ],
-                    ),
-                  ),
-                  const Spacer(),
                   _NumericKeypad(
                     onTap: (val) async {
-                      if (viewModel.otp.length < 4) {
+                      const length = ForgotPasswordViewModel.otpLength;
+                      if (viewModel.otp.length < length && !viewModel.isLoading) {
                         viewModel.appendOtp(val);
-                        if (viewModel.otp.length == 4) {
+                        if (viewModel.otp.length == length) {
                           final success = await viewModel.verifyOtp();
                           if (success && context.mounted) {
                             Navigator.pushNamed(

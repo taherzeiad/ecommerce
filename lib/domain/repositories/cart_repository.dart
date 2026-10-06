@@ -2,6 +2,8 @@ import '../entities/product_entity.dart';
 
 abstract class CartRepository {
   Future<List<CartItemEntity>> getCartItems();
+
+  /// Adds [quantity] to the product's existing cart line, or creates one.
   Future<void> addToCart(String productId, int quantity);
   Future<void> removeFromCart(dynamic cartItemId);
   Future<void> updateQuantity(dynamic cartItemId, int quantity);

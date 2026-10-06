@@ -197,9 +197,12 @@ class _LoginContent extends StatelessWidget {
                           : () async {
                               final success = await viewModel.login();
                               if (success && context.mounted) {
-                                Navigator.pushReplacementNamed(
+                                // Drop every auth screen so back can't
+                                // return to them.
+                                Navigator.pushNamedAndRemoveUntil(
                                   context,
                                   AppRoutes.mainWrapper,
+                                  (route) => false,
                                 );
                               }
                             },

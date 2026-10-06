@@ -31,11 +31,25 @@ class SupabaseCartRepository implements CartRepository {
     final user = _supabaseClient.auth.currentUser;
     if (user == null) return;
 
-    await _supabaseClient.from('cart_items').upsert({
-      'user_id': user.id,
-      'product_id': productId,
-      'quantity': quantity,
-    });
+    final existing = await _supabaseClient
+        .from('cart_items')
+        .select('id, quantity')
+        .eq('user_id', user.id)
+        .eq('product_id', productId)
+        .maybeSingle();
+
+    if (existing != null) {
+      await _supabaseClient
+          .from('cart_items')
+          .update({'quantity': (existing['quantity'] as int) + quantity})
+          .eq('id', existing['id']);
+    } else {
+      await _supabaseClient.from('cart_items').insert({
+        'user_id': user.id,
+        'product_id': productId,
+        'quantity': quantity,
+      });
+    }
   }
 
   @override

@@ -3,9 +3,12 @@ import 'package:provider/provider.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/routes/app_routes.dart';
+import '../../../core/utils/formatters.dart';
 import '../../../core/widgets/custom_search_bar.dart';
+import '../../../core/widgets/error_state_view.dart';
 import '../../../core/extensions/context_extension.dart';
 import '../../../domain/entities/product_entity.dart';
+import '../../../domain/entities/product_filter.dart';
 import '../widgets/search_error_widgets.dart';
 import '../view_model/search_view_model.dart';
 
@@ -20,9 +23,26 @@ class _SearchViewState extends State<SearchView> {
   final TextEditingController _searchController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<SearchViewModel>().loadSuggestions();
+    });
+  }
+
+  @override
   void dispose() {
     _searchController.dispose();
     super.dispose();
+  }
+
+  Future<void> _openFilter(SearchViewModel viewModel) async {
+    final filter = await Navigator.pushNamed(
+      context,
+      AppRoutes.filterSort,
+      arguments: viewModel.filter,
+    );
+    if (filter is ProductFilter) viewModel.applyFilter(filter);
   }
 
   @override
@@ -33,7 +53,11 @@ class _SearchViewState extends State<SearchView> {
       appBar: AppBar(
         backgroundColor: AppColors.primary,
         elevation: 0,
-        automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: AppColors.white),
+          onPressed: () => Navigator.pop(context),
+        ),
+        titleSpacing: 0,
         title: CustomSearchBar(
           hintText: '${context.tr('search')}...',
           height: 44,
@@ -44,8 +68,14 @@ class _SearchViewState extends State<SearchView> {
         ),
         actions: [
           IconButton(
-            onPressed: () => Navigator.pushNamed(context, AppRoutes.filterSort),
-            icon: const Icon(Icons.tune, color: AppColors.white),
+            tooltip: context.tr('filter_sort'),
+            onPressed: () => _openFilter(viewModel),
+            icon: Badge(
+              isLabelVisible: viewModel.filter.hasOptions,
+              backgroundColor: AppColors.warning,
+              smallSize: 8,
+              child: const Icon(Icons.tune, color: AppColors.white),
+            ),
           ),
         ],
       ),
@@ -58,22 +88,37 @@ class _SearchViewState extends State<SearchView> {
       return const Center(child: CircularProgressIndicator());
     }
 
-    if (viewModel.query.isNotEmpty && viewModel.results.isEmpty) {
+    if (viewModel.errorMessage != null) {
+      return ErrorStateView(
+        messageKey: viewModel.errorMessage!,
+        onRetry: viewModel.retry,
+      );
+    }
+
+    if (viewModel.hasSearched && viewModel.results.isEmpty) {
       return NoResultsWidget(
         query: viewModel.query,
-        onTryAgain: () => viewModel.search(viewModel.query),
+        onTryAgain: viewModel.retry,
       );
     }
 
     if (viewModel.results.isNotEmpty) {
+      final title = viewModel.query.trim().isEmpty
+          ? context.tr('filtered_results')
+          : context.tr('results_for').replaceAll('{query}', viewModel.query);
       return SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '${context.tr('search')} for "${viewModel.query}"', // Should add more translation logic here
+              title,
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              '${viewModel.results.length} ${context.tr('products_count')}',
+              style: TextStyle(color: Theme.of(context).hintColor),
             ),
             const SizedBox(height: 16),
             _buildResultsGrid(viewModel.results),
@@ -88,21 +133,20 @@ class _SearchViewState extends State<SearchView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            context.tr('popular_search'), // Should add 'popular_search' key
+            context.tr('popular_search'),
             style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16),
-          _buildPopularChips(viewModel),
+          _buildSuggestionChips(viewModel),
           const SizedBox(height: 32),
         ],
       ),
     );
   }
 
-  Widget _buildPopularChips(SearchViewModel viewModel) {
-    final popular = ['Apple MacBook', 'Samsung', 'Sony', 'Gaming'];
-
+  Widget _buildSuggestionChips(SearchViewModel viewModel) {
     return Container(
+      width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
@@ -112,26 +156,13 @@ class _SearchViewState extends State<SearchView> {
       child: Wrap(
         spacing: 8,
         runSpacing: 8,
-        children: popular.map((text) {
-          return InkWell(
-            onTap: () {
-              _searchController.text = text;
-              viewModel.search(text);
-            },
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              decoration: BoxDecoration(
-                color: AppColors.primary.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Text(
-                text,
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500,
-                  color: Theme.of(context).colorScheme.onSurface,
-                ),
-              ),
+        children: viewModel.suggestions.map((category) {
+          return ActionChip(
+            label: Text(context.tr(category.toLowerCase())),
+            backgroundColor: AppColors.primary.withValues(alpha: 0.1),
+            side: BorderSide.none,
+            onPressed: () => viewModel.applyFilter(
+              viewModel.filter.copyWith(category: category),
             ),
           );
         }).toList(),
@@ -215,7 +246,7 @@ class _SearchViewState extends State<SearchView> {
                   Row(
                     children: [
                       Text(
-                        '\$${product.price}',
+                        formatPrice(product.price),
                         style: const TextStyle(
                           color: AppColors.primary,
                           fontWeight: FontWeight.bold,

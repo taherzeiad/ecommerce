@@ -1,6 +1,8 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
+
 import '../../domain/entities/order_entity.dart';
 import '../../domain/repositories/order_repository.dart';
+import '../models/order_model.dart';
 
 class SupabaseOrderRepository implements OrderRepository {
   final SupabaseClient _supabaseClient;
@@ -14,32 +16,40 @@ class SupabaseOrderRepository implements OrderRepository {
 
     final response = await _supabaseClient
         .from('orders')
-        .select()
+        .select('*, order_items(*)')
         .eq('user_id', user.id)
         .order('created_at', ascending: false);
 
-    return (response as List<dynamic>).map((json) {
-      return OrderEntity(
-        id: json['id'] as String,
-        userId: json['user_id'] as String,
-        totalAmount: (json['total_amount'] as num).toDouble(),
-        status: json['status'] as String,
-        addressId: json['address_id'],
-        createdAt: DateTime.parse(json['created_at'] as String),
-      );
-    }).toList();
+    return response.map(OrderModel.fromJson).toList();
   }
 
   @override
-  Future<void> createOrder(double totalAmount, dynamic addressId) async {
-    final user = _supabaseClient.auth.currentUser;
-    if (user == null) return;
+  Future<OrderEntity?> getOrder(String orderId) async {
+    final response = await _supabaseClient
+        .from('orders')
+        .select('*, order_items(*)')
+        .eq('id', orderId)
+        .maybeSingle();
+    return response == null ? null : OrderModel.fromJson(response);
+  }
 
-    await _supabaseClient.from('orders').insert({
-      'user_id': user.id,
-      'total_amount': totalAmount,
-      'address_id': addressId,
-      'status': 'pending',
-    });
+  @override
+  Future<String> placeOrder({
+    required String addressId,
+    required PaymentMethod paymentMethod,
+    String? cardLast4,
+    String? couponCode,
+  }) async {
+    // See supabase/migrations: place_order() prices the cart on the server.
+    final orderId = await _supabaseClient.rpc(
+      'place_order',
+      params: {
+        'p_address_id': int.parse(addressId),
+        'p_payment_method': paymentMethod.name,
+        'p_card_last4': cardLast4,
+        'p_coupon_code': couponCode,
+      },
+    );
+    return orderId as String;
   }
 }

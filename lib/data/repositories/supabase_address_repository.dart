@@ -16,7 +16,8 @@ class SupabaseAddressRepository implements AddressRepository {
     final response = await _supabaseClient
         .from('shipping_addresses')
         .select()
-        .eq('user_id', user.id);
+        .eq('user_id', user.id)
+        .order('id');
 
     return (response as List<dynamic>)
         .map((json) => AddressModel.fromJson(json as Map<String, dynamic>))
@@ -24,9 +25,9 @@ class SupabaseAddressRepository implements AddressRepository {
   }
 
   @override
-  Future<void> addAddress(AddressEntity address) async {
+  Future<String> addAddress(AddressEntity address) async {
     final user = _supabaseClient.auth.currentUser;
-    if (user == null) return;
+    if (user == null) throw const AuthException('not_authenticated');
 
     final model = AddressModel(
       userId: user.id,
@@ -39,7 +40,12 @@ class SupabaseAddressRepository implements AddressRepository {
       isDefault: address.isDefault,
     );
 
-    await _supabaseClient.from('shipping_addresses').insert(model.toJson());
+    final row = await _supabaseClient
+        .from('shipping_addresses')
+        .insert(model.toJson())
+        .select('id')
+        .single();
+    return row['id'].toString();
   }
 
   @override

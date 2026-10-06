@@ -12,29 +12,43 @@ class ExpandableCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final textColor = theme.colorScheme.onSurface;
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: const Color(0xFFF1F1F1)),
+        border: Border.all(color: theme.dividerColor),
       ),
       child: Theme(
-        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
-        child: ExpansionTile(
-          title: Text(
-            title,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: Color(0xFF1B1B29),
+        data: theme.copyWith(dividerColor: Colors.transparent),
+        // Lets the tile's ripple show above the card colour.
+        child: Material(
+          type: MaterialType.transparency,
+          child: ExpansionTile(
+            title: Text(
+              title,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: textColor,
+              ),
             ),
+            iconColor: textColor,
+            collapsedIconColor: textColor,
+            childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+            expandedAlignment: AlignmentDirectional.topStart,
+            children: [
+              DefaultTextStyle.merge(
+                style: TextStyle(
+                  color: theme.colorScheme.onSurfaceVariant,
+                  height: 1.5,
+                ),
+                child: content,
+              ),
+            ],
           ),
-          iconColor: const Color(0xFF1B1B29),
-          collapsedIconColor: const Color(0xFF1B1B29),
-          childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-          expandedAlignment: Alignment.topLeft,
-          children: [content],
         ),
       ),
     );

@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../core/extensions/context_extension.dart';
+import '../../../core/utils/formatters.dart';
+import '../../../core/widgets/error_state_view.dart';
 import '../../../domain/entities/product_entity.dart';
 import '../../cart/view_model/cart_view_model.dart';
 import '../../wishlist/view_model/wishlist_view_model.dart';
@@ -19,6 +21,7 @@ class ProductDetailsView extends StatefulWidget {
 
 class _ProductDetailsViewState extends State<ProductDetailsView> {
   int _quantity = 1;
+  int _imageIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -52,22 +55,35 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
       decoration: const BoxDecoration(color: AppColors.cardBackground),
       child: Stack(
         children: [
-          Center(
-            child: Hero(
-              tag: 'product_image_${widget.product.id}',
-              child: widget.product.images.isNotEmpty
-                  ? Image.network(
-                      widget.product.images.first,
-                      height: 250,
-                      fit: BoxFit.contain,
-                    )
-                  : const Icon(
-                      Icons.laptop_mac,
-                      size: 200,
-                      color: Colors.black54,
-                    ),
+          if (widget.product.images.isEmpty)
+            const Center(
+              child: Icon(Icons.image_outlined, size: 160, color: Colors.black26),
+            )
+          else
+            PageView.builder(
+              itemCount: widget.product.images.length,
+              onPageChanged: (index) => setState(() => _imageIndex = index),
+              itemBuilder: (context, index) {
+                final image = Image.network(
+                  widget.product.images[index],
+                  height: 250,
+                  fit: BoxFit.contain,
+                  errorBuilder: (_, _, _) => const Icon(
+                    Icons.image_not_supported_outlined,
+                    size: 120,
+                    color: Colors.black26,
+                  ),
+                );
+                return Center(
+                  child: index == 0
+                      ? Hero(
+                          tag: 'product_image_${widget.product.id}',
+                          child: image,
+                        )
+                      : image,
+                );
+              },
             ),
-          ),
           SafeArea(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -103,7 +119,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                     height: 8,
                     margin: const EdgeInsets.symmetric(horizontal: 4),
                     decoration: BoxDecoration(
-                      color: index == 0
+                      color: index == _imageIndex
                           ? AppColors.primary
                           : Colors.grey.shade300,
                       shape: BoxShape.circle,
@@ -138,6 +154,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
 
   Widget _buildProductInfo(BuildContext context) {
     final theme = Theme.of(context);
+    final oldPrice = widget.product.oldPrice;
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
@@ -159,18 +176,23 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
             ),
           ),
           const SizedBox(height: 12),
-          Row(
+          // Wraps onto a second line on narrow phones instead of overflowing.
+          Wrap(
+            spacing: 12,
+            runSpacing: 8,
             children: [
               _buildTag(context, Icons.category, context.tr(widget.product.category.toLowerCase())),
-              const SizedBox(width: 12),
               _buildTag(
                 context,
                 Icons.star_border,
-                '(${widget.product.rating}) ${context.tr('rating')}',
+                '${widget.product.rating.toStringAsFixed(1)} (${widget.product.reviewCount})',
               ),
-              const SizedBox(width: 12),
               GestureDetector(
-                onTap: () => Navigator.pushNamed(context, AppRoutes.reviews, arguments: widget.product.id),
+                onTap: () => Navigator.pushNamed(
+                  context,
+                  AppRoutes.reviews,
+                  arguments: widget.product,
+                ),
                 child: Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 12,
@@ -228,23 +250,42 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
             child: Row(
               children: [
                 Text(
-                  '\$${widget.product.price.toStringAsFixed(2)}',
+                  formatPrice(widget.product.price),
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 20,
                     color: AppColors.primary,
                   ),
                 ),
-                const SizedBox(width: 8),
-                Text(
-                  context.tr('from_month'),
-                  style: TextStyle(
-                    color: theme.textTheme.bodySmall?.color,
-                    fontSize: 12,
+                if (oldPrice != null && oldPrice > widget.product.price) ...[
+                  const SizedBox(width: 8),
+                  Flexible(
+                    child: Text(
+                      formatPrice(oldPrice),
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: theme.hintColor,
+                        fontSize: 14,
+                        decoration: TextDecoration.lineThrough,
+                      ),
+                    ),
                   ),
-                ),
-                const Spacer(),
-                const Icon(Icons.info_outline, color: AppColors.primary),
+                  const Spacer(),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: AppColors.error.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      '-${((1 - widget.product.price / oldPrice) * 100).round()}%',
+                      style: const TextStyle(
+                        color: AppColors.error,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
               ],
             ),
           ),
@@ -270,6 +311,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Icon(icon, size: 16, color: AppColors.primary),
           const SizedBox(width: 4),
@@ -322,18 +364,31 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
             Expanded(
               child: ElevatedButton(
                 onPressed: () async {
-                  await cartViewModel.addToCart(widget.product, quantity: _quantity);
-                  if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
+                  final ok = await cartViewModel.addToCart(
+                    widget.product,
+                    quantity: _quantity,
+                  );
+                  if (!context.mounted) return;
+                  if (!ok) {
+                    showMessage(context, 'error_add_to_cart');
+                    return;
+                  }
+                  ScaffoldMessenger.of(context)
+                    ..hideCurrentSnackBar()
+                    ..showSnackBar(
                       SnackBar(
                         content: Text(
                           context
                               .tr('added_to_cart_count')
                               .replaceAll('{count}', _quantity.toString()),
                         ),
+                        action: SnackBarAction(
+                          label: context.tr('view_cart'),
+                          onPressed: () =>
+                              Navigator.pushNamed(context, AppRoutes.cart),
+                        ),
                       ),
                     );
-                  }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,

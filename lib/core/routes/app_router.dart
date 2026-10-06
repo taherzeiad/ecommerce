@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:ecommerce/domain/entities/address_entity.dart';
 import 'package:ecommerce/domain/entities/product_entity.dart';
+import 'package:ecommerce/domain/entities/product_filter.dart';
 import 'package:ecommerce/presentation/auth/forgot_password/forgot_password_view.dart';
 import 'package:ecommerce/presentation/auth/forgot_password/reset_password_view.dart';
 import 'package:ecommerce/presentation/auth/forgot_password/verify_account_view.dart';
@@ -9,12 +11,16 @@ import 'package:ecommerce/presentation/auth/login/login_view.dart';
 import 'package:ecommerce/presentation/auth/signup/signup_view.dart';
 import 'package:ecommerce/presentation/auth/success/success_view.dart';
 import 'package:ecommerce/presentation/address/view/add_address_view.dart';
+import 'package:ecommerce/presentation/address/view/addresses_view.dart';
 import 'package:ecommerce/presentation/address/view/edit_address_view.dart';
 import 'package:ecommerce/presentation/cart/view/cart_view.dart';
 import 'package:ecommerce/presentation/checkout/view/checkout_view.dart';
 import 'package:ecommerce/presentation/checkout/view/order_success_view.dart';
 import 'package:ecommerce/presentation/checkout/view/order_tracking_view.dart';
 import 'package:ecommerce/presentation/categories/view_model/categories_view_model.dart';
+import 'package:ecommerce/presentation/orders/view/orders_view.dart';
+import 'package:ecommerce/presentation/payment/view/payment_methods_view.dart';
+import 'package:ecommerce/presentation/profile/view_model/change_password_view_model.dart';
 import 'package:ecommerce/presentation/reviews/view_model/reviews_view_model.dart';
 import 'package:ecommerce/presentation/home/view/home_view.dart';
 import 'package:ecommerce/presentation/home/view_model/home_view_model.dart';
@@ -47,10 +53,20 @@ import 'app_routes.dart';
 /// `Navigator.pushNamed(context, AppRoutes.x)` and this class decides
 /// how to build the screen. Makes it trivial to add route guards,
 /// deep-linking or transitions later without touching the views.
+///
+/// Arguments per route:
+/// - mainWrapper: `int?` tab index
+/// - allProducts: `String` category, or a [ProductCollection]
+/// - productDetails, reviews, addReview: [ProductEntity]
+/// - search, filterSort: `ProductFilter?` to start from
+/// - editAddress: [AddressEntity]
+/// - orderSuccess, orderTracking: `String` order id
+/// - authSuccess: `String?` translation key of the message
 class AppRouter {
   AppRouter._();
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
+    final args = settings.arguments;
     switch (settings.name) {
       case AppRoutes.splash:
         return _fade(const SplashView(), settings);
@@ -67,7 +83,10 @@ class AppRouter {
       case AppRoutes.resetPassword:
         return _fade(const ResetPasswordView(), settings);
       case AppRoutes.authSuccess:
-        return _fade(const SuccessView(), settings);
+        return _fade(
+          SuccessView(messageKey: args as String? ?? 'account_created'),
+          settings,
+        );
       case AppRoutes.mainWrapper:
         return _fade(
           MultiProvider(
@@ -76,10 +95,9 @@ class AppRouter {
                 create: (_) =>
                     HomeViewModel(productRepository: sl())..fetchHomeData(),
               ),
+              // CategoriesView loads its data when the tab is first shown.
               ChangeNotifierProvider(
-                create: (_) =>
-                    CategoriesViewModel(productRepository: sl())
-                      ..fetchProductsByCategory('Smartphones'),
+                create: (_) => CategoriesViewModel(productRepository: sl()),
               ),
             ],
             child: const MainWrapper(),
@@ -96,40 +114,65 @@ class AppRouter {
           settings,
         );
       case AppRoutes.allProducts:
-        final category = (settings.arguments as String?) ?? 'Smartphones';
         return _fade(
           ChangeNotifierProvider(
-            create: (_) =>
-                CategoriesViewModel(productRepository: sl())
-                  ..fetchProductsByCategory(category),
+            create: (_) {
+              final vm = CategoriesViewModel(productRepository: sl());
+              switch (args) {
+                case final String category:
+                  vm.fetchProductsByCategory(category);
+                case ProductCollection.flashDeals:
+                  vm.showFlashDeals();
+                default:
+                  vm.showAllProducts();
+              }
+              // Loads the filter chips; keeps the products chosen above.
+              return vm..fetchCategories();
+            },
             child: const AllProductsView(),
           ),
           settings,
         );
       case AppRoutes.productDetails:
-        final product = settings.arguments as ProductEntity;
-        return _fade(ProductDetailsView(product: product), settings);
+        return _fade(
+          ProductDetailsView(product: args as ProductEntity),
+          settings,
+        );
       case AppRoutes.notifications:
         return _fade(const NotificationsView(), settings);
       case AppRoutes.reviews:
-        final productId = settings.arguments as String;
+        final product = args as ProductEntity;
         return _fade(
           ChangeNotifierProvider(
-            create: (_) => ReviewsViewModel(reviewRepository: sl())..fetchReviews(productId),
-            child: const ReviewsView(),
+            create: (_) =>
+                ReviewsViewModel(reviewRepository: sl())
+                  ..fetchReviews(product.id),
+            child: ReviewsView(product: product),
           ),
           settings,
         );
       case AppRoutes.addReview:
-        return _fade(const AddReviewView(), settings);
+        return _fade(
+          ChangeNotifierProvider(
+            create: (_) => AddReviewViewModel(reviewRepository: sl()),
+            child: AddReviewView(product: args as ProductEntity),
+          ),
+          settings,
+        );
       case AppRoutes.profile:
         return _fade(const ProfileView(), settings);
       case AppRoutes.editProfile:
         return _fade(const EditProfileView(), settings);
       case AppRoutes.changePassword:
-        return _fade(const ChangePasswordView(), settings);
+        return _fade(
+          ChangeNotifierProvider(
+            create: (_) => ChangePasswordViewModel(sl()),
+            child: const ChangePasswordView(),
+          ),
+          settings,
+        );
       case AppRoutes.settings:
-        return _fade(const SettingsView() as Widget, settings);
+        return _fade(const SettingsView(), settings);
       case AppRoutes.aboutUs:
         return _fade(const AboutUsView(), settings);
       case AppRoutes.helpCenter:
@@ -141,27 +184,45 @@ class AppRouter {
       case AppRoutes.search:
         return _fade(
           ChangeNotifierProvider(
-            create: (_) => SearchViewModel(productRepository: sl()),
+            create: (_) => SearchViewModel(
+              productRepository: sl(),
+              initialFilter: args as ProductFilter?,
+            ),
             child: const SearchView(),
           ),
           settings,
         );
       case AppRoutes.filterSort:
-        return _fade(const FilterSortView(), settings);
+        return _fade(
+          ChangeNotifierProvider(
+            create: (_) =>
+                CategoriesViewModel(productRepository: sl())..fetchCategories(),
+            child: FilterSortView(
+              initialFilter: args as ProductFilter? ?? const ProductFilter(),
+            ),
+          ),
+          settings,
+        );
       case AppRoutes.cart:
         return _fade(const CartView(), settings);
       case AppRoutes.checkout:
         return _fade(const CheckoutView(), settings);
+      case AppRoutes.addresses:
+        return _fade(const AddressesView(), settings);
       case AppRoutes.addAddress:
         return _fade(const AddAddressView(), settings);
       case AppRoutes.editAddress:
-        return _fade(const EditAddressView(), settings);
+        return _fade(EditAddressView(address: args as AddressEntity), settings);
+      case AppRoutes.paymentMethods:
+        return _fade(const PaymentMethodsView(), settings);
       case AppRoutes.addCard:
         return _fade(const AddCardView(), settings);
+      case AppRoutes.orders:
+        return _fade(const OrdersView(), settings);
       case AppRoutes.orderSuccess:
-        return _fade(const OrderSuccessView(), settings);
+        return _fade(OrderSuccessView(orderId: args as String), settings);
       case AppRoutes.orderTracking:
-        return _fade(const OrderTrackingView(), settings);
+        return _fade(OrderTrackingView(orderId: args as String), settings);
       default:
         return MaterialPageRoute(
           settings: settings,

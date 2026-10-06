@@ -1,12 +1,54 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import '../../../core/constants/app_colors.dart';
 import '../../../core/extensions/context_extension.dart';
+import '../../../core/utils/formatters.dart';
+import '../../../core/widgets/error_state_view.dart';
+import '../../../domain/entities/order_entity.dart';
+import '../../orders/view_model/orders_view_model.dart';
+import '../../orders/widgets/order_widgets.dart';
 
-class OrderTrackingView extends StatelessWidget {
-  const OrderTrackingView({super.key});
+/// Status, items, delivery address and totals of one order.
+class OrderTrackingView extends StatefulWidget {
+  const OrderTrackingView({super.key, required this.orderId});
+
+  final String orderId;
+
+  @override
+  State<OrderTrackingView> createState() => _OrderTrackingViewState();
+}
+
+class _OrderTrackingViewState extends State<OrderTrackingView> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _load());
+  }
+
+  Future<void> _load() =>
+      context.read<OrdersViewModel>().loadOrder(widget.orderId);
 
   @override
   Widget build(BuildContext context) {
+    final viewModel = context.watch<OrdersViewModel>();
+    final order = viewModel.orderById(widget.orderId);
+
+    Widget body;
+    if (order == null && viewModel.isLoading) {
+      body = const Center(child: CircularProgressIndicator());
+    } else if (order == null) {
+      body = ErrorStateView(
+        messageKey: viewModel.errorMessage ?? 'error_order_not_found',
+        onRetry: _load,
+      );
+    } else {
+      body = RefreshIndicator(
+        onRefresh: _load,
+        child: _buildDetails(order),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.primary,
@@ -16,124 +58,175 @@ class OrderTrackingView extends StatelessWidget {
           context.tr('order_tracking'),
           style: const TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
         ),
-        actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.wb_sunny_outlined, color: AppColors.white)),
-        ],
       ),
-      body: Stack(
-        children: [
-          _buildMapPlaceholder(),
-          _buildTrackingDetails(context),
-        ],
-      ),
+      body: body,
     );
   }
 
-  Widget _buildMapPlaceholder() {
-    return Container(
-      width: double.infinity,
-      height: double.infinity,
-      color: AppColors.dividerExtraLight,
-      child: Image.network(
-        'https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/-73.935242,40.730610,13/600x600?access_token=dummy', // Placeholder map
-        fit: BoxFit.cover,
-        loadingBuilder: (context, child, loadingProgress) {
-          if (loadingProgress == null) return child;
-          return const Center(child: CircularProgressIndicator());
-        },
-        errorBuilder: (context, error, stackTrace) => const Center(child: Icon(Icons.image_not_supported, size: 100, color: AppColors.grey)),
-      ),
-    );
-  }
-
-  Widget _buildTrackingDetails(BuildContext context) {
-    return DraggableScrollableSheet(
-      initialChildSize: 0.45,
-      minChildSize: 0.4,
-      maxChildSize: 0.8,
-      builder: (context, scrollController) {
-        return Container(
-          padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
-          decoration: const BoxDecoration(
-            color: AppColors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
-            boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10)],
-          ),
-          child: ListView(
-            controller: scrollController,
-            children: [
-              Center(
-                child: Container(
-                  width: 40,
-                  height: 4,
-                  decoration: BoxDecoration(color: AppColors.borderLight, borderRadius: BorderRadius.circular(2)),
-                ),
+  Widget _buildDetails(OrderEntity order) {
+    final theme = Theme.of(context);
+    return ListView(
+      padding: const EdgeInsets.all(24),
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '${context.tr('order')} #${order.number}',
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    '${formatDate(order.createdAt)}  ${formatTime(order.createdAt)}',
+                    style: TextStyle(color: theme.hintColor),
+                  ),
+                ],
               ),
-              const SizedBox(height: 24),
-              Text(context.tr('details_card'), style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 16),
-              _buildMainCard(context),
-              const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text(context.tr('confirm')),
+            ),
+            OrderStatusChip(status: order.status),
+          ],
+        ),
+        const SizedBox(height: 24),
+        _card(child: OrderTimeline(status: order.status)),
+        const SizedBox(height: 16),
+        _card(
+          title: context.tr('order_summary'),
+          child: Column(
+            children: [
+              for (final item in order.items)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 6),
+                  child: Row(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: SizedBox(
+                          width: 48,
+                          height: 48,
+                          child: item.imageUrl == null
+                              ? const Icon(Icons.image, color: AppColors.grey)
+                              : Image.network(
+                                  item.imageUrl!,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (_, _, _) => const Icon(
+                                    Icons.image_not_supported,
+                                    color: AppColors.grey,
+                                  ),
+                                ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          '${item.productName} × ${item.quantity}',
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      Text(formatPrice(item.lineTotal)),
+                    ],
+                  ),
+                ),
+              const Divider(height: 24),
+              _row(context.tr('sub_total'), formatPrice(order.subtotal)),
+              if (order.discount > 0)
+                _row(
+                  '${context.tr('discount')}${order.couponCode == null ? '' : ' (${order.couponCode})'}',
+                  '-${formatPrice(order.discount)}',
+                ),
+              _row(context.tr('delivery_fees'), formatPrice(order.deliveryFee)),
+              _row(context.tr('taxes'), formatPrice(order.tax)),
+              _row(
+                context.tr('total'),
+                formatPrice(order.totalAmount),
+                bold: true,
               ),
             ],
           ),
-        );
-      },
+        ),
+        const SizedBox(height: 16),
+        _card(
+          title: context.tr('delivery_address'),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (order.shippingName != null)
+                Text(
+                  order.shippingName!,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+              if (order.shippingAddress != null) Text(order.shippingAddress!),
+              if (order.shippingPhone != null) Text(order.shippingPhone!),
+            ],
+          ),
+        ),
+        const SizedBox(height: 16),
+        _card(
+          title: context.tr('payment'),
+          child: Row(
+            children: [
+              Icon(
+                order.paymentMethod == PaymentMethod.card
+                    ? Icons.credit_card
+                    : Icons.payments_outlined,
+                color: AppColors.primary,
+              ),
+              const SizedBox(width: 12),
+              Text(
+                order.paymentMethod == PaymentMethod.card
+                    ? '${context.tr('card')} •••• ${order.cardLast4 ?? ''}'
+                    : context.tr('cash_on_delivery'),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
-  Widget _buildMainCard(BuildContext context) {
+  Widget _card({String? title, required Widget child}) {
+    final theme = Theme.of(context);
     return Container(
+      width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.borderTeal),
+        border: Border.all(color: theme.dividerColor),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildLocationRow(Icons.location_on_outlined, 'John F. Kennedy Int’l Airport, Queens, NY'),
-          Padding(
-            padding: const EdgeInsets.only(left: 11),
-            child: Container(width: 2, height: 20, color: AppColors.borderLight),
-          ),
-          _buildLocationRow(Icons.access_time, 'The Times Square Edition, 475 Lefant plz.'),
-          const SizedBox(height: 24),
-          Text(context.tr('more'), style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.grey, letterSpacing: 1.2)),
-          const SizedBox(height: 16),
-          _buildDetailRow('Order ID:', '#BH-2391'),
-          const Divider(height: 24),
-          _buildDetailRow('Order Date:', 'Jan 3, 2026'),
-          const Divider(height: 24),
-          _buildDetailRow('Order Total:', '\$24.27'),
-          const Divider(height: 24),
-          _buildDetailRow('${context.tr('delivery_address')}:', context.tr('home_address')),
+          if (title != null) ...[
+            Text(
+              title,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 12),
+          ],
+          child,
         ],
       ),
     );
   }
 
-  Widget _buildLocationRow(IconData icon, String text) {
-    return Row(
-      children: [
-        Icon(icon, size: 22, color: AppColors.black),
-        const SizedBox(width: 12),
-        Expanded(child: Text(text, style: const TextStyle(fontWeight: FontWeight.w500))),
-      ],
-    );
-  }
-
-  Widget _buildDetailRow(String label, String value) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(label, style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.black)),
-        Text(value, style: const TextStyle(color: AppColors.grey)),
-      ],
+  Widget _row(String label, String value, {bool bold = false}) {
+    final style = TextStyle(fontWeight: bold ? FontWeight.bold : FontWeight.normal);
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 3),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Flexible(child: Text(label, style: style)),
+          Text(value, style: style),
+        ],
+      ),
     );
   }
 }

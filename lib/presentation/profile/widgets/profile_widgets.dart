@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../domain/entities/profile_entity.dart';
 
+/// The user's photo, or their initials when there is none.
 class ProfileAvatar extends StatelessWidget {
   final String? imageUrl;
-  final bool showEdit;
-  final VoidCallback? onEdit;
+  final String name;
+  final bool isLoading;
 
   const ProfileAvatar({
     super.key,
     this.imageUrl,
-    this.showEdit = false,
-    this.onEdit,
+    this.name = '',
+    this.isLoading = false,
   });
 
   @override
   Widget build(BuildContext context) {
+    final initials = ProfileEntity.initialsOf(name);
     return Stack(
       alignment: Alignment.center,
       children: [
@@ -39,14 +42,30 @@ class ProfileAvatar extends StatelessWidget {
               shape: BoxShape.circle,
             ),
             padding: const EdgeInsets.all(4),
-            child: const CircleAvatar(
+            child: CircleAvatar(
               radius: 58,
-              backgroundImage: NetworkImage(
-                'https://i.pravatar.cc/300?img=11', // Dummy image for Ramiz Man
-              ),
+              backgroundColor: AppColors.primary.withValues(alpha: 0.15),
+              foregroundImage: imageUrl == null ? null : NetworkImage(imageUrl!),
+              onForegroundImageError: imageUrl == null ? null : (_, _) {},
+              child: initials.isEmpty
+                  ? const Icon(Icons.person, size: 56, color: AppColors.primary)
+                  : Text(
+                      initials,
+                      style: const TextStyle(
+                        fontSize: 40,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.primary,
+                      ),
+                    ),
             ),
           ),
         ),
+        if (isLoading)
+          const SizedBox(
+            width: 130,
+            height: 130,
+            child: CircularProgressIndicator(strokeWidth: 3),
+          ),
       ],
     );
   }
@@ -77,27 +96,32 @@ class ProfileListItem extends StatelessWidget {
           bottom: BorderSide(color: theme.dividerColor),
         ),
       ),
-      child: ListTile(
-        onTap: onTap,
-        leading: Icon(
-          icon,
-          color: iconColor ?? AppColors.primary,
-          size: 24,
-        ),
-        title: Text(
-          title,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-            color: theme.colorScheme.onSurface,
+      // ListTile draws its ripple on the nearest Material; without this one
+      // the coloured Container above would hide it.
+      child: Material(
+        type: MaterialType.transparency,
+        child: ListTile(
+          onTap: onTap,
+          leading: Icon(
+            icon,
+            color: iconColor ?? AppColors.primary,
+            size: 24,
           ),
+          title: Text(
+            title,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              color: theme.colorScheme.onSurface,
+            ),
+          ),
+          trailing: Icon(
+            Icons.arrow_forward_ios,
+            size: 16,
+            color: theme.textTheme.bodySmall?.color,
+          ),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
         ),
-        trailing: Icon(
-          Icons.arrow_forward_ios,
-          size: 16,
-          color: theme.textTheme.bodySmall?.color,
-        ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
       ),
     );
   }

@@ -27,9 +27,12 @@ class AppRoutes {
   static const String filterSort = '/filter-sort';
   static const String cart = '/cart';
   static const String checkout = '/checkout';
+  static const String addresses = '/addresses';
   static const String addAddress = '/add-address';
   static const String editAddress = '/edit-address';
+  static const String paymentMethods = '/payment-methods';
   static const String addCard = '/add-card';
+  static const String orders = '/orders';
   static const String orderSuccess = '/order-success';
   static const String orderTracking = '/order-tracking';
   static const String addReview = '/add-review';
