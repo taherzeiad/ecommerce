@@ -31,15 +31,18 @@ class SupabaseOrderRepository implements OrderRepository {
 
   @override
   Future<OrderEntity?> getOrder(String orderId) async {
+    final dynamic parsedOrderId = int.tryParse(orderId) ?? orderId;
     try {
       final response = await _supabaseClient
           .from('orders')
           .select('*, order_items(*)')
-          .eq('id', orderId)
+          .eq('id', parsedOrderId)
           .maybeSingle();
       return response == null ? null : OrderModel.fromJson(response);
     } catch (e) {
-      debugPrint('🔴 [Order Repository] getOrder failed: $e');
+      debugPrint(
+        '🔴 [Order Repository] getOrder failed for $parsedOrderId: $e',
+      );
       return null;
     }
   }
@@ -119,10 +122,7 @@ class SupabaseOrderRepository implements OrderRepository {
         'payment_method': paymentMethod.name,
         'status': 'pending',
       },
-      {
-        'user_id': user.id,
-        'status': 'pending',
-      },
+      {'user_id': user.id, 'status': 'pending'},
     ];
 
     Map<String, dynamic>? insertedOrder;
@@ -137,7 +137,9 @@ class SupabaseOrderRepository implements OrderRepository {
         insertedOrder = row;
         break;
       } catch (e) {
-        debugPrint('🔴 [Order Repository] Insert into orders failed with $payload: $e');
+        debugPrint(
+          '🔴 [Order Repository] Insert into orders failed with $payload: $e',
+        );
       }
     }
 
@@ -171,7 +173,9 @@ class SupabaseOrderRepository implements OrderRepository {
           await _supabaseClient.from('order_items').insert(payload);
           break;
         } catch (e) {
-          debugPrint('🔴 [Order Repository] Insert order_item failed with $payload: $e');
+          debugPrint(
+            '🔴 [Order Repository] Insert order_item failed with $payload: $e',
+          );
         }
       }
     }
