@@ -110,7 +110,7 @@ class _ForgotPasswordContent extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 16),
                       child: Text(
-                        viewModel.errorMessage!,
+                        context.tr(viewModel.errorMessage!),
                         style: const TextStyle(color: AppColors.error),
                       ),
                     ),

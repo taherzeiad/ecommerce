@@ -5,6 +5,8 @@ import 'package:vector_graphics/vector_graphics.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../core/extensions/context_extension.dart';
+import '../../../core/utils/formatters.dart';
+import '../../../core/widgets/error_state_view.dart';
 import '../../theme/view_model/theme_view_model.dart';
 import '../view_model/cart_view_model.dart';
 
@@ -16,12 +18,25 @@ class CartView extends StatefulWidget {
 }
 
 class _CartViewState extends State<CartView> {
+  final TextEditingController _promoController = TextEditingController();
+  bool _applyingCoupon = false;
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<CartViewModel>().fetchCartItems();
     });
+  }
+
+  @override
+  void dispose() {
+    _promoController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _reportFailure(Future<bool> change) async {
+    if (!await change && mounted) showMessage(context, 'error_unexpected');
   }
 
   @override
@@ -60,8 +75,13 @@ class _CartViewState extends State<CartView> {
           ),
         ],
       ),
-      body: viewModel.isLoading
+      body: viewModel.isInitialLoading
           ? const Center(child: CircularProgressIndicator())
+          : viewModel.errorMessage != null && viewModel.items.isEmpty
+          ? ErrorStateView(
+              messageKey: viewModel.errorMessage!,
+              onRetry: viewModel.fetchCartItems,
+            )
           : viewModel.items.isEmpty
               ? _buildEmptyState(context)
               : Column(
@@ -102,7 +122,7 @@ class _CartViewState extends State<CartView> {
                               ),
                             ),
                             const SizedBox(height: 12),
-                            _buildPromoCodeField(context),
+                            _buildPromoCodeField(context, viewModel),
                             const SizedBox(height: 32),
                             _buildPriceBreakdown(context, viewModel),
                           ],
@@ -210,23 +230,16 @@ class _CartViewState extends State<CartView> {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: Image.network(
-                item.product.images.first,
-                width: 90,
-                height: 90,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    width: 90,
-                    height: 90,
-                    color: AppColors.dividerExtraLight,
-                    child: const Icon(
-                      Icons.image_not_supported,
-                      color: AppColors.grey,
+              child: item.product.images.isEmpty
+                  ? _buildImagePlaceholder()
+                  : Image.network(
+                      item.product.images.first,
+                      width: 90,
+                      height: 90,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) =>
+                          _buildImagePlaceholder(),
                     ),
-                  );
-                },
-              ),
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -252,12 +265,18 @@ class _CartViewState extends State<CartView> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        '\$${item.product.price.toStringAsFixed(2)}',
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.onSurface,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 17,
+                      // Long prices shrink a little instead of overflowing.
+                      Flexible(
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            formatPrice(item.product.price),
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSurface,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 17,
+                            ),
+                          ),
                         ),
                       ),
                       Container(
@@ -272,7 +291,7 @@ class _CartViewState extends State<CartView> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             _buildQtyBtn(context, Icons.remove, () {
-                              viewModel.decrementQuantity(item);
+                              _reportFailure(viewModel.decrementQuantity(item));
                             }),
                             const VerticalDivider(width: 1, thickness: 1),
                             Padding(
@@ -289,7 +308,7 @@ class _CartViewState extends State<CartView> {
                             ),
                             const VerticalDivider(width: 1, thickness: 1),
                             _buildQtyBtn(context, Icons.add, () {
-                              viewModel.incrementQuantity(item);
+                              _reportFailure(viewModel.incrementQuantity(item));
                             }),
                           ],
                         ),
@@ -302,6 +321,15 @@ class _CartViewState extends State<CartView> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildImagePlaceholder() {
+    return Container(
+      width: 90,
+      height: 90,
+      color: AppColors.dividerExtraLight,
+      child: const Icon(Icons.image_not_supported, color: AppColors.grey),
     );
   }
 
@@ -350,30 +378,61 @@ class _CartViewState extends State<CartView> {
     );
   }
 
-  Widget _buildPromoCodeField(BuildContext context) {
+  Widget _buildPromoCodeField(BuildContext context, CartViewModel viewModel) {
     final theme = Theme.of(context);
+    final coupon = viewModel.coupon;
+    if (coupon != null) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: AppColors.primary.withValues(alpha: 0.08),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: AppColors.primary),
+        ),
+        child: Row(
+          children: [
+            const Icon(Icons.local_offer_outlined, color: AppColors.primary),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                '${coupon.code} • -${coupon.discountPercent}%',
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.primary,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: viewModel.removeCoupon,
+              child: Text(context.tr('remove')),
+            ),
+          ],
+        ),
+      );
+    }
+
+    final border = OutlineInputBorder(
+      borderRadius: BorderRadius.circular(8),
+      borderSide: BorderSide(color: theme.dividerColor),
+    );
     return Row(
       children: [
         Expanded(
           child: TextField(
+            controller: _promoController,
+            textCapitalization: TextCapitalization.characters,
             decoration: InputDecoration(
               hintText: context.tr('promo_code'),
               hintStyle: TextStyle(color: theme.textTheme.bodySmall?.color),
               contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: theme.dividerColor),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: theme.dividerColor),
-              ),
+              border: border,
+              enabledBorder: border,
             ),
           ),
         ),
         const SizedBox(width: 16),
         ElevatedButton(
-          onPressed: () {},
+          onPressed: _applyingCoupon ? null : () => _applyCoupon(viewModel),
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.primary,
             foregroundColor: AppColors.white,
@@ -382,10 +441,32 @@ class _CartViewState extends State<CartView> {
               borderRadius: BorderRadius.circular(8),
             ),
           ),
-          child: Text(context.tr('apply')),
+          child: _applyingCoupon
+              ? const SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: AppColors.white,
+                  ),
+                )
+              : Text(context.tr('apply')),
         ),
       ],
     );
+  }
+
+  Future<void> _applyCoupon(CartViewModel viewModel) async {
+    setState(() => _applyingCoupon = true);
+    final error = await viewModel.applyCoupon(_promoController.text);
+    if (!mounted) return;
+    setState(() => _applyingCoupon = false);
+    if (error == null) {
+      _promoController.clear();
+      showMessage(context, 'coupon_applied');
+    } else {
+      showMessage(context, error);
+    }
   }
 
   Widget _buildPriceBreakdown(BuildContext context, CartViewModel viewModel) {
@@ -394,17 +475,23 @@ class _CartViewState extends State<CartView> {
         _buildPriceRow(
           context,
           context.tr('sub_total'),
-          '\$${viewModel.subtotal.toStringAsFixed(2)}',
+          formatPrice(viewModel.subtotal),
         ),
+        if (viewModel.coupon != null)
+          _buildPriceRow(
+            context,
+            context.tr('discount'),
+            '-${formatPrice(viewModel.discount)}',
+          ),
         _buildPriceRow(
           context,
           context.tr('delivery_fees'),
-          '\$${viewModel.deliveryFees.toStringAsFixed(2)}',
+          formatPrice(viewModel.deliveryFees),
         ),
         _buildPriceRow(
           context,
           context.tr('taxes'),
-          '\$${viewModel.taxes.toStringAsFixed(2)}',
+          formatPrice(viewModel.taxes),
           isRed: true,
         ),
         const SizedBox(height: 16),
@@ -433,7 +520,7 @@ class _CartViewState extends State<CartView> {
         _buildPriceRow(
           context,
           context.tr('total'),
-          '\$${viewModel.totalPrice.toStringAsFixed(2)}',
+          formatPrice(viewModel.totalPrice),
           isBold: true,
         ),
       ],

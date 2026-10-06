@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:ecommerce/core/constants/app_colors.dart';
+import 'package:ecommerce/core/di/service_locator.dart';
 import 'package:ecommerce/core/routes/app_routes.dart';
+import 'package:ecommerce/data/repositories/auth_repository.dart';
 import 'package:ecommerce/core/extensions/context_extension.dart';
 import 'package:ecommerce/presentation/theme/view_model/theme_view_model.dart';
 import 'package:ecommerce/presentation/theme/view_model/locale_view_model.dart';
+import 'package:ecommerce/presentation/settings/view_model/settings_view_model.dart';
 
 class SettingsView extends StatefulWidget {
   const SettingsView({super.key});
@@ -15,14 +18,11 @@ class SettingsView extends StatefulWidget {
 }
 
 class _SettingsViewState extends State<SettingsView> {
-  bool _notificationsEnabled = true;
-  bool _soundEnabled = true;
-  bool _vibrationEnabled = false;
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final themeViewModel = context.watch<ThemeViewModel>();
+    final settings = context.watch<SettingsViewModel>();
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -62,13 +62,13 @@ class _SettingsViewState extends State<SettingsView> {
               theme,
               icon: Icons.location_on_outlined,
               title: context.tr('shipping_address'),
-              onTap: () => Navigator.pushNamed(context, AppRoutes.checkout),
+              onTap: () => Navigator.pushNamed(context, AppRoutes.addresses),
             ),
             _buildSettingsItem(
               theme,
               icon: Icons.payment_outlined,
               title: context.tr('payment_methods'),
-              onTap: () {},
+              onTap: () => Navigator.pushNamed(context, AppRoutes.paymentMethods),
             ),
             _buildSettingsItem(
               theme,
@@ -76,13 +76,6 @@ class _SettingsViewState extends State<SettingsView> {
               title: context.tr('language'),
               subtitle: context.watch<LocaleViewModel>().locale.languageCode == 'en' ? 'English' : 'العربية',
               onTap: () => _showLanguagePicker(context),
-            ),
-            _buildSettingsItem(
-              theme,
-              icon: Icons.monetization_on_outlined,
-              title: context.tr('currency'),
-              subtitle: 'USD (\$)',
-              onTap: () => _showCurrencyPicker(context),
             ),
             const SizedBox(height: 32),
             _buildSectionHeader(theme, context.tr('preferences')),
@@ -98,23 +91,23 @@ class _SettingsViewState extends State<SettingsView> {
               theme,
               icon: Icons.notifications_none,
               title: context.tr('notification'),
-              value: _notificationsEnabled,
-              onChanged: (val) => setState(() => _notificationsEnabled = val),
+              value: settings.notificationsEnabled,
+              onChanged: settings.setNotificationsEnabled,
             ),
-            if (_notificationsEnabled) ...[
+            if (settings.notificationsEnabled) ...[
               _buildSettingsToggle(
                 theme,
                 icon: Icons.volume_up_outlined,
                 title: context.tr('notification_sound'),
-                value: _soundEnabled,
-                onChanged: (val) => setState(() => _soundEnabled = val),
+                value: settings.soundEnabled,
+                onChanged: settings.setSoundEnabled,
               ),
               _buildSettingsToggle(
                 theme,
                 icon: Icons.vibration,
                 title: context.tr('vibration'),
-                value: _vibrationEnabled,
-                onChanged: (val) => setState(() => _vibrationEnabled = val),
+                value: settings.vibrationEnabled,
+                onChanged: settings.setVibrationEnabled,
               ),
             ],
             const SizedBox(height: 32),
@@ -186,30 +179,35 @@ class _SettingsViewState extends State<SettingsView> {
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: theme.dividerColor.withValues(alpha: 0.1)),
       ),
-      child: ListTile(
-        onTap: onTap,
-        leading: Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: (iconColor ?? AppColors.primary).withValues(alpha: 0.1),
-            shape: BoxShape.circle,
+      // ListTile draws its ripple on the nearest Material; without this one
+      // the coloured Container above would hide it.
+      child: Material(
+        type: MaterialType.transparency,
+        child: ListTile(
+          onTap: onTap,
+          leading: Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: (iconColor ?? AppColors.primary).withValues(alpha: 0.1),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, color: iconColor ?? AppColors.primary, size: 24),
           ),
-          child: Icon(icon, color: iconColor ?? AppColors.primary, size: 24),
-        ),
-        title: Text(
-          title,
-          style: TextStyle(
-            fontWeight: FontWeight.w500,
-            color: theme.colorScheme.onSurface,
+          title: Text(
+            title,
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+              color: theme.colorScheme.onSurface,
+            ),
           ),
-        ),
-        subtitle: subtitle != null
-            ? Text(subtitle, style: const TextStyle(color: AppColors.primary))
-            : null,
-        trailing: Icon(
-          Icons.arrow_forward_ios,
-          size: 16,
-          color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+          subtitle: subtitle != null
+              ? Text(subtitle, style: const TextStyle(color: AppColors.primary))
+              : null,
+          trailing: Icon(
+            Icons.arrow_forward_ios,
+            size: 16,
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+          ),
         ),
       ),
     );
@@ -229,30 +227,33 @@ class _SettingsViewState extends State<SettingsView> {
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: theme.dividerColor.withValues(alpha: 0.1)),
       ),
-      child: ListTile(
-        leading: Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: AppColors.primary.withValues(alpha: 0.1),
-            shape: BoxShape.circle,
+      child: Material(
+        type: MaterialType.transparency,
+        child: ListTile(
+          leading: Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: AppColors.primary.withValues(alpha: 0.1),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              icon,
+              color: AppColors.primary,
+              size: 24,
+            ),
           ),
-          child: Icon(
-            icon,
-            color: AppColors.primary,
-            size: 24,
+          title: Text(
+            title,
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+              color: theme.colorScheme.onSurface,
+            ),
           ),
-        ),
-        title: Text(
-          title,
-          style: TextStyle(
-            fontWeight: FontWeight.w500,
-            color: theme.colorScheme.onSurface,
+          trailing: Switch(
+            value: value,
+            onChanged: onChanged,
+            activeThumbColor: AppColors.primary,
           ),
-        ),
-        trailing: Switch(
-          value: value,
-          onChanged: onChanged,
-          activeThumbColor: AppColors.primary,
         ),
       ),
     );
@@ -307,44 +308,6 @@ class _SettingsViewState extends State<SettingsView> {
     );
   }
 
-  void _showCurrencyPicker(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) {
-        return Container(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                context.tr('select_currency'),
-                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 20),
-              _buildCurrencyItem('USD (\$)', true),
-              _buildCurrencyItem('EUR (€)', false),
-              _buildCurrencyItem('SAR (ر.س)', false),
-              _buildCurrencyItem('GBP (£)', false),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildCurrencyItem(String currency, bool isSelected) {
-    return ListTile(
-      title: Text(currency),
-      trailing: isSelected
-          ? const Icon(Icons.check_circle, color: AppColors.primary)
-          : null,
-      onTap: () => Navigator.pop(context),
-    );
-  }
-
   void _showLogoutDialog(BuildContext context) {
     final theme = Theme.of(context);
     showDialog(
@@ -387,10 +350,13 @@ class _SettingsViewState extends State<SettingsView> {
                 const SizedBox(width: 16),
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                      Navigator.pushNamedAndRemoveUntil(
-                        context,
+                    onPressed: () async {
+                      // This is the dialog's context, which is gone once the
+                      // dialog closes, so keep the navigator itself.
+                      final navigator = Navigator.of(context);
+                      navigator.pop();
+                      await sl<AuthRepository>().logout();
+                      navigator.pushNamedAndRemoveUntil(
                         AppRoutes.login,
                         (route) => false,
                       );

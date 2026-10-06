@@ -16,7 +16,9 @@ class ProfileView extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final profileViewModel = context.watch<ProfileViewModel>();
-    final userName = profileViewModel.userName.isNotEmpty ? profileViewModel.userName : 'User';
+    final userName = profileViewModel.userName.isNotEmpty
+        ? profileViewModel.userName
+        : context.tr('guest_user');
     final userEmail = profileViewModel.userEmail;
 
     return Scaffold(
@@ -42,7 +44,10 @@ class ProfileView extends StatelessWidget {
         child: Column(
           children: [
             const SizedBox(height: 32),
-            const ProfileAvatar(),
+            ProfileAvatar(
+              imageUrl: profileViewModel.avatarUrl,
+              name: profileViewModel.userName,
+            ),
             const SizedBox(height: 16),
             Text(
               userName,
@@ -71,12 +76,24 @@ class ProfileView extends StatelessWidget {
             ProfileListItem(
               icon: Icons.favorite_border,
               title: context.tr('wishlist'),
-              onTap: () => Navigator.pushNamed(context, AppRoutes.mainWrapper), // Or direct if handled
+              // Back to the main screen (not a second copy of it), on the
+              // wishlist tab.
+              onTap: () => Navigator.pushNamedAndRemoveUntil(
+                context,
+                AppRoutes.mainWrapper,
+                (route) => false,
+                arguments: 3,
+              ),
             ),
             ProfileListItem(
               icon: Icons.assignment_outlined,
-              title: 'My Order',
-              onTap: () {},
+              title: context.tr('my_orders'),
+              onTap: () => Navigator.pushNamed(context, AppRoutes.orders),
+            ),
+            ProfileListItem(
+              icon: Icons.location_on_outlined,
+              title: context.tr('shipping_address'),
+              onTap: () => Navigator.pushNamed(context, AppRoutes.addresses),
             ),
             ProfileListItem(
               icon: Icons.notifications_none,
@@ -86,7 +103,7 @@ class ProfileView extends StatelessWidget {
             ProfileListItem(
               icon: Icons.payment_outlined,
               title: context.tr('payment_methods'),
-              onTap: () {},
+              onTap: () => Navigator.pushNamed(context, AppRoutes.paymentMethods),
             ),
             ProfileListItem(
               icon: Icons.settings_outlined,
@@ -100,7 +117,7 @@ class ProfileView extends StatelessWidget {
               iconColor: AppColors.error,
               onTap: () => _showLogoutDialog(context),
             ),
-            const SizedBox(height: 100), // Space for bottom nav
+            const SizedBox(height: 40),
           ],
         ),
       ),
@@ -150,15 +167,15 @@ class ProfileView extends StatelessWidget {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () async {
-                      Navigator.pop(context);
+                      // This is the dialog's context, which is gone once the
+                      // dialog closes, so keep the navigator itself.
+                      final navigator = Navigator.of(context);
+                      navigator.pop();
                       await sl<AuthRepository>().logout();
-                      if (context.mounted) {
-                        Navigator.pushNamedAndRemoveUntil(
-                          context,
-                          AppRoutes.login,
-                          (route) => false,
-                        );
-                      }
+                      navigator.pushNamedAndRemoveUntil(
+                        AppRoutes.login,
+                        (route) => false,
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.error,

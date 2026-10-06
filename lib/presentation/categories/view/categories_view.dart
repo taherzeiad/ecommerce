@@ -4,8 +4,11 @@ import 'package:provider/provider.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/routes/app_routes.dart';
+import '../../../core/widgets/category_icon.dart';
 import '../../../core/widgets/custom_search_bar.dart';
+import '../../../core/widgets/error_state_view.dart';
 import '../../../core/extensions/context_extension.dart';
+import '../../search/view/filter_sort_view.dart';
 import '../../theme/view_model/theme_view_model.dart';
 import '../view_model/categories_view_model.dart';
 
@@ -25,20 +28,133 @@ class _CategoriesViewState extends State<CategoriesView> {
     });
   }
 
+  /// Opens the first category whose name contains one of [keywords]
+  /// (English or Arabic), or every product when none matches.
+  void _openMatching(List<String> keywords) {
+    final categories = context.read<CategoriesViewModel>().categories;
+    final match = categories
+        .where((c) => keywords.any(c.toLowerCase().contains))
+        .firstOrNull;
+    Navigator.pushNamed(
+      context,
+      AppRoutes.allProducts,
+      arguments: match ?? ProductCollection.all,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final viewModel = context.watch<CategoriesViewModel>();
+
+    Widget content;
+    if (viewModel.isLoading && viewModel.categories.isEmpty) {
+      content = const Center(child: CircularProgressIndicator());
+    } else if (viewModel.errorMessage != null && viewModel.categories.isEmpty) {
+      content = ErrorStateView(
+        messageKey: viewModel.errorMessage!,
+        onRetry: viewModel.fetchCategories,
+      );
+    } else {
+      content = RefreshIndicator(
+        onRefresh: viewModel.fetchCategories,
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CustomSearchBar(
+                hintText: context.tr('search'),
+                height: 48,
+                onTap: () => Navigator.pushNamed(context, AppRoutes.search),
+                onFilterTap: () => openFilterThenSearch(context),
+              ),
+              const SizedBox(height: 24),
+              Text(
+                context.tr('featured_categories'),
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  color: theme.colorScheme.onSurface,
+                ),
+              ),
+              const SizedBox(height: 16),
+              _buildFeaturedCard(
+                context.tr('latest_smartphones'),
+                context.tr('discover_tech'),
+                'lib/assets/images/phonecolor.png',
+                const Color(0xFF81C784),
+                () => _openMatching(['phone', 'هاتف', 'هواتف', 'جوال']),
+              ),
+              const SizedBox(height: 16),
+              _buildFeaturedCard(
+                context.tr('gaming_laptops'),
+                context.tr('high_performance'),
+                'lib/assets/images/lap.png',
+                const Color(0xFF4DB6AC),
+                () => _openMatching(
+                  ['laptop', 'computer', 'لابتوب', 'كمبيوتر', 'حاسوب'],
+                ),
+              ),
+              const SizedBox(height: 24),
+              GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 0.9,
+                  crossAxisSpacing: 16,
+                  mainAxisSpacing: 16,
+                ),
+                itemCount: viewModel.categories.length,
+                itemBuilder: (context, index) {
+                  final category = viewModel.categories[index];
+                  final count = viewModel.categoryCounts[category] ?? 0;
+
+                  return TweenAnimationBuilder<double>(
+                    duration: Duration(milliseconds: 300 + (index * 50)),
+                    tween: Tween(begin: 0.0, end: 1.0),
+                    curve: Curves.easeOutCubic,
+                    builder: (context, value, child) {
+                      return Opacity(
+                        opacity: value,
+                        child: Transform.translate(
+                          offset: Offset(0, 20 * (1 - value)),
+                          child: child,
+                        ),
+                      );
+                    },
+                    child: _buildCategoryGridItem(
+                      context,
+                      category,
+                      '$count ${context.tr('products_count')}',
+                      index == 0,
+                    ),
+                  );
+                },
+              ),
+              const SizedBox(height: 80),
+            ],
+          ),
+        ),
+      );
+    }
 
     return Scaffold(
       backgroundColor: AppColors.primary,
       appBar: AppBar(
         backgroundColor: AppColors.primary,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
-        ),
+        // As a bottom-nav tab this is usually the only route; popping it
+        // would leave a blank screen.
+        automaticallyImplyLeading: false,
+        leading: Navigator.canPop(context)
+            ? IconButton(
+                icon: const Icon(Icons.arrow_back, color: Colors.white),
+                onPressed: () => Navigator.pop(context),
+              )
+            : null,
         title: Text(
           context.tr('categories'),
           style: const TextStyle(
@@ -75,138 +191,58 @@ class _CategoriesViewState extends State<CategoriesView> {
             topRight: Radius.circular(30),
           ),
         ),
-        child: viewModel.isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : SingleChildScrollView(
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CustomSearchBar(
-                      hintText: context.tr('search'),
-                      height: 48,
-                      onTap: () => Navigator.pushNamed(context, AppRoutes.search),
-                      onFilterTap: () =>
-                          Navigator.pushNamed(context, AppRoutes.filterSort),
-                    ),
-                    const SizedBox(height: 24),
-                    Text(
-                      context.tr('featured_categories'),
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                        color: theme.colorScheme.onSurface,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    _buildFeaturedCard(
-                      context.tr('latest_smartphones'),
-                      context.tr('discover_tech'),
-                      'lib/assets/images/phonecolor.png',
-                      const Color(0xFF81C784),
-                    ),
-                    const SizedBox(height: 16),
-                    _buildFeaturedCard(
-                      context.tr('gaming_laptops'),
-                      context.tr('high_performance'),
-                      'lib/assets/images/lap.png',
-                      const Color(0xFF4DB6AC),
-                    ),
-                    const SizedBox(height: 24),
-                    GridView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        childAspectRatio: 0.9,
-                        crossAxisSpacing: 16,
-                        mainAxisSpacing: 16,
-                      ),
-                      itemCount: viewModel.categories.length,
-                      itemBuilder: (context, index) {
-                        final category = viewModel.categories[index];
-                        final count = viewModel.categoryCounts[category] ?? 0;
-                        
-                        // Icon mapping
-                        String iconPath = 'lib/assets/icons/phone.png';
-                        if (category.toLowerCase().contains('phone') || category.contains('هواتف')) {
-                          iconPath = 'lib/assets/icons/phone.png';
-                        } else if (category.toLowerCase().contains('audio') || category.contains('صوت')) {
-                          iconPath = 'lib/assets/icons/sound.png';
-                        } else if (category.toLowerCase().contains('game') || category.contains('ألعاب')) {
-                          iconPath = 'lib/assets/icons/play.png';
-                        } else if (category.toLowerCase().contains('laptop') || category.contains('لابتوب')) {
-                          iconPath = 'lib/assets/icons/laptop.png';
-                        }
-
-                        return TweenAnimationBuilder<double>(
-                          duration: Duration(milliseconds: 300 + (index * 50)),
-                          tween: Tween(begin: 0.0, end: 1.0),
-                          curve: Curves.easeOutCubic,
-                          builder: (context, value, child) {
-                            return Opacity(
-                              opacity: value,
-                              child: Transform.translate(
-                                offset: Offset(0, 20 * (1 - value)),
-                                child: child,
-                              ),
-                            );
-                          },
-                          child: _buildCategoryGridItem(
-                            context,
-                            category,
-                            '+$count Product',
-                            iconPath,
-                            index == 0,
-                          ),
-                        );
-                      },
-                    ),
-                    const SizedBox(height: 80),
-                  ],
-                ),
-              ),
+        child: content,
       ),
     );
   }
 
-  Widget _buildFeaturedCard(String title, String subtitle, String imagePath, Color bgColor) {
-    return Container(
-      width: double.infinity,
-      height: 100,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: bgColor,
+  Widget _buildFeaturedCard(
+    String title,
+    String subtitle,
+    String imagePath,
+    Color bgColor,
+    VoidCallback onTap,
+  ) {
+    return Material(
+      color: bgColor,
+      borderRadius: BorderRadius.circular(12),
+      child: InkWell(
         borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                    color: Colors.white,
-                  ),
+        onTap: onTap,
+        child: Container(
+          width: double.infinity,
+          constraints: const BoxConstraints(minHeight: 100),
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      subtitle,
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Colors.white.withValues(alpha: 0.9),
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  subtitle,
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Colors.white.withValues(alpha: 0.9),
-                  ),
-                ),
-              ],
-            ),
+              ),
+              Image.asset(imagePath, width: 60, height: 60, fit: BoxFit.contain),
+            ],
           ),
-          Image.asset(imagePath, width: 60, height: 60, fit: BoxFit.contain),
-        ],
+        ),
       ),
     );
   }
@@ -215,76 +251,78 @@ class _CategoriesViewState extends State<CategoriesView> {
     BuildContext context,
     String title,
     String count,
-    String iconPath,
     bool isNew,
   ) {
-    return Container(
-      decoration: BoxDecoration(
-        color: const Color(0xFFE0F2F1),
+    return Material(
+      color: const Color(0xFFE0F2F1),
+      borderRadius: BorderRadius.circular(16),
+      child: InkWell(
         borderRadius: BorderRadius.circular(16),
-      ),
-      child: Stack(
-        children: [
-          if (isNew)
-            Positioned(
-              top: 12,
-              right: 12,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF129883),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  context.tr('new'),
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 10,
-                    fontWeight: FontWeight.bold,
+        onTap: () => Navigator.pushNamed(
+          context,
+          AppRoutes.allProducts,
+          arguments: title,
+        ),
+        child: Stack(
+          children: [
+            if (isNew)
+              PositionedDirectional(
+                top: 12,
+                end: 12,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: AppColors.primary,
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                ),
-              ),
-            ),
-          Center(
-            child: InkWell(
-              onTap: () => Navigator.pushNamed(
-                context,
-                AppRoutes.allProducts,
-                arguments: title,
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    iconPath,
-                    width: 50,
-                    height: 50,
-                    fit: BoxFit.contain,
-                    color: Colors.black87,
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    title,
+                  child: Text(
+                    context.tr('new'),
                     style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 10,
                       fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CategoryIcon(
+                      category: title,
+                      size: 50,
                       color: Colors.black87,
                     ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    count,
-                    style: const TextStyle(
-                      color: Color(0xFF129883),
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
+                    const SizedBox(height: 12),
+                    Text(
+                      context.tr(title.toLowerCase()),
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        color: Colors.black87,
+                      ),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 4),
+                    Text(
+                      count,
+                      style: const TextStyle(
+                        color: AppColors.primary,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

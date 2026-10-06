@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/utils/error_mapper.dart';
 import '../../../domain/entities/product_entity.dart';
 import '../../../domain/repositories/product_repository.dart';
 
@@ -23,24 +24,14 @@ class HomeViewModel extends ChangeNotifier {
 
   bool get isLoading => _isLoading;
 
-  bool _hasNewNotifications = false; // Hidden by default
-  bool get hasNewNotifications => _hasNewNotifications;
+  String? _errorMessage;
 
-  void markNotificationsAsRead() {
-    if (_hasNewNotifications) {
-      _hasNewNotifications = false;
-      notifyListeners();
-    }
-  }
-
-  // Use this method to trigger the badge (for testing or real push)
-  void simulateNewNotification() {
-    _hasNewNotifications = true;
-    notifyListeners();
-  }
+  /// Translation key of the last failed load, `null` when it worked.
+  String? get errorMessage => _errorMessage;
 
   Future<void> fetchHomeData() async {
     _isLoading = true;
+    _errorMessage = null;
     notifyListeners();
 
     try {
@@ -53,7 +44,7 @@ class HomeViewModel extends ChangeNotifier {
       _flashDeals = results[1] as List<ProductEntity>;
       _categories = results[2] as List<String>;
     } catch (e) {
-      // Handle error
+      _errorMessage = errorKeyFor(e);
     } finally {
       _isLoading = false;
       notifyListeners();

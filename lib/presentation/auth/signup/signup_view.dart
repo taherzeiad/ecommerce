@@ -255,10 +255,20 @@ class _SignupContent extends StatelessWidget {
                           ? null
                           : () async {
                               final success = await viewModel.signup();
-                              if (success && context.mounted) {
-                                Navigator.pushReplacementNamed(
+                              if (!success || !context.mounted) return;
+                              if (viewModel.needsEmailConfirmation) {
+                                // No session yet: they must confirm by email.
+                                Navigator.pushNamedAndRemoveUntil(
+                                  context,
+                                  AppRoutes.authSuccess,
+                                  (route) => false,
+                                  arguments: 'confirm_email_sent',
+                                );
+                              } else {
+                                Navigator.pushNamedAndRemoveUntil(
                                   context,
                                   AppRoutes.mainWrapper,
+                                  (route) => false,
                                 );
                               }
                             },

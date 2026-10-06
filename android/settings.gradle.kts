@@ -1,3 +1,17 @@
+// Fix for AGP AndroidLocationsException when both ANDROID_PREFS_ROOT and ANDROID_USER_HOME are present in env
+runCatching {
+    val processEnvClass = Class.forName("java.lang.ProcessEnvironment")
+    val fieldName = if (System.getProperty("os.name").contains("Windows", ignoreCase = true)) {
+        "theCaseInsensitiveEnvironment"
+    } else {
+        "theEnvironment"
+    }
+    val envField = processEnvClass.getDeclaredField(fieldName).apply { isAccessible = true }
+    @Suppress("UNCHECKED_CAST")
+    val env = envField.get(null) as? MutableMap<String, String>
+    env?.remove("ANDROID_PREFS_ROOT")
+}
+
 pluginManagement {
     val flutterSdkPath = run {
         val properties = java.util.Properties()

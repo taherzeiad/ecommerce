@@ -5,6 +5,9 @@ import 'package:vector_graphics/vector_graphics.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../core/extensions/context_extension.dart';
+import '../../../core/utils/formatters.dart';
+import '../../../core/widgets/error_state_view.dart';
+import '../../main_wrapper/main_wrapper.dart';
 import '../../../domain/entities/product_entity.dart';
 import '../../cart/view_model/cart_view_model.dart';
 import '../view_model/wishlist_view_model.dart';
@@ -33,10 +36,14 @@ class _WishlistViewState extends State<WishlistView> {
       appBar: AppBar(
         backgroundColor: AppColors.primary,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.of(context).maybePop(),
-        ),
+        // As a bottom-nav tab this is usually the only route.
+        automaticallyImplyLeading: false,
+        leading: Navigator.canPop(context)
+            ? IconButton(
+                icon: const Icon(Icons.arrow_back, color: Colors.white),
+                onPressed: () => Navigator.of(context).maybePop(),
+              )
+            : null,
         title: Text(
           context.tr('wishlist'),
           style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
@@ -54,17 +61,25 @@ class _WishlistViewState extends State<WishlistView> {
           ),
         ],
       ),
-      body: viewModel.isLoading
+      body: viewModel.isLoading && viewModel.items.isEmpty
           ? const Center(child: CircularProgressIndicator())
+          : viewModel.errorMessage != null && viewModel.items.isEmpty
+          ? ErrorStateView(
+              messageKey: viewModel.errorMessage!,
+              onRetry: viewModel.fetchWishlist,
+            )
           : viewModel.items.isEmpty
               ? _buildEmptyState(context)
-              : ListView.separated(
+              : RefreshIndicator(
+                  onRefresh: viewModel.fetchWishlist,
+                  child: ListView.separated(
                   padding: const EdgeInsets.all(24),
                   itemCount: viewModel.items.length,
                   separatorBuilder: (_, _) => const SizedBox(height: 16),
                   itemBuilder: (context, index) {
                     return _buildWishlistItem(context, viewModel.items[index]);
                   },
+                ),
                 ),
     );
   }
@@ -105,11 +120,15 @@ class _WishlistViewState extends State<WishlistView> {
               width: double.infinity,
               height: 48,
               child: ElevatedButton(
-                onPressed: () => Navigator.pushNamed(
-                  context,
-                  AppRoutes.mainWrapper,
-                  arguments: 0,
-                ),
+                onPressed: () {
+                  if (!MainWrapper.switchTab(context, MainWrapper.homeTab)) {
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      AppRoutes.mainWrapper,
+                      (route) => false,
+                    );
+                  }
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
                   foregroundColor: Colors.white,
@@ -164,12 +183,14 @@ class _WishlistViewState extends State<WishlistView> {
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12),
-                child: Image.network(
-                  product.images.first,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) =>
-                      const Icon(Icons.image_not_supported),
-                ),
+                child: product.images.isEmpty
+                    ? const Icon(Icons.image, color: AppColors.grey)
+                    : Image.network(
+                        product.images.first,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) =>
+                            const Icon(Icons.image_not_supported),
+                      ),
               ),
             ),
             const SizedBox(width: 16),
@@ -211,7 +232,7 @@ class _WishlistViewState extends State<WishlistView> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    '\$${product.price}',
+                    formatPrice(product.price),
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,

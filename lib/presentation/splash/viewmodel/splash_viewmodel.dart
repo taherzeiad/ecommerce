@@ -1,4 +1,7 @@
 import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../../core/constants/app_strings.dart';
 import '../../../data/repositories/onboarding_repository.dart';
 import '../../../data/repositories/auth_repository.dart';
 import '../../../core/di/service_locator.dart';
@@ -27,14 +30,26 @@ class SplashViewModel extends ChangeNotifier {
     ]);
 
     final hasCompleted = results.first as bool;
-    
+
     if (!hasCompleted) {
       _destination = SplashDestination.onboarding;
+    } else if (_authRepository.isUserLoggedIn() && await _shouldRemember()) {
+      _destination = SplashDestination.home;
     } else {
-      // If onboarding is completed, check if user is already logged in via Supabase active session
-      final isLoggedIn = _authRepository.isUserLoggedIn();
-      _destination = isLoggedIn ? SplashDestination.home : SplashDestination.login;
+      _destination = SplashDestination.login;
     }
     notifyListeners();
+  }
+
+  /// A user who unticked "Remember me" is signed out on the next launch.
+  Future<bool> _shouldRemember() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (prefs.getBool(AppStrings.rememberMePrefKey) ?? true) return true;
+    try {
+      await _authRepository.logout();
+    } catch (_) {
+      // Offline: the local session is still dropped on the next start.
+    }
+    return false;
   }
 }

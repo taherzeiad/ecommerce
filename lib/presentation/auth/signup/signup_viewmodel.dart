@@ -25,6 +25,12 @@ class SignupViewModel extends ChangeNotifier {
 
   String? get errorMessage => _errorMessage;
 
+  bool _needsEmailConfirmation = false;
+
+  /// After a successful [signup]: the account exists but the user must
+  /// click the link in their email before they can sign in.
+  bool get needsEmailConfirmation => _needsEmailConfirmation;
+
   void toggleTerms(bool? value) {
     _agreeToTerms = value ?? false;
     notifyListeners();
@@ -58,7 +64,7 @@ class SignupViewModel extends ChangeNotifier {
     }
 
     // Basic email validation
-    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email)) {
+    if (!RegExp(r'^[\w.+-]+@([\w-]+\.)+[\w-]{2,}$').hasMatch(email)) {
       _errorMessage = 'Please enter a valid email';
       notifyListeners();
       return false;
@@ -69,7 +75,8 @@ class SignupViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      await _authRepository.signup(name, email, password);
+      final signedIn = await _authRepository.signup(name, email, password);
+      _needsEmailConfirmation = !signedIn;
       _isLoading = false;
       notifyListeners();
       return true;

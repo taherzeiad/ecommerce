@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../../core/constants/app_strings.dart';
 import '../../../data/repositories/auth_repository.dart';
 
 class LoginViewModel extends ChangeNotifier {
@@ -12,7 +15,9 @@ class LoginViewModel extends ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-  bool _rememberMe = false;
+  /// Checked by default; when unchecked the user has to sign in again the
+  /// next time the app starts.
+  bool _rememberMe = true;
   bool get rememberMe => _rememberMe;
 
   String? _errorMessage;
@@ -34,7 +39,7 @@ class LoginViewModel extends ChangeNotifier {
     }
 
     // Basic email validation
-    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email)) {
+    if (!RegExp(r'^[\w.+-]+@([\w-]+\.)+[\w-]{2,}$').hasMatch(email)) {
       _errorMessage = 'Please enter a valid email';
       notifyListeners();
       return false;
@@ -46,6 +51,8 @@ class LoginViewModel extends ChangeNotifier {
 
     try {
       await _authRepository.login(email, password);
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool(AppStrings.rememberMePrefKey, _rememberMe);
       _isLoading = false;
       notifyListeners();
       return true;

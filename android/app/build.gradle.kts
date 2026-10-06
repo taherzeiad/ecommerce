@@ -8,7 +8,7 @@ plugins {
 android {
     namespace = "com.example.ecommerce"
     compileSdk = flutter.compileSdkVersion
-    // Let Flutter choose the best NDK version for the stable Gradle plugin
+    ndkVersion = "25.2.9519653"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17

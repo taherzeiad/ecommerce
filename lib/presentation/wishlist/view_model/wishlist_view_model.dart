@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import '../../../core/utils/error_mapper.dart';
 import '../../../domain/entities/product_entity.dart';
 import '../../../domain/repositories/wishlist_repository.dart';
 
@@ -14,26 +16,34 @@ class WishlistViewModel extends ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
+  String? _errorMessage;
+
+  /// Translation key of the last failed load, `null` when it worked.
+  String? get errorMessage => _errorMessage;
+
   Future<void> fetchWishlist() async {
     _isLoading = true;
+    _errorMessage = null;
     notifyListeners();
     try {
       _items = await _wishlistRepository.getWishlist();
     } catch (e) {
-      // Handle error
+      _errorMessage = errorKeyFor(e);
     } finally {
       _isLoading = false;
       notifyListeners();
     }
   }
 
-  Future<void> toggleWishlist(ProductEntity product) async {
+  /// Adds or removes [product]. Returns `false` when the change failed.
+  Future<bool> toggleWishlist(ProductEntity product) async {
     try {
       await _wishlistRepository.toggleWishlist(product.id);
-      await fetchWishlist();
     } catch (e) {
-      // Handle error
+      return false;
     }
+    await fetchWishlist();
+    return true;
   }
 
   bool isInWishlist(String productId) {

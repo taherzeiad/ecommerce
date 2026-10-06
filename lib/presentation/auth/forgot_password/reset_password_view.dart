@@ -145,7 +145,7 @@ class _ResetPasswordContent extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 16),
                       child: Text(
-                        viewModel.errorMessage!,
+                        context.tr(viewModel.errorMessage!),
                         style: const TextStyle(color: AppColors.error),
                       ),
                     ),
@@ -162,6 +162,7 @@ class _ResetPasswordContent extends StatelessWidget {
                                   context,
                                   AppRoutes.authSuccess,
                                   (route) => false,
+                                  arguments: 'password_reset_success',
                                 );
                               }
                             },

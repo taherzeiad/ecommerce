@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/extensions/context_extension.dart';
-
-import '../view_model/notifications_view_model.dart';
+import '../../../core/routes/app_routes.dart';
+import '../../../core/utils/formatters.dart';
+import '../../../core/widgets/error_state_view.dart';
 import '../../../domain/entities/notification_entity.dart';
-import 'package:provider/provider.dart';
+import '../../../domain/entities/order_entity.dart';
+import '../view_model/notifications_view_model.dart';
 
 class NotificationsView extends StatefulWidget {
   const NotificationsView({super.key});
@@ -25,18 +28,54 @@ class _NotificationsViewState extends State<NotificationsView> {
     });
   }
 
-  List<NotificationEntity> _filterNotifications(List<NotificationEntity> notifications) {
-    if (_selectedIndex == 0) return notifications;
-    if (_selectedIndex == 1) return notifications.where((n) => n.type == 'unread').toList();
-    if (_selectedIndex == 2) return notifications.where((n) => n.type == 'orders').toList();
-    if (_selectedIndex == 3) return notifications.where((n) => n.type == 'system').toList();
-    return notifications;
+  List<NotificationEntity> _filter(List<NotificationEntity> notifications) {
+    return switch (_selectedIndex) {
+      1 => notifications.where((n) => !n.isRead).toList(),
+      2 => notifications.where((n) => n.type == 'orders').toList(),
+      3 => notifications.where((n) => n.type != 'orders').toList(),
+      _ => notifications,
+    };
+  }
+
+  void _open(NotificationEntity notification) {
+    context.read<NotificationsViewModel>().markAsRead(notification);
+    if (notification.orderId != null) {
+      Navigator.pushNamed(
+        context,
+        AppRoutes.orderTracking,
+        arguments: notification.orderId,
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<NotificationsViewModel>();
-    final filteredList = _filterNotifications(viewModel.notifications);
+    final filteredList = _filter(viewModel.notifications);
+
+    Widget list;
+    if (viewModel.isLoading && viewModel.notifications.isEmpty) {
+      list = const Center(child: CircularProgressIndicator());
+    } else if (viewModel.errorMessage != null &&
+        viewModel.notifications.isEmpty) {
+      list = ErrorStateView(
+        messageKey: viewModel.errorMessage!,
+        onRetry: viewModel.fetchNotifications,
+      );
+    } else if (filteredList.isEmpty) {
+      list = _buildEmptyState(context);
+    } else {
+      list = RefreshIndicator(
+        onRefresh: viewModel.fetchNotifications,
+        child: ListView.separated(
+          padding: const EdgeInsets.all(24),
+          itemCount: filteredList.length,
+          separatorBuilder: (_, _) => const SizedBox(height: 16),
+          itemBuilder: (context, index) =>
+              _buildNotificationCard(context, filteredList[index]),
+        ),
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -51,36 +90,32 @@ class _NotificationsViewState extends State<NotificationsView> {
           style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
-      ),
-      body: viewModel.isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : Column(
-              children: [
-                const SizedBox(height: 20),
-                _buildFilterChips(context),
-                Expanded(
-                  child: filteredList.isEmpty
-                      ? _buildEmptyState(context)
-                      : ListView.separated(
-                          padding: const EdgeInsets.all(24),
-                          itemCount: filteredList.length,
-                          separatorBuilder: (_, _) => const SizedBox(height: 16),
-                          itemBuilder: (context, index) {
-                            final notification = filteredList[index];
-                            return _buildNotificationCard(context, notification);
-                          },
-                        ),
-                ),
-                const SizedBox(height: 80),
-              ],
+        actions: [
+          if (viewModel.unreadCount > 0)
+            IconButton(
+              tooltip: context.tr('mark_all_read'),
+              onPressed: viewModel.markAllAsRead,
+              icon: const Icon(Icons.done_all, color: Colors.white),
             ),
+        ],
+      ),
+      body: Column(
+        children: [
+          const SizedBox(height: 20),
+          _buildFilterChips(context, viewModel),
+          Expanded(child: list),
+        ],
+      ),
     );
   }
 
-  Widget _buildFilterChips(BuildContext context) {
+  Widget _buildFilterChips(
+    BuildContext context,
+    NotificationsViewModel viewModel,
+  ) {
     final filters = [
       context.tr('all'),
-      context.tr('unread'),
+      '${context.tr('unread')}${viewModel.unreadCount > 0 ? ' (${viewModel.unreadCount})' : ''}',
       context.tr('orders'),
       context.tr('system'),
     ];
@@ -117,80 +152,103 @@ class _NotificationsViewState extends State<NotificationsView> {
     );
   }
 
-  Widget _buildNotificationCard(BuildContext context, NotificationEntity notification) {
-    final color = notification.type == 'orders' ? AppColors.primary : (notification.type == 'unread' ? Colors.teal : Colors.orange);
-    final icon = notification.type == 'orders' ? Icons.local_shipping : (notification.type == 'unread' ? Icons.payment : Icons.security);
+  Widget _buildNotificationCard(
+    BuildContext context,
+    NotificationEntity notification,
+  ) {
+    final theme = Theme.of(context);
+    final isOrder = notification.type == 'orders';
+    final color = isOrder
+        ? AppColors.primary
+        : notification.type == 'promo'
+        ? AppColors.warning
+        : Colors.teal;
+    final icon = isOrder
+        ? Icons.local_shipping_outlined
+        : notification.type == 'promo'
+        ? Icons.local_offer_outlined
+        : Icons.notifications_outlined;
+    final orderNumber = notification.orderId == null
+        ? ''
+        : shortOrderNumber(notification.orderId!);
 
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
+    return Material(
+      color: theme.cardColor,
+      borderRadius: BorderRadius.circular(16),
+      child: InkWell(
         borderRadius: BorderRadius.circular(16),
-        border: Border(
-          left: BorderSide(color: color, width: 4),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 5),
-          ),
-        ],
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(8),
+        onTap: () => _open(notification),
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            border: BorderDirectional(
+              start: BorderSide(color: color, width: 4),
             ),
-            child: Icon(icon, color: color),
           ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  context.tr(notification.titleKey),
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(8),
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  context.tr(notification.descriptionKey),
-                  style: TextStyle(
-                    color: Theme.of(context).textTheme.bodySmall?.color,
-                    fontSize: 12,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Row(
+                child: Icon(icon, color: color),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(
-                      Icons.access_time,
-                      size: 14,
-                      color: Theme.of(context).hintColor,
-                    ),
-                    const SizedBox(width: 4),
                     Text(
-                      '${notification.createdAt.hour}:${notification.createdAt.minute}', // Simplified time
+                      context.tr(notification.titleKey),
                       style: TextStyle(
-                        color: Theme.of(context).hintColor,
+                        fontWeight: notification.isRead
+                            ? FontWeight.w500
+                            : FontWeight.bold,
+                        fontSize: 16,
+                        color: theme.colorScheme.onSurface,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      context
+                          .tr(notification.descriptionKey)
+                          .replaceAll('{order}', orderNumber),
+                      style: TextStyle(
+                        color: theme.colorScheme.onSurfaceVariant,
                         fontSize: 12,
                       ),
                     ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Icon(Icons.access_time, size: 14, color: theme.hintColor),
+                        const SizedBox(width: 4),
+                        Text(
+                          '${formatDate(notification.createdAt)}  ${formatTime(notification.createdAt)}',
+                          style: TextStyle(color: theme.hintColor, fontSize: 12),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
-              ],
-            ),
+              ),
+              if (!notification.isRead)
+                Container(
+                  width: 10,
+                  height: 10,
+                  margin: const EdgeInsets.only(top: 4),
+                  decoration: const BoxDecoration(
+                    color: AppColors.primary,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

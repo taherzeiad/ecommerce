@@ -7,17 +7,21 @@ class SupabaseAuthRepository implements AuthRepository {
 
   SupabaseAuthRepository(this._supabaseClient);
 
+  /// Deep link the browser returns to after Google / Facebook sign-in.
+  /// Must also be listed under Authentication -> URL Configuration ->
+  /// Redirect URLs in the Supabase dashboard.
+  static const oauthRedirectUrl = 'io.supabase.ecommerce://login-callback/';
+
+  GoTrueClient get _auth => _supabaseClient.auth;
+
   @override
   Future<void> login(String email, String password) async {
-    await _supabaseClient.auth.signInWithPassword(
-      email: email,
-      password: password,
-    );
+    await _auth.signInWithPassword(email: email, password: password);
   }
 
   @override
-  Future<void> signup(String name, String email, String password) async {
-    final response = await _supabaseClient.auth.signUp(
+  Future<bool> signup(String name, String email, String password) async {
+    final response = await _auth.signUp(
       email: email,
       password: password,
       data: {'name': name},
@@ -31,74 +35,84 @@ class SupabaseAuthRepository implements AuthRepository {
       throw const AuthException('User already exists');
     }
 
-    // Insert user info into public.profiles table
-    if (response.user != null) {
-      await _supabaseClient.from('profiles').upsert({
-        'id': response.user!.id,
-        'name': name,
-        'email': email,
-      });
-    }
+    // Without a session the user must confirm their email first; the
+    // database trigger creates the profile row in that case.
+    if (response.session == null) return false;
+
+    await _supabaseClient.from('profiles').upsert({
+      'id': response.user!.id,
+      'name': name,
+      'email': email,
+    });
+    return true;
   }
 
   @override
   Future<void> sendResetLink(String email) async {
-    await _supabaseClient.auth.resetPasswordForEmail(email);
+    await _auth.resetPasswordForEmail(email);
   }
 
   @override
-  Future<void> verifyOtp(String otp) async {
-    // Note: In Supabase, verifying OTP typically requires the email or phone number as well, or uses the token from a link.
-    // This is a placeholder wrapper that assumes email OTP type verification via verifyOTP if context allows,
-    // or can be customized depending on the exact workflow used in your UI.
-    // For standard email OTP, we can use:
-    // await _supabaseClient.auth.verifyOTP(token: otp, type: OtpType.signup);
-    throw UnimplementedError(
-      'OTP verification requires email context or custom integration in Supabase.',
-    );
+  Future<void> verifyOtp(String email, String otp) async {
+    // Needs the "Reset Password" email template to contain {{ .Token }}.
+    await _auth.verifyOTP(email: email, token: otp, type: OtpType.recovery);
   }
 
   @override
   Future<void> resetPassword(String password) async {
-    await _supabaseClient.auth.updateUser(UserAttributes(password: password));
+    await _auth.updateUser(UserAttributes(password: password));
   }
 
   @override
+  Future<void> changePassword(
+    String currentPassword,
+    String newPassword,
+  ) async {
+    final email = _auth.currentUser?.email;
+    if (email == null) throw const AuthException('not_authenticated');
+    // Signing in again proves the current password is right.
+    await _auth.signInWithPassword(email: email, password: currentPassword);
+    await _auth.updateUser(UserAttributes(password: newPassword));
+  }
+
+  @override
+  Future<void> signInWithProvider(SocialProvider provider) async {
+    await _auth.signInWithOAuth(
+      switch (provider) {
+        SocialProvider.google => OAuthProvider.google,
+        SocialProvider.facebook => OAuthProvider.facebook,
+      },
+      redirectTo: oauthRedirectUrl,
+    );
+  }
+
+  @override
+  Stream<bool> get authStateChanges =>
+      _auth.onAuthStateChange.map((state) => state.session != null);
+
+  @override
   bool isUserLoggedIn() {
-    final session = _supabaseClient.auth.currentSession;
+    final session = _auth.currentSession;
     return session != null && !session.isExpired;
   }
 
   @override
   Future<void> logout() async {
-    await _supabaseClient.auth.signOut();
+    await _auth.signOut();
   }
 
   @override
+  String? getCurrentUserId() => _auth.currentUser?.id;
+
+  @override
   String? getCurrentUserEmail() {
-    return _supabaseClient.auth.currentUser?.email;
+    return _auth.currentUser?.email;
   }
 
   @override
   String? getCurrentUserName() {
-    final user = _supabaseClient.auth.currentUser;
+    final user = _auth.currentUser;
     return user?.userMetadata?['name'] as String? ??
         user?.userMetadata?['full_name'] as String?;
-  }
-
-  @override
-  Future<void> updateProfileName(String name) async {
-    final user = _supabaseClient.auth.currentUser;
-    if (user == null) return;
-
-    // 1. Update Supabase Auth User Metadata
-    await _supabaseClient.auth.updateUser(UserAttributes(data: {'name': name}));
-
-    // 2. Update profiles table
-    await _supabaseClient.from('profiles').upsert({
-      'id': user.id,
-      'name': name,
-      'email': user.email,
-    });
   }
 }
