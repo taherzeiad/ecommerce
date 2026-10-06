@@ -43,82 +43,133 @@ class HomeView extends StatelessWidget {
             : RefreshIndicator(
                 onRefresh: viewModel.fetchHomeData,
                 child: SingleChildScrollView(
-                physics: const AlwaysScrollableScrollPhysics(),
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildHeader(context, viewModel),
-                    const SizedBox(height: 16),
-                    CustomSearchBar(
-                      hintText: context.tr('search'),
-                      height: 40,
-                      hasShadow: true,
-                      hasBorder: false,
-                      onTap: () =>
-                          Navigator.pushNamed(context, AppRoutes.search),
-                      onFilterTap: () => openFilterThenSearch(context),
-                    ),
-                    const SizedBox(height: 16),
-                    _buildBanner(context),
-                    const SizedBox(height: 16),
-                    _buildSectionHeader(
-                      context,
-                      context.tr('categories'),
-                      () {
-                        if (!MainWrapper.switchTab(
-                          context,
-                          MainWrapper.categoriesTab,
-                        )) {
-                          Navigator.pushNamed(
-                            context,
-                            AppRoutes.mainWrapper,
-                            arguments: MainWrapper.categoriesTab,
-                          );
-                        }
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    _buildCategoryList(context),
-                    const SizedBox(height: 16),
-                    _buildSectionHeader(
-                      context,
-                      context.tr('flash_deals'),
-                      () => Navigator.pushNamed(
-                        context,
-                        AppRoutes.allProducts,
-                        arguments: ProductCollection.flashDeals,
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildHeader(context, viewModel),
+                      const SizedBox(height: 16),
+                      CustomSearchBar(
+                        hintText: context.tr('search'),
+                        height: 40,
+                        hasShadow: true,
+                        hasBorder: false,
+                        onTap: () =>
+                            Navigator.pushNamed(context, AppRoutes.search),
+                        onFilterTap: () => openFilterThenSearch(context),
                       ),
-                    ),
-                    const SizedBox(height: 16),
-                    SizedBox(
-                      height: 167,
-                      child: ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: viewModel.flashDeals.length,
-                        separatorBuilder: (_, _) => const SizedBox(width: 16),
+                      const SizedBox(height: 16),
+                      _buildBanner(context),
+                      const SizedBox(height: 16),
+                      _buildSectionHeader(
+                        context,
+                        context.tr('categories'),
+                        () {
+                          if (!MainWrapper.switchTab(
+                            context,
+                            MainWrapper.categoriesTab,
+                          )) {
+                            Navigator.pushNamed(
+                              context,
+                              AppRoutes.mainWrapper,
+                              arguments: MainWrapper.categoriesTab,
+                            );
+                          }
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      _buildCategoryList(context),
+                      const SizedBox(height: 16),
+                      _buildSectionHeader(
+                        context,
+                        context.tr('flash_deals'),
+                        () => Navigator.pushNamed(
+                          context,
+                          AppRoutes.allProducts,
+                          arguments: ProductCollection.flashDeals,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      SizedBox(
+                        height: 167,
+                        child: ListView.separated(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: viewModel.flashDeals.length,
+                          separatorBuilder: (_, _) => const SizedBox(width: 16),
+                          itemBuilder: (context, index) {
+                            final product = viewModel.flashDeals[index];
+                            return TweenAnimationBuilder<double>(
+                              duration: Duration(
+                                milliseconds: 300 + (index * 50),
+                              ),
+                              tween: Tween(begin: 0.0, end: 1.0),
+                              curve: Curves.easeOutCubic,
+                              builder: (context, value, child) {
+                                return Opacity(
+                                  opacity: value,
+                                  child: Transform.translate(
+                                    offset: Offset(20 * (1 - value), 0),
+                                    child: child,
+                                  ),
+                                );
+                              },
+                              child: ProductCard(
+                                product: product,
+                                // Flash deals also appear in the popular grid;
+                                // two Heroes with the same tag break navigation.
+                                useHero: false,
+                                onTap: () => Navigator.pushNamed(
+                                  context,
+                                  AppRoutes.productDetails,
+                                  arguments: product,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      _buildSectionHeader(
+                        context,
+                        context.tr('popular_product'),
+                        () => Navigator.pushNamed(
+                          context,
+                          AppRoutes.allProducts,
+                          arguments: ProductCollection.all,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      GridView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              childAspectRatio: 0.68,
+                              crossAxisSpacing: 16,
+                              mainAxisSpacing: 16,
+                            ),
+                        itemCount: viewModel.popularProducts.length,
                         itemBuilder: (context, index) {
-                          final product = viewModel.flashDeals[index];
+                          final product = viewModel.popularProducts[index];
                           return TweenAnimationBuilder<double>(
                             duration: Duration(
-                              milliseconds: 300 + (index * 50),
+                              milliseconds: 350 + (index * 50),
                             ),
                             tween: Tween(begin: 0.0, end: 1.0),
                             curve: Curves.easeOutCubic,
                             builder: (context, value, child) {
                               return Opacity(
                                 opacity: value,
-                                child: Transform.translate(
-                                  offset: Offset(20 * (1 - value), 0),
+                                child: Transform.scale(
+                                  scale: 0.9 + (0.1 * value),
                                   child: child,
                                 ),
                               );
                             },
                             child: ProductCard(
                               product: product,
-                              // Flash deals also appear in the popular grid;
-                              // two Heroes with the same tag break navigation.
-                              useHero: false,
                               onTap: () => Navigator.pushNamed(
                                 context,
                                 AppRoutes.productDetails,
@@ -128,59 +179,10 @@ class HomeView extends StatelessWidget {
                           );
                         },
                       ),
-                    ),
-                    const SizedBox(height: 16),
-                    _buildSectionHeader(
-                      context,
-                      context.tr('popular_product'),
-                      () => Navigator.pushNamed(
-                        context,
-                        AppRoutes.allProducts,
-                        arguments: ProductCollection.all,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    GridView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            childAspectRatio: 0.68,
-                            crossAxisSpacing: 16,
-                            mainAxisSpacing: 16,
-                          ),
-                      itemCount: viewModel.popularProducts.length,
-                      itemBuilder: (context, index) {
-                        final product = viewModel.popularProducts[index];
-                        return TweenAnimationBuilder<double>(
-                          duration: Duration(milliseconds: 350 + (index * 50)),
-                          tween: Tween(begin: 0.0, end: 1.0),
-                          curve: Curves.easeOutCubic,
-                          builder: (context, value, child) {
-                            return Opacity(
-                              opacity: value,
-                              child: Transform.scale(
-                                scale: 0.9 + (0.1 * value),
-                                child: child,
-                              ),
-                            );
-                          },
-                          child: ProductCard(
-                            product: product,
-                            onTap: () => Navigator.pushNamed(
-                              context,
-                              AppRoutes.productDetails,
-                              arguments: product,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                    const SizedBox(height: 80), // Space for bottom nav
-                  ],
+                      const SizedBox(height: 80), // Space for bottom nav
+                    ],
+                  ),
                 ),
-              ),
               ),
       ),
     );

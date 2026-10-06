@@ -18,19 +18,25 @@ class ForgotPasswordViewModel extends ChangeNotifier {
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
 
   String _otp = '';
+
   String get otp => _otp;
 
   bool _isLoading = false;
+
   bool get isLoading => _isLoading;
 
   String? _errorMessage;
+
   String? get errorMessage => _errorMessage;
 
   int _resendSecondsLeft = 0;
+
   int get resendSecondsLeft => _resendSecondsLeft;
+
   bool get canResend => _resendSecondsLeft == 0 && !_isLoading;
 
   Timer? _cooldownTimer;

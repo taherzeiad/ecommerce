@@ -1,6 +1,9 @@
+import 'package:flutter/foundation.dart';
+
 /// Turns any exception from Supabase or the network into a translation key,
 /// so screens can show a readable message in the user's language.
 String errorKeyFor(Object error) {
+  debugPrint('🔴 [Supabase/App Error]: $error');
   final text = error.toString().toLowerCase();
 
   // Codes raised on purpose by the database functions (place_order).

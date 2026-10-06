@@ -14,29 +14,46 @@ class SupabaseProductRepository implements ProductRepository {
 
   @override
   Future<List<ProductEntity>> getPopularProducts() async {
-    final response = await _supabaseClient
-        .from('products')
-        .select()
-        .order('rating', ascending: false);
-    return _toProducts(response);
+    try {
+      final response = await _supabaseClient
+          .from('products')
+          .select()
+          .order('rating', ascending: false);
+      return _toProducts(response);
+    } catch (e) {
+      try {
+        final response = await _supabaseClient.from('products').select();
+        return _toProducts(response);
+      } catch (e2) {
+        return [];
+      }
+    }
   }
 
   @override
   Future<List<ProductEntity>> getFlashDeals() async {
-    final response = await _supabaseClient
-        .from('products')
-        .select()
-        .eq('is_flash_deal', true);
-    return _toProducts(response);
+    try {
+      final response = await _supabaseClient
+          .from('products')
+          .select()
+          .eq('is_flash_deal', true);
+      return _toProducts(response);
+    } catch (e) {
+      return [];
+    }
   }
 
   @override
   Future<List<ProductEntity>> getProductsByCategory(String category) async {
-    final response = await _supabaseClient
-        .from('products')
-        .select()
-        .eq('category_name', category);
-    return _toProducts(response);
+    try {
+      final response = await _supabaseClient
+          .from('products')
+          .select()
+          .eq('category_name', category);
+      return _toProducts(response);
+    } catch (e) {
+      return [];
+    }
   }
 
   @override
@@ -45,36 +62,46 @@ class SupabaseProductRepository implements ProductRepository {
 
   @override
   Future<List<ProductEntity>> getProducts(ProductFilter filter) async {
-    var query = _supabaseClient.from('products').select();
-    final text = filter.query.trim();
-    if (text.isNotEmpty) query = query.ilike('name', '%$text%');
-    if (filter.category != null) {
-      query = query.eq('category_name', filter.category!);
-    }
-    if (filter.minPrice > 0) query = query.gte('price', filter.minPrice);
-    if (filter.maxPrice < ProductFilter.maxPriceLimit) {
-      query = query.lte('price', filter.maxPrice);
-    }
+    try {
+      var query = _supabaseClient.from('products').select();
+      final text = filter.query.trim();
+      if (text.isNotEmpty) query = query.ilike('name', '%$text%');
+      if (filter.category != null) {
+        query = query.eq('category_name', filter.category!);
+      }
+      if (filter.minPrice > 0) query = query.gte('price', filter.minPrice);
+      if (filter.maxPrice < ProductFilter.maxPriceLimit) {
+        query = query.lte('price', filter.maxPrice);
+      }
 
-    final response = await switch (filter.sort) {
-      ProductSort.popular => query.order('rating', ascending: false),
-      ProductSort.newest => query.order('created_at', ascending: false),
-      ProductSort.priceLowToHigh => query.order('price', ascending: true),
-      ProductSort.priceHighToLow => query.order('price', ascending: false),
-    };
-    return _toProducts(response);
+      final response = await switch (filter.sort) {
+        ProductSort.popular => query.order('rating', ascending: false),
+        ProductSort.newest => query.order('created_at', ascending: false),
+        ProductSort.priceLowToHigh => query.order('price', ascending: true),
+        ProductSort.priceHighToLow => query.order('price', ascending: false),
+      };
+      return _toProducts(response);
+    } catch (e) {
+      return [];
+    }
   }
 
   @override
   Future<List<String>> getCategories() async {
-    final response = await _supabaseClient.from('categories').select('name');
-    final names = response.map((json) => json['name'] as String).toList();
-    if (names.isNotEmpty) return names;
+    try {
+      final response = await _supabaseClient.from('categories').select('name');
+      final names = response.map((json) => json['name'] as String).toList();
+      if (names.isNotEmpty) return names;
+    } catch (e) {
+      // Ignore categories table error, fallback to products
+    }
 
-    // The categories table can be empty or unreadable; the products still
-    // say which categories exist.
-    final counts = await getCategoryProductCounts();
-    return counts.keys.toList();
+    try {
+      final counts = await getCategoryProductCounts();
+      return counts.keys.toList();
+    } catch (e) {
+      return [];
+    }
   }
 
   @override

@@ -29,13 +29,17 @@ class SupabaseCartRepository implements CartRepository {
   @override
   Future<void> addToCart(String productId, int quantity) async {
     final user = _supabaseClient.auth.currentUser;
-    if (user == null) return;
+    if (user == null) {
+      throw Exception('not_authenticated');
+    }
+
+    final dynamic parsedProductId = int.tryParse(productId) ?? productId;
 
     final existing = await _supabaseClient
         .from('cart_items')
         .select('id, quantity')
         .eq('user_id', user.id)
-        .eq('product_id', productId)
+        .eq('product_id', parsedProductId)
         .maybeSingle();
 
     if (existing != null) {
@@ -46,7 +50,7 @@ class SupabaseCartRepository implements CartRepository {
     } else {
       await _supabaseClient.from('cart_items').insert({
         'user_id': user.id,
-        'product_id': productId,
+        'product_id': parsedProductId,
         'quantity': quantity,
       });
     }
