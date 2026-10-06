@@ -84,6 +84,7 @@ class CartViewModel extends ChangeNotifier {
     try {
       await _cartRepository.addToCart(product.id, quantity);
     } catch (e) {
+      debugPrint('🔴 [Cart Error] Failed to add to cart: $e');
       return false;
     }
     await fetchCartItems();

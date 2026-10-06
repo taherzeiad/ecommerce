@@ -8,7 +8,7 @@ class HomeViewModel extends ChangeNotifier {
   final ProductRepository _productRepository;
 
   HomeViewModel({required ProductRepository productRepository})
-    : _productRepository = productRepository;
+      : _productRepository = productRepository;
 
   List<ProductEntity> _popularProducts = [];
 
@@ -36,9 +36,18 @@ class HomeViewModel extends ChangeNotifier {
 
     try {
       final results = await Future.wait([
-        _productRepository.getPopularProducts(),
-        _productRepository.getFlashDeals(),
-        _productRepository.getCategories(),
+        _productRepository.getPopularProducts().catchError((e) {
+          debugPrint('Error loading popular products: $e');
+          return <ProductEntity>[];
+        }),
+        _productRepository.getFlashDeals().catchError((e) {
+          debugPrint('Error loading flash deals: $e');
+          return <ProductEntity>[];
+        }),
+        _productRepository.getCategories().catchError((e) {
+          debugPrint('Error loading categories: $e');
+          return <String>[];
+        }),
       ]);
       _popularProducts = results[0] as List<ProductEntity>;
       _flashDeals = results[1] as List<ProductEntity>;
