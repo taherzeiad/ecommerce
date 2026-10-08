@@ -132,9 +132,28 @@ class SupabaseOrderRepository implements OrderRepository {
       subtotal += price * quantity;
     }
 
-    final double deliveryFee = 12.0;
-    final double tax = subtotal * 0.05;
-    final double totalAmount = subtotal + deliveryFee + tax;
+    double discount = 0.0;
+    if (couponCode != null && couponCode.trim().isNotEmpty) {
+      try {
+        final couponRow = await _supabaseClient
+            .from('coupons')
+            .select()
+            .eq('code', couponCode.trim())
+            .maybeSingle();
+        if (couponRow != null) {
+          final discountPercent =
+              (couponRow['discount_percent'] as num?)?.toDouble() ?? 0.0;
+          final minOrder = (couponRow['min_order'] as num?)?.toDouble() ?? 0.0;
+          if (subtotal >= minOrder) {
+            discount = subtotal * discountPercent / 100;
+          }
+        }
+      } catch (_) {}
+    }
+
+    final double deliveryFee = cartList.isEmpty ? 0.0 : 12.0;
+    final double tax = (subtotal - discount) * 0.05;
+    final double totalAmount = subtotal - discount + deliveryFee + tax;
 
     final orderPayloads = [
       {
@@ -147,6 +166,7 @@ class SupabaseOrderRepository implements OrderRepository {
         'shipping_phone': shippingPhone,
         'shipping_address': shippingAddressStr,
         'subtotal': subtotal,
+        'discount': discount,
         'delivery_fee': deliveryFee,
         'tax': tax,
         'total_amount': totalAmount,
