@@ -48,6 +48,7 @@ class AppTranslations {
       'delivery_fees': 'Delivery Fees',
       'taxes': 'Taxes',
       'total': 'Total',
+      'each': 'each',
       'checkout': 'Check Out',
       'cart_empty': 'Your cart is empty',
       'go_shopping': 'Go Shopping',
@@ -616,6 +617,7 @@ class AppTranslations {
       'view_details': 'عرض التفاصيل',
       'view_cart': 'عرض السلة',
       'error_add_to_cart': 'تعذّر إضافة المنتج إلى السلة',
+      'each': 'للقطعة',
       // Home & catalog
       'banner_title': 'احصل على خصم في يوم التسوق',
       'banner_discount': 'حتى 50%',
