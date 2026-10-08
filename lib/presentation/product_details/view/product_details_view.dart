@@ -249,19 +249,32 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
             ),
             child: Row(
               children: [
-                Text(
-                  formatPrice(widget.product.price),
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                    color: AppColors.primary,
-                  ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      formatPrice(widget.product.price * _quantity),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        color: AppColors.primary,
+                      ),
+                    ),
+                    if (_quantity > 1)
+                      Text(
+                        '(${formatPrice(widget.product.price)} ${context.tr('each')})',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: theme.hintColor,
+                        ),
+                      ),
+                  ],
                 ),
                 if (oldPrice != null && oldPrice > widget.product.price) ...[
                   const SizedBox(width: 8),
                   Flexible(
                     child: Text(
-                      formatPrice(oldPrice),
+                      formatPrice(oldPrice * _quantity),
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         color: theme.hintColor,
@@ -342,6 +355,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
   Widget _buildBottomBar(BuildContext context) {
     final cartViewModel = context.read<CartViewModel>();
     final theme = Theme.of(context);
+    final totalPrice = widget.product.price * _quantity;
 
     return Positioned(
       bottom: 0,
@@ -361,6 +375,25 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
         ),
         child: Row(
           children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  context.tr('total'),
+                  style: TextStyle(fontSize: 12, color: theme.hintColor),
+                ),
+                Text(
+                  formatPrice(totalPrice),
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primary,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(width: 16),
             Expanded(
               child: ElevatedButton(
                 onPressed: () async {
