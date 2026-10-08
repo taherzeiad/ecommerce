@@ -92,8 +92,8 @@ class SupabaseOrderRepository implements OrderRepository {
 
         if (addrRow != null) {
           shippingName = (addrRow['full_name'] ?? addrRow['name'])?.toString();
-          shippingPhone =
-              (addrRow['phone_number'] ?? addrRow['phone'])?.toString();
+          shippingPhone = (addrRow['phone_number'] ?? addrRow['phone'])
+              ?.toString();
           final street =
               (addrRow['street_address'] ??
                       addrRow['address'] ??
