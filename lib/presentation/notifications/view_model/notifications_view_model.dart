@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../../core/utils/error_mapper.dart';
 import '../../../domain/entities/notification_entity.dart';
@@ -20,6 +22,30 @@ class NotificationsViewModel extends ChangeNotifier {
 
   String? _errorMessage;
   String? get errorMessage => _errorMessage;
+
+  StreamSubscription<List<NotificationEntity>>? _streamSubscription;
+  bool _isListening = false;
+
+  void initRealtime() {
+    if (_isListening) return;
+    _isListening = true;
+    _streamSubscription?.cancel();
+    _streamSubscription = _notificationRepository.watchNotifications().listen((newList) {
+      final oldUnread = unreadCount;
+      _notifications = newList;
+      final newUnread = unreadCount;
+      if (newUnread > oldUnread) {
+        HapticFeedback.heavyImpact();
+      }
+      notifyListeners();
+    }, onError: (_) {});
+  }
+
+  @override
+  void dispose() {
+    _streamSubscription?.cancel();
+    super.dispose();
+  }
 
   Future<void> fetchNotifications() async {
     _isLoading = true;

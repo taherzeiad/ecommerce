@@ -36,24 +36,18 @@ class HomeViewModel extends ChangeNotifier {
 
     try {
       final results = await Future.wait([
-        _productRepository.getPopularProducts().catchError((e) {
-          debugPrint('Error loading popular products: $e');
-          return <ProductEntity>[];
-        }),
-        _productRepository.getFlashDeals().catchError((e) {
-          debugPrint('Error loading flash deals: $e');
-          return <ProductEntity>[];
-        }),
-        _productRepository.getCategories().catchError((e) {
-          debugPrint('Error loading categories: $e');
-          return <String>[];
-        }),
+        _productRepository.getPopularProducts(),
+        _productRepository.getFlashDeals(),
+        _productRepository.getCategories(),
       ]);
       _popularProducts = results[0] as List<ProductEntity>;
       _flashDeals = results[1] as List<ProductEntity>;
       _categories = results[2] as List<String>;
     } catch (e) {
       _errorMessage = errorKeyFor(e);
+      _popularProducts = [];
+      _flashDeals = [];
+      _categories = [];
     } finally {
       _isLoading = false;
       notifyListeners();
