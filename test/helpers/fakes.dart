@@ -487,6 +487,10 @@ class FakeNotificationRepository implements NotificationRepository {
     markAllCount++;
     notifications = [for (final n in notifications) n.markedRead()];
   }
+
+  @override
+  Stream<List<NotificationEntity>> watchNotifications() =>
+      Stream.value(notifications);
 }
 
 class FakeReviewRepository implements ReviewRepository {

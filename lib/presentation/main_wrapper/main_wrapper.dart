@@ -44,6 +44,7 @@ class _MainWrapperState extends State<MainWrapper> {
       context.read<ProfileViewModel>().refresh();
       context.read<WishlistViewModel>().fetchWishlist();
       context.read<NotificationsViewModel>().fetchNotifications();
+      context.read<NotificationsViewModel>().initRealtime();
     });
   }
 

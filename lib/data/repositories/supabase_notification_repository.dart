@@ -38,6 +38,35 @@ class SupabaseNotificationRepository implements NotificationRepository {
   }
 
   @override
+  Stream<List<NotificationEntity>> watchNotifications() {
+    final user = _supabaseClient.auth.currentUser;
+    if (user == null) return Stream.value([]);
+
+    try {
+      return _supabaseClient
+          .from('notifications')
+          .stream(primaryKey: ['id'])
+          .eq('user_id', user.id)
+          .order('created_at', ascending: false)
+          .map((response) {
+            return response.map((json) {
+              return NotificationEntity(
+                id: json['id'],
+                titleKey: json['title_key'] as String,
+                descriptionKey: json['description_key'] as String,
+                type: json['type'] as String,
+                isRead: json['is_read'] as bool? ?? false,
+                orderId: json['order_id']?.toString(),
+                createdAt: DateTime.parse(json['created_at'] as String).toLocal(),
+              );
+            }).toList();
+          });
+    } catch (_) {
+      return Stream.value([]);
+    }
+  }
+
+  @override
   Future<void> markAsRead(dynamic notificationId) async {
     try {
       await _supabaseClient
