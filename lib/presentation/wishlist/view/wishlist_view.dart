@@ -95,6 +95,7 @@ class _WishlistViewState extends State<WishlistView> {
               loader: AssetBytesLoader('lib/assets/icons/loveex.svg'),
               width: 200,
               height: 200,
+              colorFilter: ColorFilter.mode(AppColors.primary, BlendMode.srcIn),
             ),
             const SizedBox(height: 30),
             Text(
@@ -102,7 +103,7 @@ class _WishlistViewState extends State<WishlistView> {
               style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF129883),
+                color: AppColors.primary,
               ),
             ),
             const SizedBox(height: 16),

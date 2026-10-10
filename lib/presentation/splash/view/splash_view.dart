@@ -37,13 +37,14 @@ class _SplashBody extends StatelessWidget {
           }
         });
 
-        return const Scaffold(
+        return Scaffold(
           backgroundColor: AppColors.primaryDark,
-          body: Center(
+          body: const Center(
             child: VectorGraphic(
               loader: AssetBytesLoader(AppAssets.splash),
-              width: 244, // Adjust size as needed based on the design
+              width: 244,
               height: 85,
+              colorFilter: ColorFilter.mode(AppColors.white, BlendMode.srcIn),
             ),
           ),
         );
