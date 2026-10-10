@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vector_graphics/vector_graphics.dart';
+
 import '../../../core/constants/app_assets.dart';
 import '../../../core/constants/app_colors.dart';
 
@@ -15,6 +16,7 @@ class ResetIllustration extends StatelessWidget {
           loader: AssetBytesLoader(AppAssets.resetPassword),
           width: 80,
           height: 80,
+          colorFilter: ColorFilter.mode(AppColors.primary, BlendMode.srcIn),
         ),
         const SizedBox(height: 12),
         Container(

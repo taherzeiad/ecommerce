@@ -254,7 +254,7 @@ class _CategoriesViewState extends State<CategoriesView> {
     bool isNew,
   ) {
     return Material(
-      color: const Color(0xFFE0F2F1),
+      color: AppColors.primaryLight,
       borderRadius: BorderRadius.circular(16),
       child: InkWell(
         borderRadius: BorderRadius.circular(16),

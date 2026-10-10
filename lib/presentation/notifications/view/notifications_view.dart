@@ -162,7 +162,7 @@ class _NotificationsViewState extends State<NotificationsView> {
         ? AppColors.primary
         : notification.type == 'promo'
         ? AppColors.warning
-        : Colors.teal;
+        : AppColors.primary;
     final icon = isOrder
         ? Icons.local_shipping_outlined
         : notification.type == 'promo'

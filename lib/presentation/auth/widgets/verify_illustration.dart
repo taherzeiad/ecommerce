@@ -12,10 +12,11 @@ class VerifyIllustration extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const VectorGraphic(
-          loader: AssetBytesLoader(AppAssets.verify),
+        VectorGraphic(
+          loader: const AssetBytesLoader(AppAssets.verify),
           width: 80,
           height: 80,
+          colorFilter: const ColorFilter.mode(AppColors.primary, BlendMode.srcIn),
         ),
         const SizedBox(height: 12),
         Container(
