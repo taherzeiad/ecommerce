@@ -5,7 +5,10 @@ abstract class AddressRepository {
 
   /// Saves a new address and returns its id.
   Future<String> addAddress(AddressEntity address);
+
   Future<void> updateAddress(AddressEntity address);
+
   Future<void> deleteAddress(String addressId);
+
   Future<void> setDefaultAddress(String addressId);
 }
