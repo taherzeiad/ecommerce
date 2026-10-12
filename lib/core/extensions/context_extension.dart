@@ -26,3 +26,22 @@ extension LocalizationExtension on BuildContext {
     return value;
   }
 }
+
+extension ResponsiveExtension on BuildContext {
+  double get screenWidth => MediaQuery.sizeOf(this).width;
+  double get screenHeight => MediaQuery.sizeOf(this).height;
+
+  bool get isSmallPhone => screenWidth < 360;
+  bool get isTablet => screenWidth >= 600;
+
+  double get responsiveHorizontalPadding =>
+      isSmallPhone ? 16.0 : (isTablet ? 32.0 : 24.0);
+  EdgeInsets get responsivePadding => EdgeInsets.symmetric(
+        horizontal: responsiveHorizontalPadding,
+        vertical: isSmallPhone ? 16.0 : 24.0,
+      );
+
+  int get responsiveGridCount => isTablet ? 3 : 2;
+  double get productCardAspectRatio =>
+      isSmallPhone ? 0.63 : (isTablet ? 0.75 : 0.68);
+}
