@@ -101,9 +101,9 @@ class _CategoriesViewState extends State<CategoriesView> {
               GridView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 0.9,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: context.responsiveGridCount,
+                  childAspectRatio: context.isTablet ? 1.1 : 0.9,
                   crossAxisSpacing: 16,
                   mainAxisSpacing: 16,
                 ),

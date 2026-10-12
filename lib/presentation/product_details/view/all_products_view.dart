@@ -43,10 +43,13 @@ class AllProductsView extends StatelessWidget {
       grid = Center(child: Text(context.tr('no_products_here')));
     } else {
       grid = GridView.builder(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: 0.65,
+        padding: EdgeInsets.symmetric(
+          horizontal: context.responsiveHorizontalPadding,
+          vertical: 8,
+        ),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: context.responsiveGridCount,
+          childAspectRatio: context.productCardAspectRatio,
           crossAxisSpacing: 16,
           mainAxisSpacing: 16,
         ),
@@ -64,7 +67,10 @@ class AllProductsView extends StatelessWidget {
         centerTitle: true,
         title: Text(
           title.isEmpty ? context.tr('all_products') : title,
-          style: const TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
+          style: const TextStyle(
+            color: AppColors.white,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         actions: [
           IconButton(
@@ -124,7 +130,9 @@ class AllProductsView extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 20),
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                color: isSelected ? AppColors.primary : theme.colorScheme.primaryContainer,
+                color: isSelected
+                    ? AppColors.primary
+                    : theme.colorScheme.primaryContainer,
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
@@ -181,7 +189,11 @@ class AllProductsView extends StatelessWidget {
                             errorBuilder: (context, error, stackTrace) =>
                                 const Icon(Icons.image_not_supported),
                           )
-                        : const Icon(Icons.image, color: AppColors.grey, size: 50),
+                        : const Icon(
+                            Icons.image,
+                            color: AppColors.grey,
+                            size: 50,
+                          ),
                   ),
                 ),
                 Positioned(

@@ -44,7 +44,7 @@ class HomeView extends StatelessWidget {
                 onRefresh: viewModel.fetchHomeData,
                 child: SingleChildScrollView(
                   physics: const AlwaysScrollableScrollPhysics(),
-                  padding: const EdgeInsets.all(24),
+                  padding: context.responsivePadding,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -144,9 +144,9 @@ class HomeView extends StatelessWidget {
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              childAspectRatio: 0.68,
+                            SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: context.responsiveGridCount,
+                              childAspectRatio: context.productCardAspectRatio,
                               crossAxisSpacing: 16,
                               mainAxisSpacing: 16,
                             ),
