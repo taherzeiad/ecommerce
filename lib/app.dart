@@ -30,11 +30,12 @@ class EcommerceApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => LocaleViewModel()),
         ChangeNotifierProvider(create: (_) => SettingsViewModel()),
         ChangeNotifierProvider(
-          create: (_) => CartViewModel(
-            cartRepository: sl(),
-            orderRepository: sl(),
-            couponRepository: sl(),
-          ),
+          create: (_) =>
+              CartViewModel(
+                cartRepository: sl(),
+                orderRepository: sl(),
+                couponRepository: sl(),
+              ),
         ),
         ChangeNotifierProvider(
           create: (_) => OrdersViewModel(orderRepository: sl()),
