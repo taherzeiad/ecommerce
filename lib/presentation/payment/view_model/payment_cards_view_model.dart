@@ -47,11 +47,14 @@ class PaymentCardsViewModel extends ChangeNotifier {
     required String cvv,
     DateTime? now,
   }) async {
+    final digits = CardValidator.digitsOnly(number);
+    final brand = CardBrand.fromNumber(digits);
+
     final problems = <String, String>{
       'name': ?CardValidator.holderName(holderName),
       'number': ?CardValidator.number(number),
       'expiry': ?CardValidator.expiry(expiry, now: now),
-      'cvv': ?CardValidator.cvv(cvv),
+      'cvv': ?CardValidator.cvv(cvv, brand: brand),
     };
     if (problems.isNotEmpty) throw CardFormException(problems);
 

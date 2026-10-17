@@ -79,7 +79,10 @@ class _AddCardViewState extends State<AddCardView> {
         centerTitle: true,
         title: Text(
           context.tr('add_new_card'),
-          style: const TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
+          style: const TextStyle(
+            color: AppColors.white,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
       body: SingleChildScrollView(
@@ -216,7 +219,10 @@ class _AddCardViewState extends State<AddCardView> {
         hintText: hintText,
         hintStyle: TextStyle(color: theme.hintColor),
         errorText: error == null ? null : context.tr(error),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 16,
+        ),
         border: border,
         enabledBorder: border,
       ),
