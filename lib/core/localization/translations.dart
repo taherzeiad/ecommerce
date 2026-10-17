@@ -125,7 +125,8 @@ class AppTranslations {
       'phone_number': 'Phone Number',
       'my_order': 'My Order',
       'wishlist_empty': 'My Wishlist is Empty',
-      'wishlist_empty_desc': 'Tap Heart Button to Start Saving\nYour Favorite Item',
+      'wishlist_empty_desc':
+          'Tap Heart Button to Start Saving\nYour Favorite Item',
       'explore': 'Explore',
       'reviews_rating': 'Reviews & Rating',
       'your_feedback': 'Your Feedback',
@@ -167,8 +168,10 @@ class AppTranslations {
       'notif_welcome_title': 'Welcome to E-Commerce',
       'notif_welcome_desc': 'Welcome to our platform! Start exploring thousands of products and great deals.',
       'order_number_msg': 'Your order number is #{order}. You can follow it any time from My Orders.',
-      'thank_you_order_msg': 'Thank you for your order! We’re preparing it for delivery.',
-      'inclusive_tax_msg': 'All prices displayed are inclusive of all applicable Tax.',
+      'thank_you_order_msg':
+          'Thank you for your order! We’re preparing it for delivery.',
+      'inclusive_tax_msg':
+          'All prices displayed are inclusive of all applicable Tax.',
       'enter_address_msg': 'Enter your address to receive your orders easily.',
       'update_address_msg': 'Update your address details.',
       'address': 'Address',
@@ -182,7 +185,8 @@ class AppTranslations {
       'price_low_to_high': 'Price : Low To High',
       'price_high_to_low': 'Price : High To Low',
       'camera': 'Camera',
-      'enter_card_details': 'Enter your card details to complete your payment securely.',
+      'enter_card_details':
+          'Enter your card details to complete your payment securely.',
       'enter_card_name': 'Enter Card Name',
       'enter_card_number': 'Enter Card number',
       'add_card': 'Add Card',
@@ -204,11 +208,14 @@ class AppTranslations {
       'check_connection_desc': 'Please check your connection and try again.',
       'about_us_intro': 'We are a mobile application designed to make online shopping easy, secure, and reliable for everyone',
       'about_the_app_title': 'About the App',
-      'about_the_app_content': 'Details about the application and its features.',
+      'about_the_app_content':
+          'Details about the application and its features.',
       'when_started_title': 'When We Started',
-      'when_started_content': 'Our journey began in 2023 with a vision to revolutionize shopping.',
+      'when_started_content':
+          'Our journey began in 2023 with a vision to revolutionize shopping.',
       'who_we_are_title': 'Who We Are',
-      'who_we_are_content': 'We are a team of passionate developers and retail experts.',
+      'who_we_are_content':
+          'We are a team of passionate developers and retail experts.',
       'our_goal_title': 'Our Goal',
       'our_goal_content': 'To provide the best shopping experience globally.',
       'why_choose_title': 'Why Choose Our App?',
@@ -251,7 +258,8 @@ class AppTranslations {
       'error_too_many_requests': 'Too many requests, please wait and try again',
       'error_unexpected': 'An unexpected error occurred',
       'error_user_exists': 'This email is already registered',
-      'error_weak_password': 'Password is too weak, must be at least 6 characters',
+      'error_weak_password':
+          'Password is too weak, must be at least 6 characters',
       'no_address_msg': 'No saved address yet. Please add a delivery address.',
       // View models report these messages as keys.
       'Please fill in all fields': 'Please fill in all fields',
@@ -284,19 +292,22 @@ class AppTranslations {
       'filtered_results': 'Filtered results',
       // Auth
       'confirm_email_sent': 'We sent you a confirmation link. Please open your email to activate your account, then log in.',
-      'password_reset_success': 'Your password has been changed. Log in with your new password.',
+      'password_reset_success':
+          'Your password has been changed. Log in with your new password.',
       'error_otp_incomplete': 'Please enter the full code',
       'error_otp_invalid': 'The code is wrong or has expired',
       'resend_in': 'You can request a new code in {time}',
       'code_resent': 'A new code has been sent to your email',
       'error_provider_disabled': 'This sign-in method is not available yet',
-      'error_same_password': 'The new password must be different from the current one',
+      'error_same_password':
+          'The new password must be different from the current one',
       'error_wrong_current_password': 'The current password is incorrect',
       'password_changed': 'Your password has been changed',
       // Profile
       'profile_saved': 'Profile saved',
       'gallery': 'Gallery',
-      'error_photo_access': 'Could not open the photos. Check the app permissions.',
+      'error_photo_access':
+          'Could not open the photos. Check the app permissions.',
       'my_orders': 'My Orders',
       // Addresses
       'set_as_default': 'Set as default',
@@ -305,7 +316,8 @@ class AppTranslations {
       // Cart & checkout
       'coupon_applied': 'Coupon applied',
       'error_invalid_coupon': 'This coupon code is not valid',
-      'error_coupon_min_order': 'Your order is below the minimum for this coupon',
+      'error_coupon_min_order':
+          'Your order is below the minimum for this coupon',
       'place_order': 'Place Order',
       'order_placed': 'Order Placed!',
       'cash_on_delivery': 'Cash on Delivery',
@@ -334,7 +346,8 @@ class AppTranslations {
       'notif_order_pending_title': 'Order Received',
       'notif_order_pending_desc': 'We have received your order #{order}. We will let you know when it ships.',
       'notif_order_confirmed_title': 'Order Confirmed!',
-      'notif_order_confirmed_desc': 'Your order #{order} is confirmed and being prepared.',
+      'notif_order_confirmed_desc':
+          'Your order #{order} is confirmed and being prepared.',
       'notif_order_shipped_title': 'Your Order is On the Way!',
       'notif_order_shipped_desc': 'Order #{order} has been shipped.',
       'notif_order_delivered_title': 'Order Delivered',
@@ -507,14 +520,18 @@ class AppTranslations {
       'notif_order_way_title': 'طلبك في الطريق!',
       'notif_order_way_desc': 'تم شحن الطلب رقم #SP2024001 وسيصل اليوم بين الساعة 3:00 - 5:00 مساءً',
       'notif_payment_success_title': 'تم الدفع بنجاح',
-      'notif_payment_success_desc': 'كانت عملية الدفع للطلب رقم #SP2024001 ناجحة. شكراً لتسوقك معنا!',
+      'notif_payment_success_desc':
+          'كانت عملية الدفع للطلب رقم #SP2024001 ناجحة. شكراً لتسوقك معنا!',
       'notif_security_alert_title': 'تنبيه أمني',
       'notif_security_alert_desc': 'تم تسجيل الدخول إلى حسابك من جهاز جديد. إذا لم تكن أنت، يرجى إعادة تعيين كلمة المرور.',
       'notif_welcome_title': 'مرحباً بك في المتجر الإلكتروني',
-      'notif_welcome_desc': 'مرحباً بك في منصتنا! ابدأ باستكشاف آلاف المنتجات والعروض الرائعة.',
-      'order_number_msg': 'رقم طلبك هو #{order}. يمكنك متابعته في أي وقت من صفحة طلباتي.',
+      'notif_welcome_desc':
+          'مرحباً بك في منصتنا! ابدأ باستكشاف آلاف المنتجات والعروض الرائعة.',
+      'order_number_msg':
+          'رقم طلبك هو #{order}. يمكنك متابعته في أي وقت من صفحة طلباتي.',
       'thank_you_order_msg': 'شكراً لطلبك! نحن نقوم بتجهيزه للتوصيل.',
-      'inclusive_tax_msg': 'جميع الأسعار المعروضة تشمل ضريبة القيمة المضافة المعمول بها.',
+      'inclusive_tax_msg':
+          'جميع الأسعار المعروضة تشمل ضريبة القيمة المضافة المعمول بها.',
       'enter_address_msg': 'أدخل عنوانك لاستلام طلباتك بسهولة.',
       'update_address_msg': 'قم بتحديث تفاصيل عنوانك.',
       'address': 'العنوان',
@@ -552,7 +569,8 @@ class AppTranslations {
       'about_the_app_title': 'حول التطبيق',
       'about_the_app_content': 'تفاصيل حول التطبيق ومميزاته.',
       'when_started_title': 'متى بدأنا',
-      'when_started_content': 'بدأت رحلتنا في عام 2023 برؤية لإحداث ثورة في عالم التسوق.',
+      'when_started_content':
+          'بدأت رحلتنا في عام 2023 برؤية لإحداث ثورة في عالم التسوق.',
       'who_we_are_title': 'من نحن',
       'who_we_are_content': 'نحن فريق من المطورين وخبراء التجزئة المتحمسين.',
       'our_goal_title': 'هدفنا',
@@ -592,12 +610,16 @@ class AppTranslations {
       'terms_liability': 'تحديد المسؤولية',
       'terms_modifications': 'التعديلات',
       'error_invalid_credentials': 'البريد الإلكتروني أو كلمة المرور غير صحيحة',
-      'error_email_not_confirmed': 'يرجى تأكيد حسابك أولاً عبر البريد الإلكتروني المرسل إليك',
+      'error_email_not_confirmed':
+          'يرجى تأكيد حسابك أولاً عبر البريد الإلكتروني المرسل إليك',
       'error_network': 'خطأ في الاتصال بالشبكة، يرجى التحقق من الإنترنت',
-      'error_too_many_requests': 'محاولات كثيرة جداً، يرجى الانتظار قليلاً والمحاولة مجدداً',
+      'error_too_many_requests':
+          'محاولات كثيرة جداً، يرجى الانتظار قليلاً والمحاولة مجدداً',
       'error_unexpected': 'حدث خطأ غير متوقع',
-      'error_user_exists': 'هذا البريد الإلكتروني مسجل بالفعل، يرجى تسجيل الدخول',
-      'error_weak_password': 'كلمة المرور ضعيفة جداً، يجب أن تكون من 6 أحرف أو أكثر',
+      'error_user_exists':
+          'هذا البريد الإلكتروني مسجل بالفعل، يرجى تسجيل الدخول',
+      'error_weak_password':
+          'كلمة المرور ضعيفة جداً، يجب أن تكون من 6 أحرف أو أكثر',
       'Please fill in all fields': 'يرجى ملء جميع الحقول',
       'Passwords do not match': 'كلمات المرور غير متطابقة',
       'Please agree to the terms': 'يرجى الموافقة على الشروط والأحكام',
@@ -630,7 +652,8 @@ class AppTranslations {
       'filtered_results': 'نتائج الفلترة',
       // Auth
       'confirm_email_sent': 'أرسلنا لك رابط تأكيد. افتح بريدك الإلكتروني لتفعيل حسابك ثم سجّل الدخول.',
-      'password_reset_success': 'تم تغيير كلمة المرور. سجّل الدخول بكلمة المرور الجديدة.',
+      'password_reset_success':
+          'تم تغيير كلمة المرور. سجّل الدخول بكلمة المرور الجديدة.',
       'error_otp_incomplete': 'يرجى إدخال الرمز كاملاً',
       'error_otp_invalid': 'الرمز غير صحيح أو انتهت صلاحيته',
       'resend_in': 'يمكنك طلب رمز جديد بعد {time}',

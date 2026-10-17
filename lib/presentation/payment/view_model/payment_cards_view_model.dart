@@ -12,15 +12,18 @@ class PaymentCardsViewModel extends ChangeNotifier {
   static int _nextId = 0;
 
   List<PaymentCardEntity> _cards = [];
+
   List<PaymentCardEntity> get cards => List.unmodifiable(_cards);
 
   PaymentCardEntity? get defaultCard =>
       _cards.where((c) => c.isDefault).firstOrNull ?? _cards.firstOrNull;
 
   bool _isLoading = false;
+
   bool get isLoading => _isLoading;
 
   String? _errorMessage;
+
   String? get errorMessage => _errorMessage;
 
   Future<void> fetchCards() async {
@@ -47,15 +50,17 @@ class PaymentCardsViewModel extends ChangeNotifier {
     required String cvv,
     DateTime? now,
   }) async {
+    final digits = CardValidator.digitsOnly(number);
+    final brand = CardBrand.fromNumber(digits);
+
     final problems = <String, String>{
       'name': ?CardValidator.holderName(holderName),
       'number': ?CardValidator.number(number),
       'expiry': ?CardValidator.expiry(expiry, now: now),
-      'cvv': ?CardValidator.cvv(cvv),
+      'cvv': ?CardValidator.cvv(cvv, brand: brand),
     };
     if (problems.isNotEmpty) throw CardFormException(problems);
 
-    final digits = CardValidator.digitsOnly(number);
     final parts = expiry.split('/').map((p) => int.parse(p.trim())).toList();
     final card = PaymentCardEntity(
       // The counter keeps ids unique even within the same microsecond.

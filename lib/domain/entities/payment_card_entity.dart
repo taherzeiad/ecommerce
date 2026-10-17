@@ -94,32 +94,96 @@ class CardValidator {
 
   static String digitsOnly(String value) => value.replaceAll(RegExp(r'\D'), '');
 
-  static String? holderName(String value) =>
-      value.trim().length < 2 ? 'error_card_name' : null;
-
-  static String? number(String value) {
-    final digits = digitsOnly(value);
-    if (digits.length < 13 || digits.length > 19 || !passesLuhn(digits)) {
-      return 'error_card_number';
+  static String? holderName(String value) {
+    final name = value.trim();
+    if (name.length < 3) return 'error_card_name';
+    if (!RegExp(r"^[\p{L}\s\.'\-]+$", unicode: true).hasMatch(name)) {
+      return 'error_card_name';
     }
     return null;
   }
 
-  /// Accepts `MM/YY`. The card is valid until the end of that month.
-  static String? expiry(String value, {DateTime? now}) {
-    final match = RegExp(r'^(\d{2})\s*/\s*(\d{2})$').firstMatch(value.trim());
-    if (match == null) return 'error_card_expiry';
-    final month = int.parse(match.group(1)!);
-    final year = 2000 + int.parse(match.group(2)!);
-    if (month < 1 || month > 12) return 'error_card_expiry';
-    final today = now ?? DateTime.now();
-    final firstDayAfterExpiry = DateTime(year, month + 1);
-    if (!today.isBefore(firstDayAfterExpiry)) return 'error_card_expired';
+  static String? number(String value) {
+    final digits = digitsOnly(value);
+
+    // 1. Length check
+    if (digits.length < 13 || digits.length > 19) {
+      return 'error_card_number';
+    }
+
+    // 2. Reject repeated single digits (0000..., 1111...)
+    if (RegExp(r'^(\d)\1+$').hasMatch(digits)) {
+      return 'error_card_number';
+    }
+
+    // 3. Reject common test sequences
+    if (digits == '1234567890123456' || digits == '0123456789012345') {
+      return 'error_card_number';
+    }
+
+    // 4. Valid BIN prefix check
+    if (!hasValidIINPrefix(digits)) {
+      return 'error_card_number';
+    }
+
+    // 5. Pass Luhn algorithm
+    if (!passesLuhn(digits)) {
+      return 'error_card_number';
+    }
+
     return null;
   }
 
-  static String? cvv(String value) =>
-      RegExp(r'^\d{3,4}$').hasMatch(value.trim()) ? null : 'error_card_cvv';
+  /// Checks if the leading digits match known Bank Identification Number (IIN/BIN) prefixes.
+  static bool hasValidIINPrefix(String digits) {
+    if (digits.isEmpty) return false;
+    // Visa
+    if (digits.startsWith('4')) return true;
+    // Mastercard
+    if (RegExp(r'^5[1-5]').hasMatch(digits)) return true;
+    final four = int.tryParse(digits.length >= 4 ? digits.substring(0, 4) : '');
+    if (four != null && four >= 2221 && four <= 2720) return true;
+    // American Express
+    if (RegExp(r'^3[47]').hasMatch(digits)) return true;
+    // Discover
+    if (digits.startsWith('6011') || digits.startsWith('65') || RegExp(r'^64[4-9]').hasMatch(digits)) return true;
+    // Diners Club / JCB / UnionPay
+    if (RegExp(r'^(36|38|35|62)').hasMatch(digits)) return true;
+
+    return false;
+  }
+
+  /// Accepts `MM/YY` or `MM/YYYY`. The card is valid until the end of that month.
+  static String? expiry(String value, {DateTime? now}) {
+    final match = RegExp(r'^(\d{2})\s*/\s*(\d{2}|\d{4})$').firstMatch(value.trim());
+    if (match == null) return 'error_card_expiry';
+
+    final month = int.parse(match.group(1)!);
+    var rawYear = int.parse(match.group(2)!);
+    final year = rawYear < 100 ? 2000 + rawYear : rawYear;
+
+    if (month < 1 || month > 12) return 'error_card_expiry';
+
+    final today = now ?? DateTime.now();
+    final firstDayAfterExpiry = DateTime(year, month + 1);
+    if (!today.isBefore(firstDayAfterExpiry)) return 'error_card_expired';
+
+    if (year > today.year + 20) return 'error_card_expiry';
+
+    return null;
+  }
+
+  static String? cvv(String value, {CardBrand brand = CardBrand.other}) {
+    final trimmed = value.trim();
+    if (!RegExp(r'^\d+$').hasMatch(trimmed)) return 'error_card_cvv';
+
+    if (brand == CardBrand.amex) {
+      if (trimmed.length != 4) return 'error_card_cvv';
+    } else {
+      if (trimmed.length != 3) return 'error_card_cvv';
+    }
+    return null;
+  }
 
   /// Standard checksum every real card number satisfies.
   static bool passesLuhn(String digits) {
